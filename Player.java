@@ -24,7 +24,7 @@ public class Player {
 		this.height = height;
 		this.moveSpeedMod = moveSpeedMod;
 		try {
-			playerImage = ImageIO.read(new File("./src/Hyena-S2.png")); // Replace "player.png" with the path to your image file
+			playerImage = ImageIO.read(new File("Hyena-S2.png")); // Replace "player.png" with the path to your image file
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -36,22 +36,8 @@ public class Player {
 		this.width = 400;
 		this.height = 400;
 		this.moveSpeedMod = 60;
-		File[] files = new File("./src").listFiles();
-		for (File file : files) {
-			if (file.isDirectory()) {
-				System.out.print("directory:");
-			} else {
-				System.out.print("     file:");
-			}
-			try {
-				System.out.println(file.getCanonicalPath());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 		try {
-			playerImage = ImageIO.read(new File("./src/Hyena-S2.png")); // Replace "player.png" with the path to your image file
+			playerImage = ImageIO.read(new File("Hyena-S2.png")); // Replace "player.png" with the path to your image file
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -80,17 +66,14 @@ public class Player {
 		return new double[] { this.x, this.y };
 	}
 
-	public void draw(Graphics g, int screenWidth, int screenHeight, int cursorX, int cursorY) {
+	public void draw(Graphics g, int cursorX, int cursorY) {
 	    Graphics2D g2d = (Graphics2D) g;
 	    AffineTransform old = g2d.getTransform();
 	    
-	    double centerX = screenWidth / 2 - playerImage.getWidth(null) / 2;
-	    double centerY = screenHeight / 2 - playerImage.getHeight(null) / 2;
-	    
-	    double angle = Math.atan2(cursorY - centerY, cursorX - centerX);
-	    
-	    g2d.rotate(angle, centerX + playerImage.getWidth(null) / 2, centerY + playerImage.getHeight(null) / 2);
-	    g2d.drawImage(playerImage, (int) centerX, (int) centerY, null);
+	    double angle = Math.atan2(cursorY - width / 2, height - 200);
+	    System.out.println(cursorX + "    " + cursorY);
+	    g2d.rotate(angle, width / 2, height / 2);
+	    g2d.drawImage(playerImage, 200 - playerImage.getWidth(null) / 2, 200 - playerImage.getHeight(null) / 2, null);
 	    
 	    g2d.setTransform(old);
 	}
