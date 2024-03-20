@@ -80,14 +80,18 @@ public class Player {
 		return new double[] { this.x, this.y };
 	}
 
-	public void draw(Graphics g) {
-		Graphics2D g2d = (Graphics2D) g;
-		AffineTransform old = g2d.getTransform();
-
-		double angle = Math.atan2(yDir, xDir);
-		g2d.rotate(angle, x + playerImage.getWidth(null) / 2, y + playerImage.getHeight(null) / 2);
-		g2d.drawImage(playerImage, (int) x, (int) y, null);
-
-		g2d.setTransform(old);
+	public void draw(Graphics g, int screenWidth, int screenHeight, int cursorX, int cursorY) {
+	    Graphics2D g2d = (Graphics2D) g;
+	    AffineTransform old = g2d.getTransform();
+	    
+	    double centerX = screenWidth / 2 - playerImage.getWidth(null) / 2;
+	    double centerY = screenHeight / 2 - playerImage.getHeight(null) / 2;
+	    
+	    double angle = Math.atan2(cursorY - centerY, cursorX - centerX);
+	    
+	    g2d.rotate(angle, centerX + playerImage.getWidth(null) / 2, centerY + playerImage.getHeight(null) / 2);
+	    g2d.drawImage(playerImage, (int) centerX, (int) centerY, null);
+	    
+	    g2d.setTransform(old);
 	}
 }
