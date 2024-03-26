@@ -46,7 +46,7 @@ public class GamePanel extends AnimatedPanel {
             }
         }
         
-        player.draw(g,500,500,this.mouseX,this.mouseY);
+        player.draw(g,this.mouseX,this.mouseY);
         player.move(this.mouseX - 200, this.mouseY - 200);
     }
 }
