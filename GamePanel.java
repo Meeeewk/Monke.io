@@ -5,9 +5,10 @@ import javax.swing.SwingUtilities;
 import java.util.ArrayList;
 
 public class GamePanel extends AnimatedPanel {
-    private Player player;
+    private ArrayList<Entity> entities = new ArrayList<Entity>();
     private int x = 10;
     private int y = 10;
+    private Player player;
     private int mouseX;
     private int mouseY;
     
@@ -33,7 +34,9 @@ public class GamePanel extends AnimatedPanel {
     }
 
     public void createObjects() {
-        this.player = new Player();
+    	this.player = new Player();
+        this.entities.add(this.player);
+        this.entities.add(new Bot());
     }
 
     @Override
@@ -46,7 +49,10 @@ public class GamePanel extends AnimatedPanel {
             }
         }
         
-        player.draw(g,this.mouseX,this.mouseY);
-        player.move(this.mouseX - 200, this.mouseY - 200);
+        
+        for (Entity ent : this.entities) {
+        	ent.draw(g, (int) playerPos[0], (int) playerPos[1]);
+        	ent.move(this.mouseX - 200, this.mouseY - 200);
+        }
     }
 }
