@@ -33,11 +33,20 @@ public class Player extends Entity {
 	    }
 	    this.setFacingDir(3 * Math.PI / 2 - angle);
 	    g2d.rotate(this.getFacingDir(), this.getWidth() / 2, this.getHeight() / 2);
-	    g2d.drawImage(this.getPlayerImage(), this.getWidth() / 2 - this.getDrawWidth() / 2, this.getWidth() / 2 - this.getDrawHeight() / 2, this.getDrawWidth(), this.getDrawHeight(), null);
-	    System.out.println(this.getWidth() / 2 - this.getDrawWidth() / 2);
+	    g2d.drawImage(this.getPlayerImage(), this.getWidth() / 2 - this.getDrawWidth() / 2, this.getHeight() / 2 - this.getDrawHeight() / 2, this.getDrawWidth(), this.getDrawHeight(), null);
 	    g2d.setTransform(old);
 	}
-
-
 	
+	@Override
+	public void move(double cursorX, double cursorY) {
+		cursorX -= this.getWidth() / 2;
+	    cursorY -= this.getHeight() / 2;
+		this.setxVelocity(this.getxVelocity() + cursorX / this.getMoveSpeedMod());
+		this.setyVelocity(this.getyVelocity() + cursorY / this.getMoveSpeedMod());
+		this.setxVelocity(this.getxVelocity() * (5.0 / 6));
+		this.setyVelocity(this.getyVelocity() * (5.0 / 6));
+		double vectLen = Math.sqrt(Math.pow(this.getxVelocity(), 2) + Math.pow(this.getyVelocity(), 2));
+		this.setX(this.getX() + (int) (this.getxVelocity() * 10 / vectLen));
+		this.setY(this.getY() + (int) (this.getyVelocity() * 10 / vectLen));
+	}
 }

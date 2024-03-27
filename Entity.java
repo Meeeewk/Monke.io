@@ -22,11 +22,11 @@ public class Entity {
 
 	public Entity(double x, double y, int width, int height, int moveSpeedMod, String imgPath, int drawWidth,
 			int drawHeight) {
-		this.x = x;
-		this.y = y;
+		this.setX(x);
+		this.setY(y);
 		this.setWidth(width);
 		this.setHeight(height);
-		this.moveSpeedMod = moveSpeedMod;
+		this.setMoveSpeedMod(moveSpeedMod);
 		try {
 			this.setPlayerImage(ImageIO.read(new File(imgPath)));
 		} catch (IOException e) {
@@ -36,35 +36,13 @@ public class Entity {
 		this.setDrawWidth(drawWidth);
 	}
 	public void move(double x, double y) {
-		this.setxVelocity(this.getxVelocity() + x / this.moveSpeedMod);
-		this.setyVelocity(this.getyVelocity() + y / this.moveSpeedMod);
-		this.setxVelocity(this.getxVelocity() * (5.0 / 6));
-		this.setyVelocity(this.getyVelocity() * (5.0 / 6));
-		double vectLen = Math.sqrt(Math.pow(this.getxVelocity(), 2) + Math.pow(this.getyVelocity(), 2));
-		this.x += (int) (this.getxVelocity() * 10 / vectLen);
-		this.y += (int) (this.getyVelocity() * 10 / vectLen);
+		
 	}
-	public void draw(Graphics g, int cursorX, int cursorY) {
-	    Graphics2D g2d = (Graphics2D) g;
-	    AffineTransform old = g2d.getTransform();
-	    double angle = 0;
-	    cursorX -= this.getWidth() / 2;
-	    cursorY -= this.getHeight() / 2;
-	    cursorY *= -1;
-	    double vect_len = Math.sqrt(Math.pow(this.getxVelocity(), 2) + Math.pow(this.getyVelocity(), 2));
-	    if (getyVelocity() * -1 < 0) {
-	    	angle = Math.PI * 2 - Math.acos(this.getxVelocity() / vect_len);
-	    } else {
-	    	angle = Math.acos(getxVelocity() / vect_len);
-	    }
-	    this.setFacingDir(3 * Math.PI / 2 - angle);
-	    g2d.rotate(this.getFacingDir(), this.getWidth() / 2, this.getHeight() / 2);
-	    g2d.drawImage(this.getPlayerImage(), this.getWidth() / 2 - this.getDrawWidth() / 2, this.getWidth() / 2 - this.getDrawHeight() / 2, this.getDrawWidth(), this.getDrawHeight(), null);
-	    System.out.println(this.getWidth() / 2 - this.getDrawWidth() / 2);
-	    g2d.setTransform(old);
+	public void draw(Graphics g, int playerX, int playerY) {
+	    
 	}
 	public double[] getPos() {
-		return new double[] { this.x, this.y };
+		return new double[] { this.getX(), this.getY() };
 	}
 	public int getWidth() {
 		return width;
@@ -113,5 +91,23 @@ public class Entity {
 	}
 	public void setDrawHeight(int drawHeight) {
 		this.drawHeight = drawHeight;
+	}
+	public int getMoveSpeedMod() {
+		return moveSpeedMod;
+	}
+	public void setMoveSpeedMod(int moveSpeedMod) {
+		this.moveSpeedMod = moveSpeedMod;
+	}
+	public double getX() {
+		return x;
+	}
+	public void setX(double x) {
+		this.x = x;
+	}
+	public double getY() {
+		return y;
+	}
+	public void setY(double y) {
+		this.y = y;
 	}
 }

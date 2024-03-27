@@ -35,7 +35,6 @@ public class GamePanel extends AnimatedPanel {
 
     public void createObjects() {
     	this.player = new Player();
-        this.entities.add(this.player);
         this.entities.add(new Bot());
     }
 
@@ -49,10 +48,14 @@ public class GamePanel extends AnimatedPanel {
             }
         }
         
+        this.player.setHeight(getHeight());
+        this.player.setWidth(getWidth());
+        this.player.draw(g, this.mouseX, this.mouseY);
+        this.player.move(mouseX, mouseY);
         
         for (Entity ent : this.entities) {
         	ent.draw(g, (int) playerPos[0], (int) playerPos[1]);
-        	ent.move(this.mouseX - 200, this.mouseY - 200);
+        	ent.move((int) playerPos[0], (int) playerPos[1]);
         }
     }
 }

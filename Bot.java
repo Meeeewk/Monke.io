@@ -19,9 +19,6 @@ public class Bot extends Entity {
 	}
 	@Override
 	public void draw(Graphics g, int cursorX, int cursorY) {
-	    Graphics2D g2d = (Graphics2D) g;
-	    AffineTransform old = g2d.getTransform();
-
-	    g2d.setTransform(old);
+	 
 	}
 }
