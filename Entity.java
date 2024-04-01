@@ -56,12 +56,14 @@ public class Entity {
 		return width;
 	}
 	public void setWidth(int width) {
+		this.setX(this.getX() + -1 * (width - this.getWidth()) / 2);
 		this.width = width;
 	}
 	public int getHeight() {
 		return height;
 	}
 	public void setHeight(int height) {
+		this.setY(this.getY() + -1 * (height - this.getHeight()) / 2);
 		this.height = height;
 	}
 	public double getxVelocity() {

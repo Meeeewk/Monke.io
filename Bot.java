@@ -32,7 +32,7 @@ public class Bot extends Entity {
 //	    }
 //	    this.setFacingDir(3 * Math.PI / 2 - angle);
 //	    g2d.rotate(this.getFacingDir(), this.getWidth() / 2, this.getHeight() / 2);
-	    g2d.drawImage(this.getPlayerImage(),(int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + 200),(int) (this.getY() - playerY - this.getDrawHeight() / 2.0 + 200), this.getDrawWidth(), this.getDrawHeight(), null);
+	    g2d.drawImage(this.getPlayerImage(),(int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + this.getWidth() / 2),(int) (this.getY() - playerY - this.getDrawHeight() / 2.0 + this.getHeight() / 2), this.getDrawWidth(), this.getDrawHeight(), null);
 //	    g2d.setTransform(old);
 	}
 }
