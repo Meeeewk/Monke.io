@@ -36,7 +36,15 @@ public class Entity {
 		this.setDrawWidth(drawWidth);
 	}
 	public void move(double x, double y) {
-		
+		this.setxVelocity(this.getxVelocity() + x / this.getMoveSpeedMod());
+		this.setyVelocity(this.getyVelocity() + y / this.getMoveSpeedMod());
+		double vectLen = Math.sqrt(Math.pow(this.getxVelocity(), 2) + Math.pow(this.getyVelocity(), 2));
+		if (vectLen > Math.sqrt(162)) {
+			this.setxVelocity(Math.sqrt(162) * this.getxVelocity() / vectLen);
+			this.setyVelocity(Math.sqrt(162) * this.getyVelocity() / vectLen);
+		}
+		this.setX(this.getX() + (int) (this.getxVelocity()));
+		this.setY(this.getY() + (int) (this.getyVelocity()));
 	}
 	public void draw(Graphics g, int playerX, int playerY) {
 	    

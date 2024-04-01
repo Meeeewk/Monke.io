@@ -4,7 +4,7 @@ import java.awt.geom.AffineTransform;
 
 public class Bot extends Entity {
 	public Bot() {
-		this(0.0, 0.0, 400, 400, 120, "Hyena-S2.png", 100, 100);
+		this(0.0, 0.0, 400, 400, 20, "Hyena-S2.png", 100, 100);
 	}
 
 	public Bot(double x, double y, int width, int height, int moveSpeedMod, String imgPath, int drawWidth,
@@ -15,7 +15,9 @@ public class Bot extends Entity {
 
 	@Override
 	public void move(double playerX, double playerY) {
-		// TODO do this
+		double relX = playerX - this.getX();
+		double relY = playerY - this.getY();
+		super.move(relX, relY);
 	}
 	@Override
 	public void draw(Graphics g, int playerX, int playerY) {
@@ -30,7 +32,7 @@ public class Bot extends Entity {
 //	    }
 //	    this.setFacingDir(3 * Math.PI / 2 - angle);
 //	    g2d.rotate(this.getFacingDir(), this.getWidth() / 2, this.getHeight() / 2);
-	    g2d.drawImage(this.getPlayerImage(),(int) (this.getX() - playerX - this.getDrawWidth()),(int) (this.getY() - playerY - this.getDrawHeight()), this.getDrawWidth(), this.getDrawHeight(), null);
+	    g2d.drawImage(this.getPlayerImage(),(int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + 200),(int) (this.getY() - playerY - this.getDrawHeight() / 2.0 + 200), this.getDrawWidth(), this.getDrawHeight(), null);
 //	    g2d.setTransform(old);
 	}
 }

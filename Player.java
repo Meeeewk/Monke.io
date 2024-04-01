@@ -41,12 +41,18 @@ public class Player extends Entity {
 	public void move(double cursorX, double cursorY) {
 		cursorX -= this.getWidth() / 2;
 	    cursorY -= this.getHeight() / 2;
-		this.setxVelocity(this.getxVelocity() + cursorX / this.getMoveSpeedMod());
-		this.setyVelocity(this.getyVelocity() + cursorY / this.getMoveSpeedMod());
-		this.setxVelocity(this.getxVelocity() * (5.0 / 6));
-		this.setyVelocity(this.getyVelocity() * (5.0 / 6));
-		double vectLen = Math.sqrt(Math.pow(this.getxVelocity(), 2) + Math.pow(this.getyVelocity(), 2));
-		this.setX(this.getX() + (int) (this.getxVelocity() * 10 / vectLen));
-		this.setY(this.getY() + (int) (this.getyVelocity() * 10 / vectLen));
+		super.move(cursorX, cursorY);
+	}
+	
+	@Override
+	public void setHeight(int height) {
+		this.setY(this.getY() + -1 * (height - this.getHeight()) / 2);
+		super.setHeight(height);
+	}
+	
+	@Override
+	public void setWidth(int width) {
+		this.setX(this.getX() + -1 * (width - this.getWidth()) / 2);
+		super.setWidth(width);
 	}
 }
