@@ -3,20 +3,39 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
 public class Bot extends Entity {
+	private double lazyLength;
+	private boolean roam = false;
+	private int frames = 0;
+	private double xRoam = Math.random() * 200 - 100;
+	private double yRoam = Math.random() * 200 - 100;
 	public Bot() {
-		this(0.0, 0.0, 400, 400, 120, "Hyena-S2.png", 100, 100, Math.sqrt(100));
+		this(0.0, 0.0, 400, 400, 120, "Hyena-S2.png", 100, 100, Math.sqrt(100), 400);
 	}
 
 	public Bot(double x, double y, int width, int height, int moveSpeedMod, String imgPath, int drawWidth,
-			int drawHeight, double maxSpeed) {
+			int drawHeight, double maxSpeed, double lazyLength) {
 		super(x, y, width, height, moveSpeedMod, imgPath, drawWidth, drawHeight, maxSpeed);
-		// TODO Auto-generated constructor stub
+		this.lazyLength = lazyLength;
 	}
 
 	@Override
 	public void move(double playerX, double playerY) {
 		double relX = playerX - this.getX();
 		double relY = playerY - this.getY();
+		double vectLen = Math.sqrt(Math.pow(relX, 2) + Math.pow(relY, 2));
+		if (vectLen > lazyLength) {
+			if (frames > 120) {
+				frames = 0;
+				xRoam = Math.random() * 200 - 100;
+				yRoam = Math.random() * 200 - 100;
+			} else {
+				relX = xRoam;
+				relY = yRoam;
+				frames++;
+			}
+		} else {
+			frames = 0;
+		}
 		super.move(relX, relY);
 	}
 	@Override

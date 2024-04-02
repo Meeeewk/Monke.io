@@ -36,6 +36,10 @@ public class GamePanel extends AnimatedPanel {
     public void createObjects() {
     	this.player = new Player();
         this.entities.add(new Bot());
+        this.entities.add(new Bot());
+        this.entities.add(new Bot());
+        this.entities.add(new Bot());
+        this.entities.add(new Bot());
     }
 
     @Override
