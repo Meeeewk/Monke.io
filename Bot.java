@@ -4,12 +4,12 @@ import java.awt.geom.AffineTransform;
 
 public class Bot extends Entity {
 	public Bot() {
-		this(0.0, 0.0, 400, 400, 20, "Hyena-S2.png", 100, 100);
+		this(0.0, 0.0, 400, 400, 120, "Hyena-S2.png", 100, 100, Math.sqrt(100));
 	}
 
 	public Bot(double x, double y, int width, int height, int moveSpeedMod, String imgPath, int drawWidth,
-			int drawHeight) {
-		super(x, y, width, height, moveSpeedMod, imgPath, drawWidth, drawHeight);
+			int drawHeight, double maxSpeed) {
+		super(x, y, width, height, moveSpeedMod, imgPath, drawWidth, drawHeight, maxSpeed);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -21,18 +21,18 @@ public class Bot extends Entity {
 	}
 	@Override
 	public void draw(Graphics g, int playerX, int playerY) {
-		Graphics2D g2d = (Graphics2D) g;
-//	    AffineTransform old = g2d.getTransform();
-//	    double angle = 0;
-//	    double vect_len = Math.sqrt(Math.pow(this.getxVelocity(), 2) + Math.pow(this.getyVelocity(), 2));
-//	    if (getyVelocity() * -1 < 0) {
-//	    	angle = Math.PI * 2 - Math.acos(this.getxVelocity() / vect_len);
-//	    } else {
-//	    	angle = Math.acos(getxVelocity() / vect_len);
-//	    }
-//	    this.setFacingDir(3 * Math.PI / 2 - angle);
-//	    g2d.rotate(this.getFacingDir(), this.getWidth() / 2, this.getHeight() / 2);
+	    Graphics2D g2d = (Graphics2D) g;
+	    AffineTransform old = g2d.getTransform();
+	    double angle = 0;
+	    double vect_len = Math.sqrt(Math.pow(this.getxVelocity(), 2) + Math.pow(this.getyVelocity(), 2));
+	    if (getyVelocity() * -1 < 0) {
+	    	angle = Math.PI * 2 - Math.acos(this.getxVelocity() / vect_len);
+	    } else {
+	    	angle = Math.acos(getxVelocity() / vect_len);
+	    }
+	    this.setFacingDir(3 * Math.PI / 2 - angle);
+	    g2d.rotate(this.getFacingDir(), (int) (this.getX() - playerX + this.getWidth() / 2), (int) (this.getY() - playerY + this.getHeight() / 2));
 	    g2d.drawImage(this.getPlayerImage(),(int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + this.getWidth() / 2),(int) (this.getY() - playerY - this.getDrawHeight() / 2.0 + this.getHeight() / 2), this.getDrawWidth(), this.getDrawHeight(), null);
-//	    g2d.setTransform(old);
+	    g2d.setTransform(old);
 	}
 }
