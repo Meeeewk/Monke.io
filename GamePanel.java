@@ -35,19 +35,17 @@ public class GamePanel extends AnimatedPanel {
 
     public void createObjects() {
     	this.player = new Player();
-        this.entities.add(new Bot());
-        this.entities.add(new Bot());
-        this.entities.add(new Bot());
-        this.entities.add(new Bot());
-        this.entities.add(new Bot());
+        for (int i = 0; i < 5; i++) {
+        	this.entities.add(new Bot(Math.random() * 1000 - 500, Math.random() * 1000 - 500));
+        }
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         double[] playerPos = player.getPos();
-        for (int i = -150; i <= 150; i += 50) {
-            for (int j = -150; j <= 150; j += 50) {
+        for (int i = -2000; i <= 2000; i += 100) {
+            for (int j = -2000; j <= 2000; j += 100) {
                 g.fillOval(i - (int) playerPos[0], j - (int) playerPos[1], 20, 20);
             }
         }

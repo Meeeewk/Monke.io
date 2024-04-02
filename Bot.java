@@ -17,6 +17,10 @@ public class Bot extends Entity {
 		super(x, y, width, height, moveSpeedMod, imgPath, drawWidth, drawHeight, maxSpeed);
 		this.lazyLength = lazyLength;
 	}
+	
+	public Bot(double x, double y) {
+		this(x, y, 400, 400, 120, "Hyena-S2.png", 100, 100, Math.sqrt(100), 400);
+	}
 
 	@Override
 	public void move(double playerX, double playerY) {
