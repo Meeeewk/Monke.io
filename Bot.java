@@ -4,7 +4,6 @@ import java.awt.geom.AffineTransform;
 
 public class Bot extends Entity {
 	private double lazyLength;
-	private boolean roam = false;
 	private int frames = 0;
 	private double xRoam = Math.random() * 200 - 100;
 	private double yRoam = Math.random() * 200 - 100;
