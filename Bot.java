@@ -18,7 +18,7 @@ public class Bot extends Entity {
 	}
 	
 	public Bot(double x, double y) {
-		this(x, y, 400, 400, 120, "Hyena-S2.png", 100, 100, Math.sqrt(100), 400);
+		this(x, y, 400, 400, 120, "Hyena-S2.png", 100, 100, Math.sqrt(Math.random() * 40 + 80), 400);
 	}
 
 	@Override
