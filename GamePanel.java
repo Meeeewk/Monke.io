@@ -6,8 +6,6 @@ import java.util.ArrayList;
 
 public class GamePanel extends AnimatedPanel {
     private ArrayList<Entity> entities = new ArrayList<Entity>();
-    private int x = 10;
-    private int y = 10;
     private Player player;
     private int mouseX;
     private int mouseY;
