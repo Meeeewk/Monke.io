@@ -59,8 +59,8 @@ public class Entity {
 			this.setSprinting(false);
 			this.disableSprinting(180);
 		}
-		if (this.sprintingDisabled > 0) {
-			this.sprintingDisabled--;
+		if (this.getSprintingDisabled() > 0) {
+			this.setSprintingDisabled(this.getSprintingDisabled() - 1);
 		}
 		if (vectLen > evaluatingMax) {
 			this.setxVelocity(evaluatingMax * this.getxVelocity() / vectLen);
@@ -70,13 +70,13 @@ public class Entity {
 		this.setY(this.getY() + (int) (this.getyVelocity()));
 	}
 	public void disableSprinting(int frames) {
-		this.sprintingDisabled = frames;
+		this.setSprintingDisabled(frames);
 	}
 	public void draw(Graphics g, int playerX, int playerY) {
 	    
 	}
 	public void setSprinting(boolean b) {
-		if (this.sprintingDisabled > 0) {
+		if (this.getSprintingDisabled() > 0) {
 			this.sprinting = false;
 		} else {
 			this.sprinting = b;
@@ -176,5 +176,11 @@ public class Entity {
 	}
 	public void setSprintEndurance(double sprintEndurance) {
 		this.sprintEndurance = sprintEndurance;
+	}
+	public int getSprintingDisabled() {
+		return sprintingDisabled;
+	}
+	public void setSprintingDisabled(int sprintingDisabled) {
+		this.sprintingDisabled = sprintingDisabled;
 	}
 }
