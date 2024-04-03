@@ -37,8 +37,11 @@ public class Player extends Entity {
 	    g2d.setTransform(old);
 	    g2d.setColor(Color.gray);
 	    g2d.fillRect((int) (this.getWidth() / 2 - xpGoal * 3.2 / 2), this.getHeight() - 150,(int) (this.xpGoal * 3.2), 50);
+	    g2d.fillRect((int) (this.getWidth() / 2 - this.getMaxSprintEndurance()), this.getHeight() - 80, (int) (this.getMaxSprintEndurance() * 2), 50);
 	    g2d.setColor(Color.yellow);
 	    g2d.fillRect((int) (this.getWidth() / 2 - xpGoal * 3.2 / 2), this.getHeight() - 150,(int) (this.xp * 3.2), 50);
+	    g2d.setColor(Color.orange);
+	    g2d.fillRect((int) (this.getWidth() / 2 - this.getMaxSprintEndurance()), this.getHeight() - 80, (int) (this.getSprintEndurance() * 2), 50);
 	    this.xp++;
 	    this.xp%= this.xpGoal;
 	}

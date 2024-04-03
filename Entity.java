@@ -22,6 +22,9 @@ public class Entity {
 	private double maxSpeed;
 	private boolean sprinting = false;
 	private double sprintSpeed;
+	private double sprintEndurance = 240;
+	private double maxSprintEndurance = 240;
+	private int sprintingDisabled = 0;
 
 	public Entity(double x, double y, int width, int height, int moveSpeedMod, String imgPath, int drawWidth,
 			int drawHeight, double maxSpeed, double sprintSpeed) {
@@ -44,7 +47,21 @@ public class Entity {
 		this.setxVelocity(this.getxVelocity() + x / this.getMoveSpeedMod());
 		this.setyVelocity(this.getyVelocity() + y / this.getMoveSpeedMod());
 		double vectLen = Math.sqrt(Math.pow(this.getxVelocity(), 2) + Math.pow(this.getyVelocity(), 2));
-		double evaluatingMax = sprinting ? this.getSprintSpeed() : this.getMaxSpeed();
+		double evaluatingMax = this.getMaxSpeed();
+		if (sprinting) {
+			evaluatingMax = this.getSprintSpeed();
+			this.setSprintEndurance(this.getSprintEndurance() - 2);
+		} else {
+			this.setSprintEndurance(this.getSprintEndurance() + 1);
+			this.setSprintEndurance(Math.min(this.getSprintEndurance(), this.getMaxSprintEndurance()));
+		}
+		if (this.getSprintEndurance() <= 0) {
+			this.setSprinting(false);
+			this.disableSprinting(180);
+		}
+		if (this.sprintingDisabled > 0) {
+			this.sprintingDisabled--;
+		}
 		if (vectLen > evaluatingMax) {
 			this.setxVelocity(evaluatingMax * this.getxVelocity() / vectLen);
 			this.setyVelocity(evaluatingMax * this.getyVelocity() / vectLen);
@@ -52,11 +69,18 @@ public class Entity {
 		this.setX(this.getX() + (int) (this.getxVelocity()));
 		this.setY(this.getY() + (int) (this.getyVelocity()));
 	}
+	public void disableSprinting(int frames) {
+		this.sprintingDisabled = frames;
+	}
 	public void draw(Graphics g, int playerX, int playerY) {
 	    
 	}
 	public void setSprinting(boolean b) {
-		this.sprinting = b;
+		if (this.sprintingDisabled > 0) {
+			this.sprinting = false;
+		} else {
+			this.sprinting = b;
+		}
 	}
 	public double[] getPos() {
 		return new double[] { this.getX(), this.getY() };
@@ -140,5 +164,17 @@ public class Entity {
 	}
 	public void setSprintSpeed(double sprintSpeed) {
 		this.sprintSpeed = sprintSpeed;
+	}
+	public double getMaxSprintEndurance() {
+		return maxSprintEndurance;
+	}
+	public void setMaxSprintEndurance(double maxSprintEndurance) {
+		this.maxSprintEndurance = maxSprintEndurance;
+	}
+	public double getSprintEndurance() {
+		return sprintEndurance;
+	}
+	public void setSprintEndurance(double sprintEndurance) {
+		this.sprintEndurance = sprintEndurance;
 	}
 }
