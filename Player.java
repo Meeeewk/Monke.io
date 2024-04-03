@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -7,7 +8,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class Player extends Entity {
-	//Direction the player icon should be facing in, measured in radians
+	private int xp = 0;
+	private int xpGoal = 200;
 
 	public Player(double x, double y, int width, int height, int moveSpeedMod, int drawWidth, int drawHeight,String playerImage, double maxSpeed) {
 		super(x,y,width,height,moveSpeedMod,playerImage,drawWidth,drawHeight,maxSpeed);
@@ -32,6 +34,12 @@ public class Player extends Entity {
 	    g2d.rotate(this.getFacingDir(), this.getWidth() / 2, this.getHeight() / 2);
 	    g2d.drawImage(this.getPlayerImage(), this.getWidth() / 2 - this.getDrawWidth() / 2, this.getHeight() / 2 - this.getDrawHeight() / 2, this.getDrawWidth(), this.getDrawHeight(), null);
 	    g2d.setTransform(old);
+	    g2d.setColor(Color.gray);
+	    g2d.fillRect((int) (this.getWidth() / 2 - xpGoal * 3.2 / 2), this.getHeight() - 150,(int) (this.xpGoal * 3.2), 50);
+	    g2d.setColor(Color.yellow);
+	    g2d.fillRect((int) (this.getWidth() / 2 - xpGoal * 3.2 / 2), this.getHeight() - 150,(int) (this.xp * 3.2), 50);
+	    this.xp++;
+	    this.xp%= this.xpGoal;
 	}
 	
 	@Override

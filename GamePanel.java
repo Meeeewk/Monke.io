@@ -50,10 +50,6 @@ public class GamePanel extends AnimatedPanel {
         
         int height = getHeight();
         int width = getWidth();
-        this.player.setHeight(height);
-        this.player.setWidth(width);
-        this.player.draw(g, this.mouseX, this.mouseY);
-        this.player.move(mouseX, mouseY);
         
         for (Entity ent : this.entities) {
         	ent.draw(g, (int) playerPos[0], (int) playerPos[1]);
@@ -61,5 +57,10 @@ public class GamePanel extends AnimatedPanel {
         	ent.setHeight(height);
         	ent.setWidth(width);
         }
+        
+        this.player.setHeight(height);
+        this.player.setWidth(width);
+        this.player.draw(g, this.mouseX, this.mouseY);
+        this.player.move(mouseX, mouseY);
     }
 }
