@@ -11,12 +11,13 @@ public class Player extends Entity {
 	private int xp = 0;
 	private int xpGoal = 200;
 
-	public Player(double x, double y, int width, int height, int moveSpeedMod, int drawWidth, int drawHeight,String playerImage, double maxSpeed) {
-		super(x,y,width,height,moveSpeedMod,playerImage,drawWidth,drawHeight,maxSpeed);
+
+	public Player(double x, double y, int width, int height, int moveSpeedMod, int drawWidth, int drawHeight,String playerImage, double maxSpeed, double sprintSpeed) {
+		super(x,y,width,height,moveSpeedMod,playerImage,drawWidth,drawHeight,maxSpeed, sprintSpeed);
 	}
 
 	public Player() {
-		this(0.0,0.0,400,400,60,100,100,"Hyena-S2.png", Math.sqrt(162));
+		this(0.0,0.0,400,400,60,100,100,"Hyena-S2.png", Math.sqrt(162), Math.sqrt(243));
 	}
 
 	@Override

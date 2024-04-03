@@ -29,6 +29,21 @@ public class GamePanel extends AnimatedPanel {
                 mouseY = e.getY();
             }
         });
+        this.addKeyListener(new KeyAdapter() {
+        	@Override
+        	public void keyPressed(KeyEvent e) {
+        		if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+        			player.setSprinting(true);
+        		}
+        	}
+        	
+        	@Override
+        	public void keyReleased(KeyEvent e) {
+        		if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+        			player.setSprinting(false);
+        		}
+        	}
+        });
     }
 
     public void createObjects() {

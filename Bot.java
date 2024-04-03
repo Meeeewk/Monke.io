@@ -8,17 +8,17 @@ public class Bot extends Entity {
 	private double xRoam = Math.random() * 200 - 100;
 	private double yRoam = Math.random() * 200 - 100;
 	public Bot() {
-		this(0.0, 0.0, 400, 400, 120, "Hyena-S2.png", 100, 100, Math.sqrt(100), 400);
+		this(0.0, 0.0, 400, 400, 120, "Hyena-S2.png", 100, 100, Math.sqrt(100), 400, Math.sqrt(192));
 	}
 
 	public Bot(double x, double y, int width, int height, int moveSpeedMod, String imgPath, int drawWidth,
-			int drawHeight, double maxSpeed, double lazyLength) {
-		super(x, y, width, height, moveSpeedMod, imgPath, drawWidth, drawHeight, maxSpeed);
+			int drawHeight, double maxSpeed, double lazyLength, double sprintSpeed) {
+		super(x, y, width, height, moveSpeedMod, imgPath, drawWidth, drawHeight, maxSpeed, sprintSpeed);
 		this.lazyLength = lazyLength;
 	}
 	
 	public Bot(double x, double y) {
-		this(x, y, 400, 400, 120, "Hyena-S2.png", 100, 100, Math.sqrt(Math.random() * 40 + 80), 400);
+		this(x, y, 400, 400, 120, "Hyena-S2.png", 100, 100, Math.sqrt(Math.random() * 40 + 80), 400, Math.sqrt(192));
 	}
 
 	@Override

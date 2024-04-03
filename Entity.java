@@ -20,15 +20,18 @@ public class Entity {
 	private Image playerImage;
 	private double facingDir;
 	private double maxSpeed;
+	private boolean sprinting = false;
+	private double sprintSpeed;
 
 	public Entity(double x, double y, int width, int height, int moveSpeedMod, String imgPath, int drawWidth,
-			int drawHeight, double maxSpeed) {
+			int drawHeight, double maxSpeed, double sprintSpeed) {
 		this.setX(x);
 		this.setY(y);
 		this.setWidth(width);
 		this.setHeight(height);
 		this.setMaxSpeed(maxSpeed);
 		this.setMoveSpeedMod(moveSpeedMod);
+		this.setSprintSpeed(sprintSpeed);
 		try {
 			this.setPlayerImage(ImageIO.read(new File(imgPath)));
 		} catch (IOException e) {
@@ -41,15 +44,19 @@ public class Entity {
 		this.setxVelocity(this.getxVelocity() + x / this.getMoveSpeedMod());
 		this.setyVelocity(this.getyVelocity() + y / this.getMoveSpeedMod());
 		double vectLen = Math.sqrt(Math.pow(this.getxVelocity(), 2) + Math.pow(this.getyVelocity(), 2));
-		if (vectLen > this.getMaxSpeed()) {
-			this.setxVelocity(this.getMaxSpeed() * this.getxVelocity() / vectLen);
-			this.setyVelocity(this.getMaxSpeed() * this.getyVelocity() / vectLen);
+		double evaluatingMax = sprinting ? this.getSprintSpeed() : this.getMaxSpeed();
+		if (vectLen > evaluatingMax) {
+			this.setxVelocity(evaluatingMax * this.getxVelocity() / vectLen);
+			this.setyVelocity(evaluatingMax * this.getyVelocity() / vectLen);
 		}
 		this.setX(this.getX() + (int) (this.getxVelocity()));
 		this.setY(this.getY() + (int) (this.getyVelocity()));
 	}
 	public void draw(Graphics g, int playerX, int playerY) {
 	    
+	}
+	public void setSprinting(boolean b) {
+		this.sprinting = b;
 	}
 	public double[] getPos() {
 		return new double[] { this.getX(), this.getY() };
@@ -127,5 +134,11 @@ public class Entity {
 	}
 	public void setMaxSpeed(double maxSpeed) {
 		this.maxSpeed = maxSpeed;
+	}
+	public double getSprintSpeed() {
+		return sprintSpeed;
+	}
+	public void setSprintSpeed(double sprintSpeed) {
+		this.sprintSpeed = sprintSpeed;
 	}
 }
