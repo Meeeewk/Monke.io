@@ -97,7 +97,8 @@ public class GamePanel extends AnimatedPanel {
         double[] playerPos = player.getPos();
         for (int i = -2000; i <= 2000; i += 100) {
             for (int j = -2000; j <= 2000; j += 100) {
-                g.fillOval(i - (int) playerPos[0], j - (int) playerPos[1], 20, 20);
+                g.drawRect(i - (int) playerPos[0], j - (int) playerPos[1], 1, 200);
+                g.drawRect(i - (int) playerPos[0], j - (int) playerPos[1], 200, 1);
             }
         }
         
