@@ -70,7 +70,7 @@ public class GamePanel extends AnimatedPanel {
     	double y1 = e.getY();
     	double x2 = e2.getX();
     	double y2 = e2.getY();
-    	int radius1 = (e.getDrawWidth()-25)/2;
+    	int radius1 = ((e.getDrawWidth()-25)/2+(e2.getDrawWidth()-25)/2)/2;
     	if(isY) {
     		return y1+(e.compareTo(e2)==0?0:radius1*(y2-y1)/e.compareTo(e2));
     	}
