@@ -18,7 +18,10 @@ public class Bot extends Entity {
 	}
 	
 	public Bot(double x, double y) {
-		this(x, y, 400, 400, 120, "Hyena-S2.png", 100, 100, Math.sqrt(Math.random() * 40 + 80), 400, Math.sqrt(192));
+		this(x, y, 400, 400, 120, "Hyena-S2.png", 100, 100, Math.sqrt(100), 400, Math.sqrt(192));
+		int rnd = (int) (Math.random() * 400 + 100);
+		this.setDrawHeight(rnd);
+		this.setDrawWidth(rnd);
 	}
 
 	@Override
@@ -26,7 +29,7 @@ public class Bot extends Entity {
 		double relX = playerX - this.getX();
 		double relY = playerY - this.getY();
 		double vectLen = Math.sqrt(Math.pow(relX, 2) + Math.pow(relY, 2));
-		if (vectLen > lazyLength) {
+		if (vectLen > (lazyLength*this.getDrawHeight()/200) + this.getDrawHeight() / 4) {
 			if (frames > 120) {
 				frames = 0;
 				xRoam = Math.random() * 200 - 100;
@@ -56,5 +59,6 @@ public class Bot extends Entity {
 	    g2d.rotate(this.getFacingDir(), (int) (this.getX() - playerX + this.getWidth() / 2), (int) (this.getY() - playerY + this.getHeight() / 2));
 	    g2d.drawImage(this.getPlayerImage(),(int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + this.getWidth() / 2),(int) (this.getY() - playerY - this.getDrawHeight() / 2.0 + this.getHeight() / 2), this.getDrawWidth(), this.getDrawHeight(), null);
 	    g2d.setTransform(old);
+	    g2d.drawOval((int) (this.getX() - playerX - (this.getDrawWidth() * 0.72) / 2.0 + this.getWidth() / 2), (int) (this.getY() - playerY - (this.getDrawHeight() * 0.72) / 2.0 + this.getHeight() / 2), (int) (this.getDrawWidth() * 0.72), (int) (this.getDrawHeight() * 0.72));
 	}
 }

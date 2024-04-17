@@ -19,6 +19,7 @@ public class GamePanel extends AnimatedPanel {
         addEventHandlers();
         this.setBackground(Color.GREEN);
         createObjects();
+        this.entities.sort((o1, o2) -> o1.getDrawHeight() - o2.getDrawHeight());
     }
 
     public void addEventHandlers() {
@@ -51,6 +52,7 @@ public class GamePanel extends AnimatedPanel {
     	for(int i=0;i<5;i++) {
         	this.entities.add(new Bot(Math.random()*1000, Math.random()*1000));
     	}
+    	this.entities.add(this.player);
     }
     private boolean isTouching(Entity e,Entity e2) {
     	double x1 = e2.getX();
@@ -58,8 +60,10 @@ public class GamePanel extends AnimatedPanel {
     	double x2 = e.getX();
     	double y2 = e.getY();
     	//radius is sketchy, change the 28 to different numbers and see
-    	int radius1 = (e2.getDrawWidth()-28)/2;
-    	int radius2 = (e.getDrawWidth()-28)/2;
+    	int radius1 = (e2.getDrawWidth())/2;
+    	radius1 = (int) (radius1 * 0.72);
+    	int radius2 = (e.getDrawWidth())/2;
+    	radius2 = (int) (radius2 * 0.72);
     	double xDif = x1 - x2;
     	double yDif = y1 - y2;
     	double distanceSquared = xDif * xDif + yDif * yDif;
@@ -70,7 +74,8 @@ public class GamePanel extends AnimatedPanel {
     	double y1 = e.getY();
     	double x2 = e2.getX();
     	double y2 = e2.getY();
-    	int radius1 = ((e.getDrawWidth()-25)/2+(e2.getDrawWidth()-25)/2)/2;
+    	int radius1 = (e.getDrawWidth())/2;
+    	radius1 = (int) (radius1 * 0.72);
     	if(isY) {
     		return y1+(e.compareTo(e2)==0?0:radius1*(y2-y1)/e.compareTo(e2));
     	}
@@ -79,7 +84,7 @@ public class GamePanel extends AnimatedPanel {
     	}
     }
     private void collide(Entity e,Entity e2) {
-    	while(isTouching(e,e2)) {
+    	if (isTouching(e,e2)) {
     		double j = 2*(value(e,e2,false)-(value(e2,e,false)+value(e,e2,false))/2);
     		double t = 2*(value(e,e2,true)-(value(e2,e,true)+value(e,e2,true))/2);
     		e2.setX(e2.getX()+j);
@@ -98,6 +103,7 @@ public class GamePanel extends AnimatedPanel {
         
         int height = getHeight();
         int width = getWidth();
+
         
         for (Entity ent : this.entities) {
         	if(isTouching(ent,this.player)) {
@@ -108,14 +114,15 @@ public class GamePanel extends AnimatedPanel {
         		collide(ent,ent2);
         	}
             }
-        	ent.draw(g, (int) playerPos[0], (int) playerPos[1]);
-        	ent.move((int) playerPos[0], (int) playerPos[1]);
+            if (ent instanceof Player) {
+            	this.player.draw(g, this.mouseX, this.mouseY);
+                this.player.move(mouseX, mouseY);
+            } else {
+            	ent.draw(g, (int) playerPos[0], (int) playerPos[1]);
+            	ent.move((int) playerPos[0], (int) playerPos[1]);
+            }
         	ent.setHeight(height);
         	ent.setWidth(width);
         }
-        this.player.setHeight(height);
-        this.player.setWidth(width);
-        this.player.draw(g, this.mouseX, this.mouseY);
-        this.player.move(mouseX, mouseY);
     }
 }
