@@ -24,6 +24,7 @@ public class Entity {
 	private double sprintEndurance = 240;
 	private double maxSprintEndurance = 240;
 	private int sprintingDisabled = 0;
+	private int health = 0;
 	
 	public Entity(double x, double y, int width, int height, int moveSpeedMod, String imgPath, int drawWidth,
 			int drawHeight, double maxSpeed, double sprintSpeed) {
@@ -184,5 +185,11 @@ public class Entity {
 	}
 	public void setSprintingDisabled(int sprintingDisabled) {
 		this.sprintingDisabled = sprintingDisabled;
+	}
+	public int getHealth() {
+		return health;
+	}
+	public void setHealth(int health) {
+		this.health = health;
 	}
 }
