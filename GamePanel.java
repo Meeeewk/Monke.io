@@ -49,7 +49,7 @@ public class GamePanel extends AnimatedPanel {
     public void createObjects() {
     	this.player = new Player();
     	for(int i=0;i<5;i++) {
-        	this.entities.add(new Bot(Math.random() * 100, Math.random() * 100));
+        	this.entities.add(new Bot(Math.random()*1000, Math.random()*1000));
     	}
     }
     private boolean isTouching(Entity e,Entity e2) {
@@ -57,20 +57,34 @@ public class GamePanel extends AnimatedPanel {
     	double y1 = e2.getY();
     	double x2 = e.getX();
     	double y2 = e.getY();
-    	int radius1 = (e2.getDrawWidth()-25)/2;
-    	int radius2 = (e.getDrawWidth()-25)/2;
+    	//radius is sketchy, change the 28 to different numbers and see
+    	int radius1 = (e2.getDrawWidth()-28)/2;
+    	int radius2 = (e.getDrawWidth()-28)/2;
     	double xDif = x1 - x2;
     	double yDif = y1 - y2;
     	double distanceSquared = xDif * xDif + yDif * yDif;
     	return distanceSquared < (radius1 + radius2) * (radius1 + radius2);
     }
+    private double value(Entity e, Entity e2, boolean isY) {
+    	double x1 = e.getX();
+    	double y1 = e.getY();
+    	double x2 = e2.getX();
+    	double y2 = e2.getY();
+    	int radius1 = (e.getDrawWidth()-25)/2;
+    	if(isY) {
+    		return y1+(e.compareTo(e2)==0?0:radius1*(y2-y1)/e.compareTo(e2));
+    	}
+    	else {
+    		return x1+(e.compareTo(e2)==0?0:radius1*(x2-x1)/e.compareTo(e2));
+    	}
+    }
     private void collide(Entity e,Entity e2) {
     	while(isTouching(e,e2)) {
-			e2.setX(e2.getX()-(e2.getxVelocity()==0?0.5:e2.getxVelocity())/10);
-			e2.setY(e2.getY()-(e2.getyVelocity()==0?0.5:e2.getyVelocity())/10);
+    		double j = 2*(value(e,e2,false)-(value(e2,e,false)+value(e,e2,false))/2);
+    		double t = 2*(value(e,e2,true)-(value(e2,e,true)+value(e,e2,true))/2);
+    		e2.setX(e2.getX()+j);
+			e2.setY(e2.getY()+t);
 		}
-		e2.setxVelocity(e2.getxVelocity()/20);
-		e2.setyVelocity(e2.getyVelocity()/20);
     }
     @Override
     public void paintComponent(Graphics g) {

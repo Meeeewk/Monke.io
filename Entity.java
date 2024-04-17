@@ -42,6 +42,9 @@ public class Entity {
 		this.setDrawHeight(drawHeight);
 		this.setDrawWidth(drawWidth);
 	}
+	public double compareTo(Entity e) {
+		return Math.sqrt(Math.pow(this.getX()-e.getX(),2)+Math.pow(this.getY()-e.getY(),2));
+	}
 	public void move(double x, double y) {
 		this.setxVelocity(this.getxVelocity() + x / this.getMoveSpeedMod());
 		this.setyVelocity(this.getyVelocity() + y / this.getMoveSpeedMod());
