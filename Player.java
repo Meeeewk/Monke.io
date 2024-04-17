@@ -47,7 +47,7 @@ public class Player extends Entity {
 	    this.xp++;
 	    this.xp%= this.xpGoal;
 	    g2d.setColor(Color.gray);
-	    g2d.fillRect(70, this.getHeight() / 2 - 300, 20, 600);
+	    g2d.fillRect(65, this.getHeight() / 2 - 300 - 5, 30, 610);
 	    g2d.setColor(Player.healthToColor(this.getHealth() / 100.0));
 	    g2d.fillRect(70, this.getHeight() / 2 + 300 - (this.getHealth() * 6), 20, this.getHealth() * 6);
 	    this.setHealth((this.getHealth() + 1) % 100);
