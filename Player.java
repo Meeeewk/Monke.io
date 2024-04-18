@@ -3,7 +3,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
-public class Player extends Entity {
+public class Player extends MovingEntity {
 	private int xp = 0;
 	private int xpGoal = 200;
 

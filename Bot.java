@@ -2,7 +2,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
-public class Bot extends Entity {
+public class Bot extends MovingEntity {
 	private double lazyLength;
 	private int frames = 0;
 	private double xRoam = Math.random() * 200 - 100;
@@ -19,7 +19,7 @@ public class Bot extends Entity {
 	
 	public Bot(double x, double y) {
 		this(x, y, 400, 400, 120, "Hyena-S2.png", 100, 100, Math.sqrt(100), 400, Math.sqrt(192));
-		int rnd = (int) (Math.random() * 400 + 100);
+		int rnd = (int) (Math.random() * 100 + 100);
 		this.setDrawHeight(rnd);
 		this.setDrawWidth(rnd);
 	}
