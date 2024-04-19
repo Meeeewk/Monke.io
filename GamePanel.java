@@ -10,8 +10,8 @@ public class GamePanel extends AnimatedPanel {
 	private Player player;
 	private int mouseX;
 	private int mouseY;
-	private int boundingX = 1000;
-	private int boundingY = 1000;
+	private int boundingX = 10000;
+	private int boundingY = 10000;
 
 	@Override
 	public void updateAnimation() {
@@ -52,13 +52,13 @@ public class GamePanel extends AnimatedPanel {
 
 	public void createObjects() {
 		this.player = new Player();
-		for (int i = 0; i < 5; i++) {
-			this.entities.add(new Bot(Math.random() * 900, Math.random() * 900));
-		}
-		for (int j = 0; j < 20; j++) {
-			this.entities.add(new Consumable(Math.random() * 900, Math.random() * 900, "banana"));
-		}
 		this.entities.add(this.player);
+		for (int i = 0; i < 200; i++) {
+			this.entities.add(new Bot(Math.random() * 9000, Math.random() * 9000));
+		}
+		for (int j = 0; j < 200; j++) {
+			this.entities.add(new Consumable(Math.random() * 9000, Math.random() * 9000, "banana"));
+		}
 	}
 
 	private boolean isTouching(Entity e, Entity e2) {
@@ -139,8 +139,8 @@ public class GamePanel extends AnimatedPanel {
 //		g.fillRect(boundingX- (int) playerPos[0]+getWidth()-450, boundingY-(int) playerPos[1]-getHeight()-530, 10,boundingY*2);
 //		g.fillRect(-boundingX- (int) playerPos[0]+getWidth()-450, boundingY-(int) playerPos[1]-getHeight()-530, 10,boundingY*2);
 		g.setColor(Color.BLACK);
-		for (int i = -2000; i <= 2000; i += 100) {
-			for (int j = -2000; j <= 2000; j += 100) {
+		for (int i = -boundingX; i <= boundingX; i += 100) {
+			for (int j = -boundingY; j <= boundingY; j += 100) {
 				g.drawRect(i - (int) playerPos[0], j - (int) playerPos[1], 1, 200);
 				g.drawRect(i - (int) playerPos[0], j - (int) playerPos[1], 200, 1);
 			}
@@ -148,27 +148,42 @@ public class GamePanel extends AnimatedPanel {
 
 		int height = getHeight();
 		int width = getWidth();
-
+		ArrayList<Integer> delete = new ArrayList<>();
 		for (Entity ent : this.entities) {
-			if (isTouching(ent, this.player)) {
-				collide(this.player, ent);
-			}
 			for (Entity ent2 : this.entities) {
 				if (ent != ent2 && isTouching(ent, ent2)) {
-					if (ent2 instanceof Consumable) {
-						collide(ent, ent2);
-					} else {
+					if (ent2 instanceof MovingEntity&&ent instanceof MovingEntity) {
 						collide(ent2, ent);
+						if(((MovingEntity) ent).getHitCooldown()==0) {
+							((MovingEntity) ent).setHitCooldown(30);
+							((MovingEntity) ent).setHealth(((MovingEntity) ent).getHealth()-10);
+						}
+						if(((MovingEntity) ent).getHealth()<=0){
+							delete.add(this.entities.indexOf(ent));
+							((MovingEntity) ent).setHealth(0);
+						}
+					} else {
+						if(ent instanceof Consumable) {
+							collide(ent2, ent);
+						}
+						else {
+							collide(ent, ent2);
+						}
 					}
 				}
 			}
 			if (ent instanceof Player) {
-				this.player.draw(g, this.mouseX, this.mouseY);
-				this.player.move(mouseX, mouseY);
 			} else {
+				// draw health bar
+				
 				ent.draw(g, (int) playerPos[0], (int) playerPos[1]);
 				if (ent instanceof MovingEntity) {
+					if(this.entities.contains(this.player)) {
 					((MovingEntity) ent).move((int) playerPos[0], (int) playerPos[1]);
+					}
+					else {
+						((MovingEntity) ent).move(10000000, 10000000);
+					}
 				}
 			}
 			if (isPastBounding(ent)) {
@@ -178,5 +193,16 @@ public class GamePanel extends AnimatedPanel {
 			ent.setWidth(width);
 		}
 
+		if(this.entities.contains(this.player))
+			this.player.draw(g, this.mouseX, this.mouseY);
+		if(this.entities.contains(this.player)) {
+		this.player.move(mouseX, mouseY,!this.entities.contains(this.player));
+		}
+		else {
+			this.player.move(0, 0,!this.entities.contains(this.player));
+		}
+		for (int ent : delete) {
+			this.entities.remove(ent);
+		}
 	}
 }

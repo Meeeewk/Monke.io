@@ -24,8 +24,8 @@ public class MovingEntity extends Entity {
 	private double sprintEndurance = 240;
 	private double maxSprintEndurance = 240;
 	private int sprintingDisabled = 0;
-	private int health = 100;
-	
+	private double health = 100;
+	private double hitCooldown=10;
 	public MovingEntity(double x, double y, int width, int height, int moveSpeedMod, String imgPath, int drawWidth,
 			int drawHeight, double maxSpeed, double sprintSpeed) {
 		super(x,y);
@@ -185,10 +185,16 @@ public class MovingEntity extends Entity {
 	public void setSprintingDisabled(int sprintingDisabled) {
 		this.sprintingDisabled = sprintingDisabled;
 	}
-	public int getHealth() {
+	public double getHealth() {
 		return health;
 	}
-	public void setHealth(int health) {
-		this.health = health;
+	public void setHealth(double d) {
+		this.health = d;
+	}
+	public double getHitCooldown() {
+		return hitCooldown;
+	}
+	public void setHitCooldown(double hitCooldown) {
+		this.hitCooldown = hitCooldown;
 	}
 }

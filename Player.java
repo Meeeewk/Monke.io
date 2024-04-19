@@ -6,7 +6,9 @@ import java.awt.geom.AffineTransform;
 public class Player extends MovingEntity {
 	private int xp = 0;
 	private int xpGoal = 200;
-
+	private int frames = 0;
+	private double xRoam = Math.random() * 200 - 100;
+	private double yRoam = Math.random() * 200 - 100;
 
 	public Player(double x, double y, int width, int height, int moveSpeedMod, int drawWidth, int drawHeight,String playerImage, double maxSpeed, double sprintSpeed) {
 		super(x,y,width,height,moveSpeedMod,playerImage,drawWidth,drawHeight,maxSpeed, sprintSpeed);
@@ -15,7 +17,6 @@ public class Player extends MovingEntity {
 	public Player() {
 		this(0.0,0.0,400,400,60,100,100,"Hyena-S2.png", Math.sqrt(162), Math.sqrt(243));
 	}
-
 	@Override
 	public void draw(Graphics g, int cursorX, int cursorY) {
 	    Graphics2D g2d = (Graphics2D) g;
@@ -49,8 +50,12 @@ public class Player extends MovingEntity {
 	    g2d.setColor(Color.gray);
 	    g2d.fillRect(65, this.getHeight() / 2 - 300 - 5, 30, 610);
 	    g2d.setColor(Player.healthToColor(this.getHealth() / 100.0));
-	    g2d.fillRect(70, this.getHeight() / 2 + 300 - (this.getHealth() * 6), 20, this.getHealth() * 6);
-	    this.setHealth((this.getHealth() + 1) % 100);
+	    System.out.println(this.getHealth());
+	    this.setHitCooldown(this.getHitCooldown()<=0?0:this.getHitCooldown() - 0.5);
+	    g2d.fillRect(70, (int) (this.getHeight() / 2 + 300 - (this.getHealth() * 6)), 20, (int) this.getHealth() * 6);
+	    if(this.getHealth()>0) {
+	    	this.setHealth(this.getHealth()+0.01);
+	    }
 	}
 	public static Color healthToColor(double percentage) {
 	    if (percentage > 1) {
@@ -64,10 +69,24 @@ public class Player extends MovingEntity {
 	    int blue = 0;
 	    return new Color(red, green, blue);
 	}
-	@Override
-	public void move(double cursorX, double cursorY) {
-		cursorX -= this.getWidth() / 2;
-	    cursorY -= this.getHeight() / 2;
+	
+	public void move(double cursorX, double cursorY,boolean isDead) {
+		if(isDead) {
+			if (frames > 120) {
+				frames = 0;
+				xRoam = Math.random() * 200 - 100;
+				yRoam = Math.random() * 200 - 100;
+			} else {
+				cursorX = xRoam;
+				cursorY = yRoam;
+				frames++;
+			}
+		}
+		else {
+			frames=0;
+			cursorX -= this.getWidth() / 2;
+		    cursorY -= this.getHeight() / 2;
+		}
 		super.move(cursorX, cursorY);
 	}
 }
