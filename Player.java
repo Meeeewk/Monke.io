@@ -15,7 +15,10 @@ public class Player extends MovingEntity {
 	}
 
 	public Player() {
-		this(0.0,0.0,400,400,60,100,100,"Hyena-S2.png", Math.sqrt(162), Math.sqrt(243));
+		this(0.0,0.0,400,400,60,100,100,"Hyena-S2.png", Math.sqrt(162), Math.sqrt(243));		
+		int rnd = (int) (Math.random() * 100 + 100);
+		this.setDrawHeight(rnd);
+		this.setDrawWidth(rnd);
 	}
 	@Override
 	public void draw(Graphics g, int cursorX, int cursorY) {
@@ -50,10 +53,9 @@ public class Player extends MovingEntity {
 	    g2d.setColor(Color.gray);
 	    g2d.fillRect(65, this.getHeight() / 2 - 300 - 5, 30, 610);
 	    g2d.setColor(Player.healthToColor(this.getHealth() / 100.0));
-	    System.out.println(this.getHealth());
 	    this.setHitCooldown(this.getHitCooldown()<=0?0:this.getHitCooldown() - 0.5);
 	    g2d.fillRect(70, (int) (this.getHeight() / 2 + 300 - (this.getHealth() * 6)), 20, (int) this.getHealth() * 6);
-	    if(this.getHealth()>0) {
+	    if(this.getHealth()>0&&this.getHealth()<100) {
 	    	this.setHealth(this.getHealth()+0.01);
 	    }
 	}

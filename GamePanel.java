@@ -173,6 +173,7 @@ public class GamePanel extends AnimatedPanel {
 				}
 			}
 			if (ent instanceof Player) {
+				this.player.draw(g, this.mouseX, this.mouseY);
 			} else {
 				// draw health bar
 				
@@ -193,8 +194,6 @@ public class GamePanel extends AnimatedPanel {
 			ent.setWidth(width);
 		}
 
-		if(this.entities.contains(this.player))
-			this.player.draw(g, this.mouseX, this.mouseY);
 		if(this.entities.contains(this.player)) {
 		this.player.move(mouseX, mouseY,!this.entities.contains(this.player));
 		}
