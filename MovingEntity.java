@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -44,6 +45,18 @@ public class MovingEntity extends Entity {
 	}
 	public double compareTo(Entity e) {
 		return Math.sqrt(Math.pow(this.getX()-e.getX(),2)+Math.pow(this.getY()-e.getY(),2));
+	}
+	public Color healthToColor(double percentage) {
+	    if (percentage > 1) {
+	        percentage = 1;
+	    }
+	    else if (percentage < 0) {
+	        percentage = 0;
+	    }
+	    int red = (int)((129.0 * (1 - percentage)) + 125) ;
+	    int green = (int)((204.0 * (percentage)) + 50) ;
+	    int blue = 0;
+	    return new Color(red, green, blue);
 	}
 	public void move(double x, double y) {
 		this.setxVelocity(this.getxVelocity() + x / this.getMoveSpeedMod());

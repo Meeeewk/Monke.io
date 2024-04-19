@@ -3,6 +3,7 @@ import java.awt.event.*;
 import java.util.List;
 import javax.swing.SwingUtilities;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class GamePanel extends AnimatedPanel {
 	private ArrayList<Entity> entities = new ArrayList<>();
@@ -10,8 +11,8 @@ public class GamePanel extends AnimatedPanel {
 	private Player player;
 	private int mouseX;
 	private int mouseY;
-	private int boundingX = 10000;
-	private int boundingY = 10000;
+	private int boundingX = 1000;
+	private int boundingY = 1000;
 
 	@Override
 	public void updateAnimation() {
@@ -53,8 +54,8 @@ public class GamePanel extends AnimatedPanel {
 	public void createObjects() {
 		this.player = new Player();
 		this.entities.add(this.player);
-		for (int i = 0; i < 200; i++) {
-			this.entities.add(new Bot(Math.random() * 9000, Math.random() * 9000));
+		for (int i = 0; i < 3; i++) {
+			this.entities.add(new Bot(Math.random() * 900, Math.random() * 900));
 		}
 		for (int j = 0; j < 200; j++) {
 			this.entities.add(new Consumable(Math.random() * 9000, Math.random() * 9000, "banana"));
@@ -135,9 +136,9 @@ public class GamePanel extends AnimatedPanel {
 		super.paintComponent(g);
 		double[] playerPos = player.getPos();
 		g.setColor(Color.CYAN);
-//		System.out.println(getWidth());
-//		g.fillRect(boundingX- (int) playerPos[0]+getWidth()-450, boundingY-(int) playerPos[1]-getHeight()-530, 10,boundingY*2);
-//		g.fillRect(-boundingX- (int) playerPos[0]+getWidth()-450, boundingY-(int) playerPos[1]-getHeight()-530, 10,boundingY*2);
+		System.out.println(getWidth());
+		g.fillRect(boundingX- (int) playerPos[0]+getWidth()-450, boundingY-(int) playerPos[1]-getHeight()-530, 10,boundingY*2);
+		g.fillRect(-boundingX- (int) playerPos[0]+getWidth()-450, boundingY-(int) playerPos[1]-getHeight()-530, 10,boundingY*2);
 		g.setColor(Color.BLACK);
 		for (int i = -boundingX; i <= boundingX; i += 100) {
 			for (int j = -boundingY; j <= boundingY; j += 100) {
@@ -183,7 +184,7 @@ public class GamePanel extends AnimatedPanel {
 					((MovingEntity) ent).move((int) playerPos[0], (int) playerPos[1]);
 					}
 					else {
-						((MovingEntity) ent).move(10000000, 10000000);
+						((MovingEntity) ent).move(ent.getX() + Math.random() * 2000 - 1000, ent.getY() + Math.random() * 2000 - 1000);
 					}
 				}
 			}
@@ -200,8 +201,14 @@ public class GamePanel extends AnimatedPanel {
 		else {
 			this.player.move(0, 0,!this.entities.contains(this.player));
 		}
-		for (int ent : delete) {
-			this.entities.remove(ent);
+		Collections.sort(delete);
+		for (int i = 0; i < delete.size(); i++) {
+			try {
+				this.entities.remove(this.entities.get(delete.get(i) - i));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
+		delete.clear();
 	}
 }

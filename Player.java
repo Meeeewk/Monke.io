@@ -52,25 +52,14 @@ public class Player extends MovingEntity {
 	    this.xp%= this.xpGoal;
 	    g2d.setColor(Color.gray);
 	    g2d.fillRect(65, this.getHeight() / 2 - 300 - 5, 30, 610);
-	    g2d.setColor(Player.healthToColor(this.getHealth() / 100.0));
+	    g2d.setColor(this.healthToColor(this.getHealth() / 100.0));
 	    this.setHitCooldown(this.getHitCooldown()<=0?0:this.getHitCooldown() - 0.5);
 	    g2d.fillRect(70, (int) (this.getHeight() / 2 + 300 - (this.getHealth() * 6)), 20, (int) this.getHealth() * 6);
 	    if(this.getHealth()>0&&this.getHealth()<100) {
 	    	this.setHealth(this.getHealth()+0.01);
 	    }
 	}
-	public static Color healthToColor(double percentage) {
-	    if (percentage > 1) {
-	        percentage = 1;
-	    }
-	    else if (percentage < 0) {
-	        percentage = 0;
-	    }
-	    int red = (int)((129.0 * (1 - percentage)) + 125) ;
-	    int green = (int)((204.0 * (percentage)) + 50) ;
-	    int blue = 0;
-	    return new Color(red, green, blue);
-	}
+
 	
 	public void move(double cursorX, double cursorY,boolean isDead) {
 		if(isDead) {
