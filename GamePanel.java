@@ -60,6 +60,7 @@ public class GamePanel extends AnimatedPanel {
 		for (int j = 0; j < 200; j++) {
 			this.entities.add(new Consumable(Math.random() * 9000, Math.random() * 9000, "banana"));
 		}
+		this.entities.add(new Obstacle(Math.random() * 100, Math.random() * 100, "tree",false));
 	}
 
 	private boolean isTouching(Entity e, Entity e2) {
@@ -94,10 +95,20 @@ public class GamePanel extends AnimatedPanel {
 
 	private void collide(Entity e, Entity e2) {
 		if (isTouching(e, e2)) {
+			if(e2 instanceof Obstacle && !((Obstacle) e2).isMoveable()
+//					&&(e2.getDrawHeight()/2)<e.getDrawHeight()
+					) {
+				double j = 2 * (value(e2, e, false) - (value(e, e2, false) + value(e2, e, false)) / 2);
+				double t = 2 * (value(e2, e, true) - (value(e, e2, true) + value(e2, e, true)) / 2);
+				e.setX(e.getX() + j);
+				e.setY(e.getY() + t);
+			}
+			else {
 			double j = 2 * (value(e, e2, false) - (value(e2, e, false) + value(e, e2, false)) / 2);
 			double t = 2 * (value(e, e2, true) - (value(e2, e, true) + value(e, e2, true)) / 2);
 			e2.setX(e2.getX() + j);
 			e2.setY(e2.getY() + t);
+			}
 		}
 	}
 
