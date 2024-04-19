@@ -11,8 +11,8 @@ public class GamePanel extends AnimatedPanel {
 	private Player player;
 	private int mouseX;
 	private int mouseY;
-	private int boundingX = 1000;
-	private int boundingY = 1000;
+	private int boundingX = 500;
+	private int boundingY = 500;
 
 	@Override
 	public void updateAnimation() {
@@ -146,10 +146,13 @@ public class GamePanel extends AnimatedPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		double[] playerPos = player.getPos();
+		// Drawing map borders
 		g.setColor(Color.CYAN);
-		System.out.println(getWidth());
-		g.fillRect(boundingX- (int) playerPos[0]+getWidth()-450, boundingY-(int) playerPos[1]-getHeight()-530, 10,boundingY*2);
-		g.fillRect(-boundingX- (int) playerPos[0]+getWidth()-450, boundingY-(int) playerPos[1]-getHeight()-530, 10,boundingY*2);
+		g.fillRect(boundingX - (int) playerPos[0] + getWidth() / 2, -boundingY - (int) playerPos[1] + getHeight() / 2, 10,boundingY*2);
+		g.fillRect(-boundingX - (int) playerPos[0] + getWidth() / 2, -boundingY -(int) playerPos[1] + getHeight() / 2, 10,boundingY*2);
+		g.fillRect(-boundingX - (int) playerPos[0] + getWidth() / 2, -boundingY - (int) playerPos[1] + getHeight() / 2, boundingX*2,10);
+		g.fillRect(-boundingX - (int) playerPos[0] + getWidth() / 2, boundingY - (int) playerPos[1] + getHeight() / 2, boundingX*2,10);
+		// 
 		g.setColor(Color.BLACK);
 		for (int i = -boundingX; i <= boundingX; i += 100) {
 			for (int j = -boundingY; j <= boundingY; j += 100) {
