@@ -9,10 +9,17 @@ public class Entity {
 	private int drawHeight;
 	private Image playerImage;
 	private double facingDir;
-	
+	private double z;
 	public Entity(double x, double y) {
 		this.setX(x);
 		this.setY(y);
+		this.setZ(1);
+	}
+	public double getZ() {
+		return this.z;
+	}
+	public void setZ(double z) {
+		this.z=z;
 	}
 	public double compareTo(Entity e) {
 		return Math.sqrt(Math.pow(this.getX()-e.getX(),2)+Math.pow(this.getY()-e.getY(),2));

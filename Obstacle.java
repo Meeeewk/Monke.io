@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -18,9 +19,9 @@ public class Obstacle extends Entity{
 	private double facingDir;
 	private String name;
 	private int xp;
-	private boolean moveable=false;
+	private String state="moveable";
 	public Obstacle(double x, double y, int width, int height, String imgPath, int drawWidth,
-			int drawHeight,String name,int xp,boolean moveable) {
+			int drawHeight,String name,int xp,String moveable) {
 		super(x,y);
 		this.setXp(xp);
 		this.setName(name);
@@ -33,31 +34,33 @@ public class Obstacle extends Entity{
 		}
 		this.setDrawHeight(drawHeight);
 		this.setDrawWidth(drawWidth);
-		this.setMoveable(this.moveable);
+		this.setState(moveable);
 	}
-	public Obstacle(double x, double y, String name,boolean moveable) {
+	public Obstacle(double x, double y, String name,String moveable) {
 		super(x,y);
+		this.setZ(2);
 		this.setXp(50);
 		this.setName(name);
-		this.setWidth(800);
-		this.setHeight(800);
+		int w=(int)(Math.random()*500)+500;
+		this.setWidth(w*2);
+		this.setHeight(w*2);
 		try {
 			this.setPlayerImage(ImageIO.read(new File(name+".png")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		this.setDrawHeight(400);
-		this.setDrawWidth(400);
-		this.setMoveable(this.moveable);
+		this.setDrawHeight(w);
+		this.setDrawWidth(w);
+		this.setState(moveable);
 	}
 	public int getXp() {
 		return this.xp;
 	}
-	public boolean isMoveable() {
-		return this.moveable;
+	public String getState() {
+		return this.state;
 	}
-	private void setMoveable(boolean moveable) {
-		this.moveable=moveable;
+	private void setState(String moveable) {
+		this.state=moveable;
 	}
 	private void setXp(int xp) {
 		this.xp=xp;
@@ -74,7 +77,9 @@ public class Obstacle extends Entity{
 	    //		Predator red circle behind
 	    //	    g2d.fillOval((int) (this.getX() - playerX - (this.getDrawWidth() * 0.72) / 2.0 + this.getWidth() / 2), (int) (this.getY() - playerY - (this.getDrawHeight() * 0.72) / 2.0 + this.getHeight() / 2), (int) (this.getDrawWidth() * 0.72), (int) (this.getDrawHeight() * 0.72));
 		g2d.drawImage(this.getPlayerImage(),(int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + this.getWidth() / 2),(int) (this.getY() - playerY - this.getDrawHeight() / 2.0 + this.getHeight() / 2), this.getDrawWidth(), this.getDrawHeight(), null);
-	    g2d.setTransform(old);
+		g2d.setColor(Color.red);
+	    g2d.drawString("z: "+this.getZ(), (int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + this.getWidth() / 2), (int) (this.getY() - playerY - this.getDrawHeight() / 2.0 + this.getHeight() / 2));
+		g2d.setTransform(old);
 	    g2d.drawOval((int) (this.getX() - playerX - (this.getDrawWidth() * 0.72) / 2.0 + this.getWidth() / 2), (int) (this.getY() - playerY - (this.getDrawHeight() * 0.72) / 2.0 + this.getHeight() / 2), (int) (this.getDrawWidth() * 0.72), (int) (this.getDrawHeight() * 0.72));
 	}
 	public double[] getPos() {

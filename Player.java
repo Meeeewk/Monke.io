@@ -16,7 +16,7 @@ public class Player extends MovingEntity {
 
 	public Player() {
 		this(0.0,0.0,400,400,60,100,100,"Hyena-S2.png", Math.sqrt(162), Math.sqrt(243));		
-		int rnd = (int) (Math.random() * 100 + 100);
+		int rnd = (int) (Math.random() * 100 + 20);
 		this.setDrawHeight(rnd);
 		this.setDrawWidth(rnd);
 	}
@@ -33,9 +33,15 @@ public class Player extends MovingEntity {
 	    }
 	    this.setFacingDir(3 * Math.PI / 2 - angle);
 	    g2d.rotate(this.getFacingDir(), this.getWidth() / 2, this.getHeight() / 2);
+	    
 	    g2d.drawImage(this.getPlayerImage(), this.getWidth() / 2 - this.getDrawWidth() / 2, this.getHeight() / 2 - this.getDrawHeight() / 2, this.getDrawWidth(), this.getDrawHeight(), null);
-	    g2d.setTransform(old);
+	    g2d.setColor(new Color(255, 0, 0, (int)this.getHitCooldown()*3));
+	    g2d.fillOval((int)(this.getWidth() / 2 - (this.getDrawWidth() * 0.72) / 2),(int)( this.getHeight() / 2 - (this.getDrawHeight() * 0.72) / 2), (int) (this.getDrawWidth() * 0.72), (int) (this.getDrawHeight() * 0.72));
+	    g2d.setColor(Color.red);
+	    g2d.drawString("z: "+this.getZ(), (int)(this.getWidth() / 2 - (this.getDrawWidth() * 0.72) / 2), (int)( this.getHeight() / 2 - (this.getDrawHeight() * 0.72) / 2)-30);
 	    g2d.setColor(Color.gray);
+	    g2d.setTransform(old);
+
 	    g2d.fillRect((int) (this.getWidth() / 2 - xpGoal * 3.2 / 2), 80,(int) (this.xpGoal * 3.2), 20);
 	   
 	    g2d.setColor(Color.yellow);
