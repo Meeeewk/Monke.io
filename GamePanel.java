@@ -163,18 +163,23 @@ public class GamePanel extends AnimatedPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		double[] playerPos = player.getPos();
+		double playerZ = player.getZ();
 		// Drawing map borders
 		g.setColor(Color.CYAN);
-//		g.fillRect(boundingX - (int) playerPos[0] + getWidth() / 2, -boundingY - (int) playerPos[1] + getHeight() / 2-this.getHeight(), this.getWidth(),boundingY*8);
-//		g.fillRect(-boundingX - (int) playerPos[0] + getWidth() / 2-this.getWidth(), -boundingY -(int) playerPos[1] + getHeight() / 2, this.getWidth(),boundingY*8);
-//		g.fillRect(-boundingX - (int) playerPos[0] + getWidth() / 2, -boundingY - (int) playerPos[1] + getHeight() / 2 - this.getHeight()-60, boundingX*8,this.getHeight());
-//		g.fillRect(-boundingX - (int) playerPos[0] + getWidth() / 2, boundingY - (int) playerPos[1] + getHeight() / 2, boundingX*8,this.getHeight());
-//		// 
+		//Top
+		g.fillRect(-boundingX - (int) playerPos[0] - 100,-boundingY - (int) playerPos[1] - getHeight() / 2 - 100, boundingX*2 + getHeight() + 200,this.getHeight() + 100);
+		//Left
+		g.fillRect(-boundingX - (int) playerPos[0] - 100, -boundingY - (int) playerPos[1] - 100,getWidth() / 2 + 100, boundingY * 2 + getHeight() + 200);
+		//Right
+		g.fillRect(boundingX - (int) playerPos[0] + getWidth() / 2, -boundingY - (int) playerPos[1] - 100, this.getWidth(), boundingY * 2 + getHeight() + 200);
+		//Bottom
+		g.fillRect(-boundingX - (int) playerPos[0] - 100,boundingY - (int) playerPos[1] + getHeight() / 2, boundingX*2 + getHeight() + 200,this.getHeight() + 100);
+		// 
 		g.setColor(Color.BLACK);
 		for (int i = -boundingX; i <= boundingX; i += 100) {
 			for (int j = -boundingY; j <= boundingY; j += 100) {
-				g.drawRect(i - (int) playerPos[0], j - (int) playerPos[1], 1, 200);
-				g.drawRect(i - (int) playerPos[0], j - (int) playerPos[1], 200, 1);
+				g.drawRect(i - (int) playerPos[0], j - (int) playerPos[1] + getWidth() / 2, 1, 200);
+				g.drawRect(i - (int) playerPos[0], j - (int) playerPos[1] + getWidth() / 2, 200, 1);
 			}
 		}
 
@@ -274,7 +279,7 @@ ent.setZ(1.0);
 		        ent.draw(g, (int) playerPos[0], (int) playerPos[1]);
 		        if (ent instanceof MovingEntity) {
 		            if (this.entities.contains(this.player)) {
-		                ((MovingEntity) ent).move((int) playerPos[0], (int) playerPos[1]);
+		                ((MovingEntity) ent).move((int) playerPos[0], (int) playerPos[1], playerZ);
 		            } else {
 		                double x = ent.getX() + Math.random() * 2000 - 1000;
 		                double y = ent.getY() + Math.random() * 2000 - 1000;
@@ -288,7 +293,7 @@ ent.setZ(1.0);
 		                } else if (y < -boundingX) {
 		                    y = -boundingX;
 		                }
-		                ((MovingEntity) ent).move(x, y);
+		                ((MovingEntity) ent).move(x, y, playerZ);
 		            }
 		        }
 		    }

@@ -84,6 +84,6 @@ public class Player extends MovingEntity {
 			cursorX -= this.getWidth() / 2;
 		    cursorY -= this.getHeight() / 2;
 		}
-		super.move(cursorX, cursorY);
+		super.move(cursorX, cursorY, 1.0);
 	}
 }

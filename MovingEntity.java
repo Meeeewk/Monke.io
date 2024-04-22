@@ -58,7 +58,7 @@ public class MovingEntity extends Entity {
 	    int blue = 0;
 	    return new Color(red, green, blue);
 	}
-	public void move(double x, double y) {
+	public void move(double x, double y, double z) {
 		this.setxVelocity(this.getxVelocity() + x / this.getMoveSpeedMod());
 		this.setyVelocity(this.getyVelocity() + y / this.getMoveSpeedMod());
 		double vectLen = Math.sqrt(Math.pow(this.getxVelocity(), 2) + Math.pow(this.getyVelocity(), 2));

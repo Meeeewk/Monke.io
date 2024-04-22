@@ -26,11 +26,11 @@ public class Bot extends MovingEntity {
 	}
 
 	@Override
-	public void move(double playerX, double playerY) {
+	public void move(double playerX, double playerY, double z) {
 		double relX = playerX - this.getX();
 		double relY = playerY - this.getY();
 		double vectLen = Math.sqrt(Math.pow(relX, 2) + Math.pow(relY, 2));
-		if (vectLen > (lazyLength*this.getDrawHeight()/200) + this.getDrawHeight() / 4) {
+		if (vectLen > (lazyLength*this.getDrawHeight()/200) + this.getDrawHeight() / 4 || z - this.getZ() > 1) {
 			if (frames > 120) {
 				frames = 0;
 				xRoam = Math.random() * 200 - 100;
@@ -43,7 +43,7 @@ public class Bot extends MovingEntity {
 		} else {
 			frames = 0;
 		}
-		super.move(relX, relY);
+		super.move(relX, relY, z);
 	}
 	@Override
 	public void draw(Graphics g, int playerX, int playerY) {
