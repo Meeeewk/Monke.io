@@ -60,28 +60,31 @@ public class GamePanel extends AnimatedPanel {
 			this.entities.add(new Bot(Math.random() * 1000, Math.random() * 1000));
 		}
 		for (int j = 0; j < 200; j++) {
-			this.entities.add(new Consumable(Math.random() * 9000,Math.random() * 9000, "banana"));
+			this.entities.add(new Consumable(Math.random() * 9000, Math.random() * 9000, "banana"));
 		}
 		for (int i = 0; i < 1; i++) {
-		this.entities.add(new Obstacle(Math.random() * 100, Math.random() * 100, "tree", "non-moveable"));
+			this.entities.add(new Obstacle(Math.random() * 100, Math.random() * 100, "tree", "non-moveable"));
 		}
 	}
 
 	private boolean isTouching(Entity e, Entity e2) {
-	    double x1 = e2.getX();
-	    double y1 = e2.getY();
-	    double x2 = e.getX();
-	    double y2 = e.getY();
-	    int radius1 = (e2.getDrawWidth()) / 2;
-	    radius1 = (int) (radius1 * 0.72);
-	    int radius2 = (e.getDrawWidth()) / 2;
-	    radius2 = (int) (radius2 * 0.72);
-	    double xDif = x1 - x2;
-	    double yDif = y1 - y2;
-	    double distanceSquared = xDif * xDif + yDif * yDif;
-	    double zDiff = Math.abs(e.getZ() - e2.getZ()); // Calculate the absolute difference in Z-coordinates
-	    return zDiff < 1 && distanceSquared < (radius1 + radius2) * (radius1 + radius2); // Adjust the condition to consider the Z-coordinate difference
+		double x1 = e2.getX();
+		double y1 = e2.getY();
+		double x2 = e.getX();
+		double y2 = e.getY();
+		int radius1 = (e2.getDrawWidth()) / 2;
+		radius1 = (int) (radius1 * 0.72);
+		int radius2 = (e.getDrawWidth()) / 2;
+		radius2 = (int) (radius2 * 0.72);
+		double xDif = x1 - x2;
+		double yDif = y1 - y2;
+		double distanceSquared = xDif * xDif + yDif * yDif;
+		double zDiff = Math.abs(e.getZ() - e2.getZ()); // Calculate the absolute difference in Z-coordinates
+		return zDiff < 1 && distanceSquared < (radius1 + radius2) * (radius1 + radius2); // Adjust the condition to
+																							// consider the Z-coordinate
+																							// difference
 	}
+
 	private boolean isTouching2(Entity e, Entity e2) {
 		double x1 = e2.getX();
 		double y1 = e2.getY();
@@ -97,6 +100,7 @@ public class GamePanel extends AnimatedPanel {
 		double distanceSquared = xDif * xDif + yDif * yDif;
 		return distanceSquared < (radius1 + radius2) * (radius1 + radius2);
 	}
+
 	private double value(Entity e, Entity e2, boolean isY) {
 		double x1 = e.getX();
 		double y1 = e.getY();
@@ -158,31 +162,7 @@ public class GamePanel extends AnimatedPanel {
 	private double getBoundingY() {
 		return this.boundingY;
 	}
-
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		double[] playerPos = player.getPos();
-		double playerZ = player.getZ();
-		// Drawing map borders
-		g.setColor(Color.CYAN);
-		//Top
-		g.fillRect(-boundingX - (int) playerPos[0] - 100,-boundingY - (int) playerPos[1] - getHeight() / 2 - 100, boundingX*2 + getHeight() + 200,this.getHeight() + 100);
-		//Left
-		g.fillRect(-boundingX - (int) playerPos[0] - 100, -boundingY - (int) playerPos[1] - 100,getWidth() / 2 + 100, boundingY * 2 + getHeight() + 200);
-		//Right
-		g.fillRect(boundingX - (int) playerPos[0] + getWidth() / 2, -boundingY - (int) playerPos[1] - 100, this.getWidth(), boundingY * 2 + getHeight() + 200);
-		//Bottom
-		g.fillRect(-boundingX - (int) playerPos[0] - 100,boundingY - (int) playerPos[1] + getHeight() / 2, boundingX*2 + getHeight() + 200,this.getHeight() + 100);
-		// 
-		g.setColor(Color.BLACK);
-		for (int i = -boundingX; i <= boundingX; i += 100) {
-			for (int j = -boundingY; j <= boundingY; j += 100) {
-				g.drawRect(i - (int) playerPos[0], j - (int) playerPos[1] + getWidth() / 2, 1, 200);
-				g.drawRect(i - (int) playerPos[0], j - (int) playerPos[1] + getWidth() / 2, 200, 1);
-			}
-		}
-
+	private void collideLogic(double[] playerPos, double playerZ,Graphics g) {
 		int height = getHeight();
 		int width = getWidth();
 		ArrayList<Integer> delete = new ArrayList<>();
@@ -196,116 +176,88 @@ public class GamePanel extends AnimatedPanel {
 				return 0;
 			}
 		});
-//		for (Entity e:this.entities) {
-//			System.out.print(e+" "+ e.getZ());
-//		}
-//		System.out.println();
-//		System.out.println(this.entities.toString());
 		for (Entity ent : this.entities) {
-		    boolean zSet = false; // Flag to track if Z-coordinate has been set for the current entity
+			boolean zSet = false; // Flag to track if Z-coordinate has been set for the current entity
 
-		    // Check for collision and set Z-coordinate
-		    for (Entity ent2 : this.entities) {
-		        if (ent != ent2 && isTouching2(ent, ent2)) {
-		            if ((ent instanceof Obstacle && ((Obstacle)ent).getState().equals("non-moveable") && (ent2 instanceof MovingEntity && ent2.getDrawWidth() < 120))
-		                    || (ent2 instanceof Obstacle && ((Obstacle)ent2).getState().equals("non-moveable") && (ent instanceof MovingEntity && ent.getDrawWidth() < 120))) {
-		                
-		                    if (ent instanceof Obstacle) {
-		                        ent2.setZ(3.0);
-		                    } else {zSet = true;
-		                        ent.setZ(3.0);
-		                    }
-		                    zSet = true; // Set flag to true after setting Z-coordinate
-		                
-		            } 
-//		            else if((ent2 instanceof MovingEntity && ent2.getDrawWidth() < 120)||(ent instanceof MovingEntity && ent.getDrawWidth() < 120)){
-//		            	// small ones that are not touching tree
-//		            	
-//		                    if (ent instanceof Obstacle) {
-//		                        ent2.setZ(1.0);
-//		                    } else {
-//		                    	
-//		                        ent.setZ(1.0);
-//		                    	
-//		                    }zSet = true;
-//		                     // Set flag to true after setting Z-coordinate
-//		                
-//		            }
-//		            else {
-//		            	
-//		            }
+			// Check for collision and set Z-coordinate
+			for (Entity ent2 : this.entities) {
+				if (ent != ent2 && isTouching2(ent, ent2)) {
+					if ((ent instanceof Obstacle && ((Obstacle) ent).getState().equals("non-moveable")
+							&& (ent2 instanceof MovingEntity && ent2.getDrawWidth() < 120))
+							|| (ent2 instanceof Obstacle && ((Obstacle) ent2).getState().equals("non-moveable")
+									&& (ent instanceof MovingEntity && ent.getDrawWidth() < 120))) {
 
-		            // Handle collision effects
-		            if (isTouching(ent, ent2)) {
-		            	if(ent instanceof Consumable||ent2 instanceof Consumable) {
-		            		
-		            	}
-		            	else {
-			            	System.out.println(ent+" "+ent.getZ());
-			            	System.out.println(ent2+" "+ent2.getZ());
-		            	}
+						if (ent instanceof Obstacle) {
+							ent2.setZ(3.0);
+						} else {
+							zSet = true;
+							ent.setZ(3.0);
+						}
+						zSet = true; // Set flag to true after setting Z-coordinate
 
-		                if (ent2 instanceof MovingEntity && ent instanceof MovingEntity) {
-		                    collide(ent2, ent);
-		                    if (((MovingEntity) ent).getHitCooldown() == 0) {
-		                        ((MovingEntity) ent).setHitCooldown(30);
-		                        ((MovingEntity) ent).setHealth(((MovingEntity) ent).getHealth() - 10);
-		                    }
-		                    if (((MovingEntity) ent).getHealth() <= 0) {
-		                        delete.add(this.entities.indexOf(ent));
-		                        ((MovingEntity) ent).setHealth(0);
-		                    }
-		                } else {
-		                    if (ent instanceof Consumable) {
-		                        collide(ent2, ent);
-		                    } else {
-		                        collide(ent, ent2);
-		                    }
-		                }
-		            }
-		        }
-		    }
-		    if(ent instanceof Player) {
-//		    	System.out.println(zSet);
-		    }
-if(!zSet&&!(ent instanceof Obstacle)) {
-ent.setZ(1.0);
-}
-		    // Draw entities and handle movement
-		    if (ent instanceof Player) {
-		        // Adjust Z-coordinate for player entity when near edges of other entities or objects
-		        this.player.draw(g, this.mouseX, this.mouseY);
-		    } else {
-		        ent.draw(g, (int) playerPos[0], (int) playerPos[1]);
-		        if (ent instanceof MovingEntity) {
-		            if (this.entities.contains(this.player)) {
-		                ((MovingEntity) ent).move((int) playerPos[0], (int) playerPos[1], playerZ);
-		            } else {
-		                double x = ent.getX() + Math.random() * 2000 - 1000;
-		                double y = ent.getY() + Math.random() * 2000 - 1000;
-		                if (y > boundingY) {
-		                    y = boundingY;
-		                } else if (y < -boundingY) {
-		                    y = -boundingY;
-		                }
-		                if (y < boundingX) {
-		                    y = boundingX;
-		                } else if (y < -boundingX) {
-		                    y = -boundingX;
-		                }
-		                ((MovingEntity) ent).move(x, y, playerZ);
-		            }
-		        }
-		    }
+					}
 
-		    // Check if entity is past bounding and adjust position if necessary
-		    if (isPastBounding(ent)) {
-		        movePastBounding(ent);
-		    }
+					// Handle collision effects
+					if (isTouching(ent, ent2)) {
+						if (ent2 instanceof MovingEntity && ent instanceof MovingEntity) {
+							collide(ent2, ent);
+							if (((MovingEntity) ent).getHitCooldown() == 0) {
+								((MovingEntity) ent).setHitCooldown(30);
+								((MovingEntity) ent).setHealth(((MovingEntity) ent).getHealth() - 10);
+							}
+							if (((MovingEntity) ent).getHealth() <= 0) {
+								delete.add(this.entities.indexOf(ent));
+								((MovingEntity) ent).setHealth(0);
+							}
+						} else {
+							if (ent instanceof Consumable) {
+								collide(ent2, ent);
+							} else {
+								collide(ent, ent2);
+							}
+						}
+					}
+				}
+			}
+			if (!zSet && !(ent instanceof Obstacle)) {
+				ent.setZ(1.0);
+			}
+			// Draw entities and handle movement
+			if (ent instanceof Player) {
+				// Adjust Z-coordinate for player entity when near edges of other entities or
+				// objects
+				this.player.draw(g, this.mouseX, this.mouseY);
+			} else {
+				ent.draw(g, (int) playerPos[0], (int) playerPos[1]);
+				if (ent instanceof MovingEntity) {
+					if (this.entities.contains(this.player)) {
+						((MovingEntity) ent).move((int) playerPos[0], (int) playerPos[1], playerZ);
+					} else {
+						double x = ent.getX() + Math.random() * 2000 - 1000;
+						double y = ent.getY() + Math.random() * 2000 - 1000;
+						if (y > boundingY) {
+							y = boundingY;
+						} else if (y < -boundingY) {
+							y = -boundingY;
+						}
+						if (y < boundingX) {
+							y = boundingX;
+						} else if (y < -boundingX) {
+							y = -boundingX;
+						}
+						((MovingEntity) ent).move(x, y, playerZ);
+					}
+				}
+			}
 
-		    // Update entity dimensions
-		    ent.setHeight(height);
-		    ent.setWidth(width);
+			// Check if entity is past bounding and adjust position if necessary
+			if (isPastBounding(ent)) {
+				movePastBounding(ent);
+			}
+
+			// Update entity dimensions
+			ent.setHeight(height);
+			ent.setWidth(width);
 		}
 
 		if (this.entities.contains(this.player)) {
@@ -322,5 +274,35 @@ ent.setZ(1.0);
 			}
 		}
 		delete.clear();
+	}
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		double[] playerPos = player.getPos();
+		double playerZ = player.getZ();
+		for (int i = -boundingX; i <= boundingX; i += 100) {
+			for (int j = -boundingY; j <= boundingY; j += 100) {
+				g.drawRect(i - (int) playerPos[0], j - (int) playerPos[1] + getWidth() / 2, 1, 200);
+				g.drawRect(i - (int) playerPos[0], j - (int) playerPos[1] + getWidth() / 2, 200, 1);
+			}
+		}
+		// Drawing map borders
+		g.setColor(Color.CYAN);
+		// Top
+		g.fillRect(-boundingX - (int) playerPos[0] - 100, -boundingY - (int) playerPos[1] - getHeight() / 2 - 100,
+				boundingX * 2 + getHeight() + 200, this.getHeight() + 100);
+		// Left
+		g.fillRect(-boundingX - (int) playerPos[0] - 100, -boundingY - (int) playerPos[1] - 100, getWidth() / 2 + 100,
+				boundingY * 2 + getHeight() + 200);
+		// Right
+		g.fillRect(boundingX - (int) playerPos[0] + getWidth() / 2, -boundingY - (int) playerPos[1] - 100,
+				this.getWidth(), boundingY * 2 + getHeight() + 200);
+		// Bottom
+		g.fillRect(-boundingX - (int) playerPos[0] - 100, boundingY - (int) playerPos[1] + getHeight() / 2,
+				boundingX * 2 + getHeight() + 200, this.getHeight() + 100);
+		//
+		g.setColor(Color.BLACK);
+
+		collideLogic(playerPos, playerZ,g);
 	}
 }
