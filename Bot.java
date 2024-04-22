@@ -20,7 +20,7 @@ public class Bot extends MovingEntity {
 	
 	public Bot(double x, double y) {
 		this(x, y, 400, 400, 120, "Hyena-S2.png", 100, 100, Math.sqrt(100), 400, Math.sqrt(192));
-		int rnd = (int) (Math.random() * 20 + 100);
+		int rnd = (int) (Math.random() * 20 + 200);
 		this.setDrawHeight(rnd);
 		this.setDrawWidth(rnd);
 	}

@@ -56,7 +56,7 @@ public class GamePanel extends AnimatedPanel {
 	public void createObjects() {
 		this.player = new Player();
 		this.entities.add(this.player);
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 1; i++) {
 			this.entities.add(new Bot(Math.random() * 1000, Math.random() * 1000));
 		}
 		for (int j = 0; j < 200; j++) {
@@ -96,11 +96,6 @@ public class GamePanel extends AnimatedPanel {
 		double yDif = y1 - y2;
 		double distanceSquared = xDif * xDif + yDif * yDif;
 		return distanceSquared < (radius1 + radius2) * (radius1 + radius2);
-	}
-	private void adjustPlayerZ(Entity ent, Entity ent2) {
-	    if (ent instanceof Player &&!(ent2 instanceof MovingEntity)&& ent2.getZ() > ent.getZ()) {
-	        ent.setZ(ent2.getZ());
-	    }
 	}
 	private double value(Entity e, Entity e2, boolean isY) {
 		double x1 = e.getX();
@@ -203,13 +198,10 @@ public class GamePanel extends AnimatedPanel {
 //		System.out.println(this.entities.toString());
 		for (Entity ent : this.entities) {
 		    boolean zSet = false; // Flag to track if Z-coordinate has been set for the current entity
-if(ent instanceof Player) {
-	System.out.println(ent.getZ());
-}
+
 		    // Check for collision and set Z-coordinate
 		    for (Entity ent2 : this.entities) {
 		        if (ent != ent2 && isTouching2(ent, ent2)) {
-		        	adjustPlayerZ(ent, ent2);
 		            if ((ent instanceof Obstacle && ((Obstacle)ent).getState().equals("non-moveable") && (ent2 instanceof MovingEntity && ent2.getDrawWidth() < 120))
 		                    || (ent2 instanceof Obstacle && ((Obstacle)ent2).getState().equals("non-moveable") && (ent instanceof MovingEntity && ent.getDrawWidth() < 120))) {
 		                
@@ -220,27 +212,34 @@ if(ent instanceof Player) {
 		                    }
 		                    zSet = true; // Set flag to true after setting Z-coordinate
 		                
-		            } else if((ent2 instanceof MovingEntity && ent2.getDrawWidth() < 120)||(ent instanceof MovingEntity && ent.getDrawWidth() < 120)){
-		            	// small ones that are not touching tree
-		            	
-		                    if (ent instanceof Obstacle) {
-		                        ent2.setZ(1.0);
-		                    } else {
-		                    	if(!zSet) {
-		                        ent.setZ(1.0);
-		                    	}
-		                    }zSet = true;
-		                     // Set flag to true after setting Z-coordinate
-		                
-		            }
-		            else {
-		            	
-		            }
+		            } 
+//		            else if((ent2 instanceof MovingEntity && ent2.getDrawWidth() < 120)||(ent instanceof MovingEntity && ent.getDrawWidth() < 120)){
+//		            	// small ones that are not touching tree
+//		            	
+//		                    if (ent instanceof Obstacle) {
+//		                        ent2.setZ(1.0);
+//		                    } else {
+//		                    	
+//		                        ent.setZ(1.0);
+//		                    	
+//		                    }zSet = true;
+//		                     // Set flag to true after setting Z-coordinate
+//		                
+//		            }
+//		            else {
+//		            	
+//		            }
 
 		            // Handle collision effects
 		            if (isTouching(ent, ent2)) {
-//		            	System.out.println(ent+" "+ent.getZ());
-//		            	System.out.println(ent2+" "+ent2.getZ());
+		            	if(ent instanceof Consumable||ent2 instanceof Consumable) {
+		            		
+		            	}
+		            	else {
+			            	System.out.println(ent+" "+ent.getZ());
+			            	System.out.println(ent2+" "+ent2.getZ());
+		            	}
+
 		                if (ent2 instanceof MovingEntity && ent instanceof MovingEntity) {
 		                    collide(ent2, ent);
 		                    if (((MovingEntity) ent).getHitCooldown() == 0) {
@@ -261,7 +260,10 @@ if(ent instanceof Player) {
 		            }
 		        }
 		    }
-if(!zSet&&!(ent instanceof Object)) {
+		    if(ent instanceof Player) {
+//		    	System.out.println(zSet);
+		    }
+if(!zSet&&!(ent instanceof Obstacle)) {
 ent.setZ(1.0);
 }
 		    // Draw entities and handle movement
