@@ -10,6 +10,7 @@ public class Entity {
 	private Image playerImage;
 	private double facingDir;
 	private double z;
+	private boolean isUp=false;
 	public Entity(double x, double y) {
 		this.setX(x);
 		this.setY(y);
@@ -17,6 +18,12 @@ public class Entity {
 	}
 	public double getZ() {
 		return this.z;
+	}
+	public void setIsUp(boolean isUp) {
+		this.isUp=isUp;
+	}
+	public boolean getIsUp() {
+		return this.isUp;
 	}
 	public void setZ(double z) {
 		this.z=z;

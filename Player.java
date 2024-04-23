@@ -16,7 +16,7 @@ public class Player extends MovingEntity {
 
 	public Player() {
 		this(0.0,0.0,400,400,60,100,100,"Hyena-S2.png", Math.sqrt(162), Math.sqrt(243));		
-		int rnd = (int) (Math.random() * 100 + 20);
+		int rnd = 100;
 		this.setDrawHeight(rnd);
 		this.setDrawWidth(rnd);
 	}

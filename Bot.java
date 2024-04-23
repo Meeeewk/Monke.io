@@ -6,6 +6,7 @@ import java.awt.geom.AffineTransform;
 public class Bot extends MovingEntity {
 	private double lazyLength;
 	private int frames = 0;
+	private Entity target;
 	private double xRoam = Math.random() * 200 - 100;
 	private double yRoam = Math.random() * 200 - 100;
 	public Bot() {
@@ -15,22 +16,25 @@ public class Bot extends MovingEntity {
 	public Bot(double x, double y, int width, int height, int moveSpeedMod, String imgPath, int drawWidth,
 			int drawHeight, double maxSpeed, double lazyLength, double sprintSpeed) {
 		super(x, y, width, height, moveSpeedMod, imgPath, drawWidth, drawHeight, maxSpeed, sprintSpeed);
-		this.lazyLength = lazyLength;
+		this.lazyLength = 2000;
 	}
 	
-	public Bot(double x, double y) {
+	public Bot(double x, double y,Entity target) {
 		this(x, y, 400, 400, 120, "Hyena-S2.png", 100, 100, Math.sqrt(100), 400, Math.sqrt(192));
-		int rnd = (int) (Math.random() * 20 + 200);
+		int rnd = (int) (Math.random() * 20 + 100);
 		this.setDrawHeight(rnd);
 		this.setDrawWidth(rnd);
+		this.setTarget(target);
 	}
 
 	@Override
-	public void move(double playerX, double playerY, double z) {
+	public void move(double a, double b, double z) {
+		double playerX=target.getPos()[0];
+		double playerY=target.getPos()[1];
 		double relX = playerX - this.getX();
 		double relY = playerY - this.getY();
 		double vectLen = Math.sqrt(Math.pow(relX, 2) + Math.pow(relY, 2));
-		if (vectLen > (lazyLength*this.getDrawHeight()/200) + this.getDrawHeight() / 4 || z - this.getZ() > 1) {
+		if (vectLen > (lazyLength*this.getDrawHeight()/200) + this.getDrawHeight() / 4 || Math.abs(z - this.getZ()) > 1) {
 			if (frames > 120) {
 				frames = 0;
 				xRoam = Math.random() * 200 - 100;
@@ -46,7 +50,9 @@ public class Bot extends MovingEntity {
 		super.move(relX, relY, z);
 	}
 	@Override
-	public void draw(Graphics g, int playerX, int playerY) {
+	public void draw(Graphics g, int a, int b) {
+		int playerX=(int)target.getPos()[0];
+		int playerY=(int)target.getPos()[1];
 	    Graphics2D g2d = (Graphics2D) g;
 	    AffineTransform old = g2d.getTransform();
 	    double angle = 0;
@@ -74,5 +80,12 @@ g2d.setColor(new Color(255, 0, 0, (int)this.getHitCooldown()*3));
 	    g2d.setColor(Color.gray);
 	    g2d.fillRect(x+((int) (this.getHealth() * this.getDrawWidth()/100)), y,(int) ((100-this.getHealth()) * this.getDrawWidth()/100), 10);
 	    this.setHitCooldown(this.getHitCooldown()<=0?0:this.getHitCooldown() - 0.5);
+	}
+
+	public void setTarget(Entity target) {
+		this.target=target;
+	}
+	public Entity getTarget() {
+		return this.target;
 	}
 }
