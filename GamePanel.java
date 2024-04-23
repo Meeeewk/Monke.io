@@ -13,8 +13,8 @@ public class GamePanel extends AnimatedPanel {
 	private Player player;
 	private int mouseX;
 	private int mouseY;
-	private int boundingX = 500;
-	private int boundingY = 500;
+	private int boundingX = 1500;
+	private int boundingY = 1500;
 	@Override
 	public void updateAnimation() {
 		this.requestFocusInWindow();
@@ -63,16 +63,17 @@ public class GamePanel extends AnimatedPanel {
 	public void createObjects() {
 		this.player = new Player();
 		this.entities.add(this.player);
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < 20; i++) {
+			this.entities.add(new Bot(Math.random() * boundingX, Math.random() * boundingY,this.player));
 		}
-		this.entities.add(new Bot(Math.random() * boundingX, Math.random() * boundingY,this.player));
-		this.entities.add(new Bot(Math.random() * boundingX, Math.random() * boundingY,this.entities.get(1)));
-//		for (int j = 0; j < 200; j++) {
-//			this.entities.add(new Consumable(Math.random() * boundingX, Math.random() * boundingY, "banana"));
-//		}
-//		for (int i = 0; i < 10; i++) {
-//			this.entities.add(new Obstacle(Math.random() * boundingX, Math.random() * boundingY, "tree", "non-moveable"));
-//		}
+		
+
+		for (int j = 0; j < 200; j++) {
+			this.entities.add(new Consumable(Math.random() * boundingX, Math.random() * boundingY, "banana"));
+		}
+		for (int i = 0; i < 1; i++) {
+			this.entities.add(new Obstacle(Math.random() * boundingX, Math.random() * boundingY, "tree", "non-moveable"));
+		}
 	}
 
 	private boolean isTouching(Entity e, Entity e2) {
@@ -227,12 +228,20 @@ public class GamePanel extends AnimatedPanel {
 	                // Handle collision effects
 	                if (isTouching(ent, ent2)) {
 	                    if (ent2 instanceof MovingEntity && ent instanceof MovingEntity) {
+	                    	if(ent2 instanceof Player) {
 	                        collide(ent2, ent);
+	                    	}
+	                    	else if(ent instanceof Player) {
+		                        collide(ent, ent2);
+		                    	}
+	                    	else {
+	                    		collide(ent, ent2);
+	                    	}
 	                        if(ent instanceof Bot) {
-	                        	((Bot) ent).setTarget(ent2);
+	                        	((Bot) ent).setTarget((MovingEntity) ent2);
 	                        }
 	                        if(ent2 instanceof Bot) {
-	                        	((Bot) ent2).setTarget(ent);
+	                        	((Bot) ent2).setTarget((MovingEntity) ent);
 	                        }
 	                        if (((MovingEntity) ent).getHitCooldown() == 0) {
 	                            ((MovingEntity) ent).setHitCooldown(30);
@@ -267,7 +276,12 @@ public class GamePanel extends AnimatedPanel {
 	            ent.draw(g, (int) playerPos[0], (int) playerPos[1]);
 	            if (ent instanceof MovingEntity) {
 	                if (this.entities.contains(this.player)) {
-	                    ((MovingEntity) ent).move((int) playerPos[0], (int) playerPos[1], playerZ);
+	                    if (ent instanceof Bot) {
+	                    	if (((Bot) ent).getTarget() == null) {
+	                    		((Bot) ent).setTarget(player);
+	                    	}
+	                    	((Bot) ent).move();
+	                    }
 	                } else {
 	                    double x = ent.getX() + Math.random() * 2000 - 1000;
 	                    double y = ent.getY() + Math.random() * 2000 - 1000;
@@ -346,5 +360,14 @@ public class GamePanel extends AnimatedPanel {
 		displayBorders(playerPos,g);
 		g.setColor(Color.BLACK);
 		collideLogic(playerPos, playerZ,g);
+		//scawy batel woyal
+//		if(Math.random()>0.3) {
+//		this.boundingX-=1;
+//		this.boundingY-=1;
+//		}
+		if(Math.random()>0.99) {
+			this.entities.add(new Bot(Math.random() * boundingX, Math.random() * boundingY,this.player));
+			this.entities.sort((o1, o2) -> o1.getDrawHeight() - o2.getDrawHeight());
+		}
 	}
 }

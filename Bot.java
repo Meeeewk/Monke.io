@@ -6,7 +6,7 @@ import java.awt.geom.AffineTransform;
 public class Bot extends MovingEntity {
 	private double lazyLength;
 	private int frames = 0;
-	private Entity target;
+	private MovingEntity target;
 	private double xRoam = Math.random() * 200 - 100;
 	private double yRoam = Math.random() * 200 - 100;
 	public Bot() {
@@ -19,7 +19,7 @@ public class Bot extends MovingEntity {
 		this.lazyLength = 2000;
 	}
 	
-	public Bot(double x, double y,Entity target) {
+	public Bot(double x, double y,MovingEntity target) {
 		this(x, y, 400, 400, 120, "Hyena-S2.png", 100, 100, Math.sqrt(100), 400, Math.sqrt(192));
 		int rnd = (int) (Math.random() * 20 + 100);
 		this.setDrawHeight(rnd);
@@ -27,14 +27,27 @@ public class Bot extends MovingEntity {
 		this.setTarget(target);
 	}
 
-	@Override
-	public void move(double a, double b, double z) {
-		double playerX=target.getPos()[0];
-		double playerY=target.getPos()[1];
-		double relX = playerX - this.getX();
-		double relY = playerY - this.getY();
-		double vectLen = Math.sqrt(Math.pow(relX, 2) + Math.pow(relY, 2));
-		if (vectLen > (lazyLength*this.getDrawHeight()/200) + this.getDrawHeight() / 4 || Math.abs(z - this.getZ()) > 1) {
+	public void move() {
+		double targetX;
+		double targetY;
+		double relX = 99999;
+		double relY = 99999;
+		double vectLen = 99999;
+		double z = 1;
+		if (target != null && target.getHealth() <= 0) {
+			target = null;
+		}
+		if (target != null) {
+			targetX=target.getPos()[0];
+			targetY=target.getPos()[1];
+			relX = targetX - this.getX();
+			relY = targetY - this.getY();
+			z = target.getZ();
+			vectLen = Math.sqrt(Math.pow(relX, 2) + Math.pow(relY, 2));
+		}
+		
+
+		if (target == null || vectLen > (lazyLength*this.getDrawHeight()/200) + this.getDrawHeight() / 4 || Math.abs(z - this.getZ()) > 1) {
 			if (frames > 120) {
 				frames = 0;
 				xRoam = Math.random() * 200 - 100;
@@ -50,9 +63,8 @@ public class Bot extends MovingEntity {
 		super.move(relX, relY, z);
 	}
 	@Override
-	public void draw(Graphics g, int a, int b) {
-		int playerX=(int)target.getPos()[0];
-		int playerY=(int)target.getPos()[1];
+	public void draw(Graphics g, int playerX, int playerY) {
+		// EVERYTHING GETS DRAWN RELATIVE TO THE PLAYER DO NOT CHANGE
 	    Graphics2D g2d = (Graphics2D) g;
 	    AffineTransform old = g2d.getTransform();
 	    double angle = 0;
@@ -82,7 +94,7 @@ g2d.setColor(new Color(255, 0, 0, (int)this.getHitCooldown()*3));
 	    this.setHitCooldown(this.getHitCooldown()<=0?0:this.getHitCooldown() - 0.5);
 	}
 
-	public void setTarget(Entity target) {
+	public void setTarget(MovingEntity target) {
 		this.target=target;
 	}
 	public Entity getTarget() {
