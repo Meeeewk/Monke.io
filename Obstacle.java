@@ -19,6 +19,7 @@ public class Obstacle extends Entity{
 	private double facingDir;
 	private String name;
 	private int xp;
+	private double angle=Math.random()*360;
 	private String state="moveable";
 	public Obstacle(double x, double y, int width, int height, String imgPath, int drawWidth,
 			int drawHeight,String name,int xp,String moveable) {
@@ -36,21 +37,18 @@ public class Obstacle extends Entity{
 		this.setDrawWidth(drawWidth);
 		this.setState(moveable);
 	}
-	public Obstacle(double x, double y, String name,String moveable) {
+	public Obstacle(double x, double y, String name,String moveable,int size,double z) {
 		super(x,y);
-		this.setZ(2);
+		this.setZ(z);
 		this.setXp(50);
 		this.setName(name);
-		int w=(int)(Math.random()*500)+500;
-		this.setWidth(w*2);
-		this.setHeight(w*2);
 		try {
 			this.setPlayerImage(ImageIO.read(new File(name+".png")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		this.setDrawHeight(w);
-		this.setDrawWidth(w);
+		this.setDrawHeight(size);
+		this.setDrawWidth(size);
 		this.setState(moveable);
 	}
 	public int getXp() {
@@ -71,7 +69,6 @@ public class Obstacle extends Entity{
 	public void draw(Graphics g, int playerX, int playerY) {
 		Graphics2D g2d = (Graphics2D) g;
 	    AffineTransform old = g2d.getTransform();
-	    double angle = 0;
 	    this.setFacingDir(3 * Math.PI / 2 - angle);
 	    g2d.rotate(this.getFacingDir(), (int) (this.getX() - playerX + this.getWidth() / 2), (int) (this.getY() - playerY + this.getHeight() / 2));
 	    //		Predator red circle behind

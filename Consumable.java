@@ -33,19 +33,17 @@ public class Consumable extends Entity{
 		this.setDrawHeight(drawHeight);
 		this.setDrawWidth(drawWidth);
 	}
-	public Consumable(double x, double y, String name) {
+	public Consumable(double x, double y, String name,int size) {
 		super(x,y);
 		this.setXp(50);
 		this.setName(name);
-		this.setWidth(100);
-		this.setHeight(100);
 		try {
 			this.setPlayerImage(ImageIO.read(new File(name+".png")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		this.setDrawHeight(50);
-		this.setDrawWidth(50);
+		this.setDrawHeight(size);
+		this.setDrawWidth(size);
 	}
 	public int getXp() {
 		return this.xp;

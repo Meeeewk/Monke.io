@@ -9,16 +9,16 @@ public class Player extends MovingEntity {
 	private int frames = 0;
 	private double xRoam = Math.random() * 200 - 100;
 	private double yRoam = Math.random() * 200 - 100;
-
+	public Entity target;
 	public Player(double x, double y, int width, int height, int moveSpeedMod, int drawWidth, int drawHeight,String playerImage, double maxSpeed, double sprintSpeed) {
 		super(x,y,width,height,moveSpeedMod,playerImage,drawWidth,drawHeight,maxSpeed, sprintSpeed);
 	}
 
 	public Player() {
-		this(0.0,0.0,400,400,60,100,100,"Hyena-S2.png", Math.sqrt(162), Math.sqrt(243));		
-		int rnd = 100;
-		this.setDrawHeight(rnd);
-		this.setDrawWidth(rnd);
+		this(0.0,0.0,400,400,60,100,100,"elephant.png", Math.sqrt(162), Math.sqrt(243));		
+//		int rnd = 250;
+//		this.setDrawHeight(rnd);
+//		this.setDrawWidth(rnd);
 	}
 	@Override
 	public void draw(Graphics g, int cursorX, int cursorY) {
@@ -66,7 +66,18 @@ public class Player extends MovingEntity {
 	    }
 	}
 
-	
+	public void move() {
+		double t = 0.1; // Adjust this value for the desired speed of movement
+	    
+	    double botX = ((Bot) target).getX();
+	    double botY = ((Bot) target).getY();
+	    
+	    double newX = this.getX() + (botX - this.getX()) * t;
+	    double newY = this.getY() + (botY - this.getY()) * t;
+	    
+	    this.setX(newX);
+	    this.setY(newY);
+	}
 	public void move(double cursorX, double cursorY,boolean isDead) {
 		if(isDead) {
 			if (frames > 120) {
@@ -84,6 +95,6 @@ public class Player extends MovingEntity {
 			cursorX -= this.getWidth() / 2;
 		    cursorY -= this.getHeight() / 2;
 		}
-		super.move(cursorX, cursorY, 1.0);
+		super.move(cursorX, cursorY, this.getZ());
 	}
 }

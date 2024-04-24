@@ -9,6 +9,8 @@ public class Bot extends MovingEntity {
 	private MovingEntity target;
 	private double xRoam = Math.random() * 200 - 100;
 	private double yRoam = Math.random() * 200 - 100;
+	private double relX =9999;
+	private double relY =9999;
 	public Bot() {
 		this(0.0, 0.0, 400, 400, 120, "Hyena-S2.png", 100, 100, Math.sqrt(100), 400, Math.sqrt(192));
 	}
@@ -21,17 +23,15 @@ public class Bot extends MovingEntity {
 	
 	public Bot(double x, double y,MovingEntity target) {
 		this(x, y, 400, 400, 120, "Hyena-S2.png", 100, 100, Math.sqrt(100), 400, Math.sqrt(192));
-		int rnd = (int) (Math.random() * 20 + 100);
-		this.setDrawHeight(rnd);
-		this.setDrawWidth(rnd);
+//		int rnd = (int) (Math.random() * 20 + 100);
+//		this.setDrawHeight(rnd);
+//		this.setDrawWidth(rnd);
 		this.setTarget(target);
 	}
 
 	public void move() {
 		double targetX;
 		double targetY;
-		double relX = 99999;
-		double relY = 99999;
 		double vectLen = 99999;
 		double z = 1;
 		if (target != null && target.getHealth() <= 0) {
@@ -40,10 +40,10 @@ public class Bot extends MovingEntity {
 		if (target != null) {
 			targetX=target.getPos()[0];
 			targetY=target.getPos()[1];
-			relX = targetX - this.getX();
-			relY = targetY - this.getY();
+			setRelX(targetX - this.getX());
+			setRelY(targetY - this.getY());
 			z = target.getZ();
-			vectLen = Math.sqrt(Math.pow(relX, 2) + Math.pow(relY, 2));
+			vectLen = Math.sqrt(Math.pow(getRelX(), 2) + Math.pow(getRelY(), 2));
 		}
 		
 
@@ -53,14 +53,14 @@ public class Bot extends MovingEntity {
 				xRoam = Math.random() * 200 - 100;
 				yRoam = Math.random() * 200 - 100;
 			} else {
-				relX = xRoam;
-				relY = yRoam;
+				setRelX(xRoam);
+				setRelY(yRoam);
 				frames++;
 			}
 		} else {
 			frames = 0;
 		}
-		super.move(relX, relY, z);
+		super.move(getRelX(), getRelY(), z);
 	}
 	@Override
 	public void draw(Graphics g, int playerX, int playerY) {
@@ -99,5 +99,21 @@ g2d.setColor(new Color(255, 0, 0, (int)this.getHitCooldown()*3));
 	}
 	public Entity getTarget() {
 		return this.target;
+	}
+
+	public double getRelX() {
+		return relX;
+	}
+
+	public void setRelX(double relX) {
+		this.relX = relX;
+	}
+
+	public double getRelY() {
+		return relY;
+	}
+
+	public void setRelY(double relY) {
+		this.relY = relY;
 	}
 }
