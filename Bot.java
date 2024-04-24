@@ -11,6 +11,8 @@ public class Bot extends MovingEntity {
 	private double yRoam = Math.random() * 200 - 100;
 	private double relX =9999;
 	private double relY =9999;
+	private int boundingX;
+	private int boundingY;
 	public Bot() {
 		this(0.0, 0.0, 400, 400, 120, "Hyena-S2.png", 100, 100, Math.sqrt(100), 400, Math.sqrt(192));
 	}
@@ -21,12 +23,14 @@ public class Bot extends MovingEntity {
 		this.lazyLength = 2000;
 	}
 	
-	public Bot(double x, double y,MovingEntity target) {
+	public Bot(double x, double y,MovingEntity target, int boundingX, int boundingY) {
 		this(x, y, 400, 400, 120, "Hyena-S2.png", 100, 100, Math.sqrt(100), 400, Math.sqrt(192));
 //		int rnd = (int) (Math.random() * 20 + 100);
 //		this.setDrawHeight(rnd);
 //		this.setDrawWidth(rnd);
 		this.setTarget(target);
+		this.boundingX = boundingX;
+		this.boundingY = boundingY;
 	}
 
 	public void move() {
@@ -34,6 +38,7 @@ public class Bot extends MovingEntity {
 		double targetY;
 		double vectLen = 99999;
 		double z = 1;
+		// If target is dead target gets set to null
 		if (target != null && target.getHealth() <= 0) {
 			target = null;
 		}
@@ -46,16 +51,28 @@ public class Bot extends MovingEntity {
 			vectLen = Math.sqrt(Math.pow(getRelX(), 2) + Math.pow(getRelY(), 2));
 		}
 		
-
+		// Roaming mode if doesn't have a target, or if target is too far away / too high away
 		if (target == null || vectLen > (lazyLength*this.getDrawHeight()/200) + this.getDrawHeight() / 4 || Math.abs(z - this.getZ()) > 1) {
 			if (frames > 120) {
 				frames = 0;
 				xRoam = Math.random() * 200 - 100;
 				yRoam = Math.random() * 200 - 100;
+				
+				
 			} else {
 				setRelX(xRoam);
 				setRelY(yRoam);
 				frames++;
+				// Keeping bots away from walls
+				double proposedX = xRoam * 3.5 + this.getX();
+				double proposedY = yRoam * 3.5 + this.getY();
+				// Regenerate if the bot is going to roam into/too close to a wall
+				if (proposedX > boundingX - 100 || proposedX < -boundingX + 100) {
+					xRoam = Math.random() * 200 - 100;
+				}
+				if (proposedY > boundingY - 100 || proposedY < -boundingY + 100) {
+					yRoam = Math.random() * 200 - 100;
+				}
 			}
 		} else {
 			frames = 0;
@@ -66,6 +83,9 @@ public class Bot extends MovingEntity {
 	public void draw(Graphics g, int playerX, int playerY) {
 		// EVERYTHING GETS DRAWN RELATIVE TO THE PLAYER DO NOT CHANGE
 	    Graphics2D g2d = (Graphics2D) g;
+//	    // View where bot is roaming to
+//	    g2d.setColor(Color.ORANGE);
+//	    g2d.fillOval((int) (xRoam * 3.5 + this.getX() - playerX + this.getWidth() / 2), (int) (yRoam * 3.5 + this.getY() - playerY + this.getHeight() / 2),30,30);
 	    AffineTransform old = g2d.getTransform();
 	    double angle = 0;
 	    double vect_len = Math.sqrt(Math.pow(this.getxVelocity(), 2) + Math.pow(this.getyVelocity(), 2));

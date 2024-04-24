@@ -80,27 +80,12 @@ public class Player extends MovingEntity {
 	    this.setY(newY);
 	}
 	public void move(double cursorX, double cursorY,boolean isDead) {
-		if(isDead) {
-			if (frames > 120) {
-				frames = 0;
-				xRoam = Math.random() * 200 - 100;
-				yRoam = Math.random() * 200 - 100;
-			} else {
-				cursorX = xRoam;
-				cursorY = yRoam;
-				frames++;
-			}
-		}
-		else {
-			frames=0;
-			cursorX -= this.getWidth() / 2;
-		    cursorY -= this.getHeight() / 2;
-		}
+		cursorX -= this.getWidth() / 2;
+		cursorY -= this.getHeight() / 2;
 		super.move(cursorX, cursorY, this.getZ());
 	}
 
 	public void setTarget(Entity ent) {
 		this.target=ent;
-		
 	}
 }

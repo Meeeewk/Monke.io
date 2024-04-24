@@ -18,6 +18,7 @@ public class Consumable extends Entity{
 	private double facingDir;
 	private String name;
 	private int xp;
+	private int health;
 	public Consumable(double x, double y, int width, int height, String imgPath, int drawWidth,
 			int drawHeight,String name,int xp) {
 		super(x,y);
@@ -33,6 +34,11 @@ public class Consumable extends Entity{
 		this.setDrawHeight(drawHeight);
 		this.setDrawWidth(drawWidth);
 	}
+	public Consumable(double x, double y, String name, int size, int xp, int health) {
+		this(x, y, name, size);
+		this.setXp(xp);
+		this.setHealth(health);
+	}
 	public Consumable(double x, double y, String name,int size) {
 		super(x,y);
 		this.setXp(50);
@@ -44,6 +50,12 @@ public class Consumable extends Entity{
 		}
 		this.setDrawHeight(size);
 		this.setDrawWidth(size);
+	}
+	public void setHealth(int health) {
+		this.health = health;
+	}
+	public int getHealth() {
+		return this.health;
 	}
 	public int getXp() {
 		return this.xp;
