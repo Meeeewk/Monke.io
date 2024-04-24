@@ -15,7 +15,7 @@ public class GamePanel extends AnimatedPanel {
 	private int mouseY;
 	private int boundingX = 8000;
 	private int boundingY = 8000;
-
+	private ArrayList<Entity> shuffledEntities = new ArrayList<>();
 	@Override
 	public void updateAnimation() {
 		this.requestFocusInWindow();
@@ -56,6 +56,35 @@ public class GamePanel extends AnimatedPanel {
 				int keyCode = e.getKeyCode();
 				if (keyCode == KeyEvent.VK_Z) {
 					player.setIsUp(true);
+				}
+				if(player.target!=null&&keyCode == KeyEvent.VK_RIGHT) {
+					int index = shuffledEntities.indexOf(player.target)+1;
+					while(true) {
+						if(index>=shuffledEntities.size()) {
+							index=0;
+						}
+						if(shuffledEntities.get(index) instanceof MovingEntity) {
+							player.target=shuffledEntities.get(index);
+							break;
+						}
+						index++;
+					}
+				}
+				if(player.target!=null&&keyCode == KeyEvent.VK_LEFT) {
+					int index = shuffledEntities.indexOf(player.target)-1;
+					while(true) {
+						if(index>=shuffledEntities.size()) {
+							index=0;
+						}
+						if(index<0) {
+							index=0;
+						}
+						if(shuffledEntities.get(index) instanceof MovingEntity) {
+							player.target=shuffledEntities.get(index);
+							break;
+						}
+						index--;
+					}
 				}
 			}
 		});
@@ -277,6 +306,9 @@ public class GamePanel extends AnimatedPanel {
 							}
 							if (((MovingEntity) ent).getHealth() <= 0) {
 								delete.add(this.entities.indexOf(ent));
+								if(this.player.target==ent||ent instanceof Player) {
+									this.player.setTarget(ent2);
+								}
 								((MovingEntity) ent).setHealth(0);
 							}
 						} else {
@@ -331,17 +363,22 @@ public class GamePanel extends AnimatedPanel {
 			this.player.move(mouseX, mouseY, !this.entities.contains(this.player));
 		} else {
 			if(this.player.target==null||!this.entities.contains(this.player.target)) {
-				int index=0;
-				Collections.shuffle(this.entities);
+				int index=0; 
+				shuffledEntities = new ArrayList<>(this.entities);
+				Collections.shuffle(shuffledEntities);
 				while(true) {
-					if(this.entities.get(index) instanceof MovingEntity) {
-						this.player.target=this.entities.get(index);
+					if(shuffledEntities.get(index) instanceof MovingEntity) {
+						this.player.target=this.shuffledEntities.get(index);
 						break;
 					}
 					index++;
 				}
 			}
 			this.player.move();
+		}
+		if(shuffledEntities.size()==0) {
+			shuffledEntities = new ArrayList<>(this.entities);
+			Collections.shuffle(shuffledEntities);
 		}
 		Collections.sort(delete);
 		for (int i = 0; i < delete.size(); i++) {

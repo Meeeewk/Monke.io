@@ -16,6 +16,7 @@ public class Player extends MovingEntity {
 
 	public Player() {
 		this(0.0,0.0,400,400,60,100,100,"elephant.png", Math.sqrt(162), Math.sqrt(243));		
+		this.setHealth(1);
 //		int rnd = 250;
 //		this.setDrawHeight(rnd);
 //		this.setDrawWidth(rnd);
@@ -96,5 +97,10 @@ public class Player extends MovingEntity {
 		    cursorY -= this.getHeight() / 2;
 		}
 		super.move(cursorX, cursorY, this.getZ());
+	}
+
+	public void setTarget(Entity ent) {
+		this.target=ent;
+		
 	}
 }
