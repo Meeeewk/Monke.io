@@ -98,19 +98,19 @@ public class GamePanel extends AnimatedPanel {
 	public void createObjects() {
 		this.player = new Player();
 		this.entities.add(this.player);
-		for (int i = 0; i < 130; i++) {
+		for (int i = 0; i < 20; i++) {
 			this.entities.add(new Bot(random(boundingX), random(boundingY),null, boundingX, boundingY));
 		}
 //		
 //
-		for (int j = 0; j < 200; j++) {
-			this.entities.add(new Consumable(random(boundingX),random(boundingY), "watermelon",60, 40, 0));
-			this.entities.add(new Consumable(random(boundingX),random(boundingY), "banana",40, 0, 40));
+		for (int j = 0; j < 20; j++) {
+			this.entities.add(new Consumable(random(boundingX),random(boundingY), "watermelon",60, 0, 15));
+			this.entities.add(new Consumable(random(boundingX),random(boundingY), "banana",40, 25, 0));
 		}
-		for (int i = 0; i < 200; i++) {
+		for (int i = 0; i < 20; i++) {
 			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "rock", "moveable",(int)(Math.random()*100+50),1));
 		}
-		for (int i = 0; i < 50; i++) {
+		for (int i = 0; i < 30; i++) {
 			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "tree", "non-moveable",(int)(Math.random()*500+500),2));
 		}
 	}
@@ -240,7 +240,7 @@ public class GamePanel extends AnimatedPanel {
 	private void collideLogic(double[] playerPos, double playerZ, Graphics g) {
 		int height = getHeight();
 		int width = getWidth();
-		ArrayList<Integer> delete = new ArrayList<>();
+		ArrayList<Entity> delete = new ArrayList<>();
 		Collections.sort(this.entities, new Comparator<>() {
 			public int compare(Entity e, Entity e2) {
 				if (e.getZ() - e2.getZ() > 0) {
@@ -305,15 +305,19 @@ public class GamePanel extends AnimatedPanel {
 								((MovingEntity) ent).setHealth(((MovingEntity) ent).getHealth() - ((MovingEntity) ent2).getDamage());
 							}
 							if (((MovingEntity) ent).getHealth() <= 0) {
-								delete.add(this.entities.indexOf(ent));
+								delete.add(ent);
 								if(this.player.target==ent||ent instanceof Player) {
 									this.player.setTarget(ent2);
 								}
 								((MovingEntity) ent).setHealth(0);
 							}
 						} else {
-							if (ent instanceof Consumable) {
-								collide(ent2, ent);
+							if (ent instanceof Consumable && ent2 instanceof MovingEntity) {
+								((Consumable) ent).consume((MovingEntity) ent2);
+								delete.add(ent);
+							} else if (ent2 instanceof Consumable && ent instanceof MovingEntity) {
+								((Consumable) ent2).consume((MovingEntity) ent);
+								delete.add(ent2);
 							} else {
 								collide(ent, ent2);
 							}
@@ -347,7 +351,10 @@ public class GamePanel extends AnimatedPanel {
 					}
 				}
 			}
-
+			// Draw player UI over everything else
+			if (this.player.getHealth() > 0) {
+				this.player.drawUI(g);
+			}
 			// Check if entity is past bounding and adjust position if necessary
 			if (isPastBounding(ent)) {
 				movePastBounding(ent);
@@ -376,20 +383,24 @@ public class GamePanel extends AnimatedPanel {
 			}
 			this.player.move();
 		}
-		if(shuffledEntities.size()==0) {
+		if(shuffledEntities.size()!=this.entities.size()) {
 			shuffledEntities = new ArrayList<>(this.entities);
 			Collections.shuffle(shuffledEntities);
 		}
-		Collections.sort(delete);
 		for (int i = 0; i < delete.size(); i++) {
 			try {
-				this.entities.remove(this.entities.get(delete.get(i) - i));
-					this.entities.add(new Bot(random(boundingX), random(boundingY), this.player, boundingX, boundingY));
+				this.entities.remove(delete.get(i));
+				this.shuffledEntities.remove(delete.get(i));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		delete.clear();
+		if (Math.random() > 0.98) {
+			this.entities.add(new Bot(random(boundingX), random(boundingY),null, boundingX, boundingY));
+			System.out.println("added");
+			System.out.println(entities.size());
+		}
 		this.entities.sort((o1, o2) -> o1.getDrawHeight() - o2.getDrawHeight());
 	}
 

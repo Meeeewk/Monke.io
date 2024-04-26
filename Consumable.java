@@ -66,6 +66,13 @@ public class Consumable extends Entity{
 	private void setName(String name) {
 		this.name=name;
 	}
+	public void consume(MovingEntity ent) {
+		ent.setHealth(ent.getHealth() + this.health);
+		if (ent instanceof Player) {
+			Player entity = (Player) ent;
+			entity.setXp(entity.getXp() + this.xp);
+		}
+	}
 	public void draw(Graphics g, int playerX, int playerY) {
 		Graphics2D g2d = (Graphics2D) g;
 	    AffineTransform old = g2d.getTransform();

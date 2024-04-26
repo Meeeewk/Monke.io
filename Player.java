@@ -40,13 +40,15 @@ public class Player extends MovingEntity {
 	    g2d.fillOval((int)(this.getWidth() / 2 - (this.getDrawWidth() * 0.72) / 2),(int)( this.getHeight() / 2 - (this.getDrawHeight() * 0.72) / 2), (int) (this.getDrawWidth() * 0.72), (int) (this.getDrawHeight() * 0.72));
 	    g2d.setColor(Color.red);
 	    g2d.drawString("z: "+this.getZ(), (int)(this.getWidth() / 2 - (this.getDrawWidth() * 0.72) / 2), (int)( this.getHeight() / 2 - (this.getDrawHeight() * 0.72) / 2)-30);
-	    g2d.setColor(Color.gray);
 	    g2d.setTransform(old);
-
+	}
+	
+	public void drawUI(Graphics g) {
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.setColor(Color.gray);
 	    g2d.fillRect((int) (this.getWidth() / 2 - xpGoal * 3.2 / 2), 80,(int) (this.xpGoal * 3.2), 20);
-	   
 	    g2d.setColor(Color.yellow);
-	    g2d.fillRect((int) (this.getWidth() / 2 - xpGoal * 3.2 / 2), 80,(int) (this.xp * 3.2), 20);
+	    g2d.fillRect((int) (this.getWidth() / 2 - xpGoal * 3.2 / 2), 80,(int) (this.getXp() * 3.2), 20);
 	    g2d.setColor(Color.gray);
 	    g2d.fillRect((int) (this.getWidth() / 2 - this.getMaxSprintEndurance()), this.getHeight() - 80, (int) (this.getMaxSprintEndurance() * 2), 20);
 	    if (this.getSprintingDisabled() > 0) {
@@ -55,16 +57,11 @@ public class Player extends MovingEntity {
 		    g2d.setColor(Color.orange);
 	    }
 	    g2d.fillRect((int) (this.getWidth() / 2 - this.getMaxSprintEndurance()), this.getHeight() - 80, (int) (this.getSprintEndurance() * 2), 20);
-	    this.xp++;
-	    this.xp%= this.xpGoal;
 	    g2d.setColor(Color.gray);
 	    g2d.fillRect(65, this.getHeight() / 2 - 300 - 5, 30, 610);
 	    g2d.setColor(this.healthToColor(this.getHealth() / 100.0));
 	    this.setHitCooldown(this.getHitCooldown()<=0?0:this.getHitCooldown() - 0.5);
 	    g2d.fillRect(70, (int) (this.getHeight() / 2 + 300 - (this.getHealth() * 6)), 20, (int) this.getHealth() * 6);
-	    if(this.getHealth()>0&&this.getHealth()<100) {
-	    	this.setHealth(this.getHealth()+0.01);
-	    }
 	}
 
 	public void move() {
@@ -87,5 +84,14 @@ public class Player extends MovingEntity {
 
 	public void setTarget(Entity ent) {
 		this.target=ent;
+	}
+
+	public int getXp() {
+		return xp;
+	}
+
+	public void setXp(int xp) {
+		this.xp = xp;
+		this.xp %= this.xpGoal;
 	}
 }

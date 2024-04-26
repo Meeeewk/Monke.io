@@ -39,7 +39,7 @@ class Main extends JFrame{
 
                 repaint();
 
-                Thread.sleep(27);
+                Thread.sleep(34);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
