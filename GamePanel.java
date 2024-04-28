@@ -300,11 +300,20 @@ public class GamePanel extends AnimatedPanel {
 							if (ent2 instanceof Bot) {
 								((Bot) ent2).setTarget((MovingEntity) ent);
 							}
-							if (((MovingEntity) ent).getHitCooldown() == 0) {
+							if (((MovingEntity) ent).getHitCooldown() == 0) {								
+								if (ent instanceof Player) {
+								System.out.println(((MovingEntity) ent).getHealth());
+								System.out.println(((MovingEntity) ent).getHitCooldown());
+							}
 								((MovingEntity) ent).setHitCooldown(30);
 								((MovingEntity) ent).setHealth(((MovingEntity) ent).getHealth() - ((MovingEntity) ent2).getDamage());
+
 							}
+
 							if (((MovingEntity) ent).getHealth() <= 0) {
+								if (ent instanceof Player) {
+									System.out.println(((MovingEntity) ent).getHitCooldown());
+								}
 								delete.add(ent);
 								if(this.player.target==ent||ent instanceof Player) {
 									this.player.setTarget(ent2);
@@ -398,8 +407,8 @@ public class GamePanel extends AnimatedPanel {
 		delete.clear();
 		if (Math.random() > 0.98) {
 			this.entities.add(new Bot(random(boundingX), random(boundingY),null, boundingX, boundingY));
-			System.out.println("added");
-			System.out.println(entities.size());
+//			System.out.println("added");
+//			System.out.println(entities.size());
 		}
 		this.entities.sort((o1, o2) -> o1.getDrawHeight() - o2.getDrawHeight());
 	}

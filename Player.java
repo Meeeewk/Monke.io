@@ -16,7 +16,7 @@ public class Player extends MovingEntity {
 
 	public Player() {
 		this(0.0,0.0,400,400,60,100,100,"elephant.png", Math.sqrt(162), Math.sqrt(243));		
-		this.setHealth(1);
+//		this.setHealth(1);
 //		int rnd = 250;
 //		this.setDrawHeight(rnd);
 //		this.setDrawWidth(rnd);
@@ -40,6 +40,7 @@ public class Player extends MovingEntity {
 	    g2d.fillOval((int)(this.getWidth() / 2 - (this.getDrawWidth() * 0.72) / 2),(int)( this.getHeight() / 2 - (this.getDrawHeight() * 0.72) / 2), (int) (this.getDrawWidth() * 0.72), (int) (this.getDrawHeight() * 0.72));
 	    g2d.setColor(Color.red);
 	    g2d.drawString("z: "+this.getZ(), (int)(this.getWidth() / 2 - (this.getDrawWidth() * 0.72) / 2), (int)( this.getHeight() / 2 - (this.getDrawHeight() * 0.72) / 2)-30);
+	    this.setHitCooldown(this.getHitCooldown()<=0?0:this.getHitCooldown() - 0.01);
 	    g2d.setTransform(old);
 	}
 	
@@ -60,7 +61,7 @@ public class Player extends MovingEntity {
 	    g2d.setColor(Color.gray);
 	    g2d.fillRect(65, this.getHeight() / 2 - 300 - 5, 30, 610);
 	    g2d.setColor(this.healthToColor(this.getHealth() / 100.0));
-	    this.setHitCooldown(this.getHitCooldown()<=0?0:this.getHitCooldown() - 0.5);
+	    this.setHitCooldown(this.getHitCooldown()<=0?0:this.getHitCooldown() - 0.01);
 	    g2d.fillRect(70, (int) (this.getHeight() / 2 + 300 - (this.getHealth() * 6)), 20, (int) this.getHealth() * 6);
 	}
 
