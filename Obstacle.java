@@ -71,11 +71,9 @@ public class Obstacle extends Entity{
 	    AffineTransform old = g2d.getTransform();
 	    this.setFacingDir(3 * Math.PI / 2 - angle);
 	    g2d.rotate(this.getFacingDir(), (int) (this.getX() - playerX + this.getWidth() / 2), (int) (this.getY() - playerY + this.getHeight() / 2));
-	    //		Predator red circle behind
-	    //	    g2d.fillOval((int) (this.getX() - playerX - (this.getDrawWidth() * 0.72) / 2.0 + this.getWidth() / 2), (int) (this.getY() - playerY - (this.getDrawHeight() * 0.72) / 2.0 + this.getHeight() / 2), (int) (this.getDrawWidth() * 0.72), (int) (this.getDrawHeight() * 0.72));
 		g2d.drawImage(this.getPlayerImage(),(int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + this.getWidth() / 2),(int) (this.getY() - playerY - this.getDrawHeight() / 2.0 + this.getHeight() / 2), this.getDrawWidth(), this.getDrawHeight(), null);
-		g2d.setColor(Color.red);
-	    g2d.drawString("z: "+this.getZ(), (int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + this.getWidth() / 2), (int) (this.getY() - playerY - this.getDrawHeight() / 2.0 + this.getHeight() / 2));
+//		g2d.setColor(Color.red);
+//	    g2d.drawString("z: "+this.getZ(), (int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + this.getWidth() / 2), (int) (this.getY() - playerY - this.getDrawHeight() / 2.0 + this.getHeight() / 2));
 		g2d.setTransform(old);
 	    g2d.drawOval((int) (this.getX() - playerX - (this.getDrawWidth() * 0.72) / 2.0 + this.getWidth() / 2), (int) (this.getY() - playerY - (this.getDrawHeight() * 0.72) / 2.0 + this.getHeight() / 2), (int) (this.getDrawWidth() * 0.72), (int) (this.getDrawHeight() * 0.72));
 	}

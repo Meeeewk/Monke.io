@@ -31,6 +31,7 @@ public class MovingEntity extends Entity {
 	private double maxSprintEndurance = 240;
 	private int sprintingDisabled = 0;
 	private double health = 100;
+	private double maxHealth = 100;
 	private double hitCooldown = 10;
 	private int skin;
 
@@ -51,8 +52,8 @@ public class MovingEntity extends Entity {
 		}
 //		this.setDrawHeight(drawHeight);
 //		this.setDrawWidth(drawWidth);
-		this.setDrawHeight(this.skinSize[skin]);
-		this.setDrawWidth(this.skinSize[skin]);
+		this.setDrawHeight(this.skinSize[skin]*2);
+		this.setDrawWidth(this.skinSize[skin]*2);
 	}
 	public void setSkin(int selectRandomSkin) {
 		this.skin=selectRandomSkin;
@@ -273,6 +274,9 @@ public class MovingEntity extends Entity {
 
 	public void setHealth(double d) {
 		this.health = d;
+		if (this.health > this.maxHealth) {
+			this.health = this.maxHealth;
+		}
 	}
 
 	public double getHitCooldown() {

@@ -77,7 +77,7 @@ public class GamePanel extends AnimatedPanel {
 							index=0;
 						}
 						if(index<0) {
-							index=0;
+							index=shuffledEntities.size()-1;
 						}
 						if(shuffledEntities.get(index) instanceof MovingEntity) {
 							player.target=shuffledEntities.get(index);
@@ -111,7 +111,7 @@ public class GamePanel extends AnimatedPanel {
 			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "rock", "moveable",(int)(Math.random()*100+50),1));
 		}
 		for (int i = 0; i < 30; i++) {
-			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "tree", "non-moveable",(int)(Math.random()*500+500),2));
+			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "tree", "non-moveable",(int)(Math.random()*500+300),2));
 		}
 	}
 
@@ -236,6 +236,18 @@ public class GamePanel extends AnimatedPanel {
 	private double getBoundingY() {
 		return this.boundingY;
 	}
+	private boolean angleCollide(MovingEntity ent, MovingEntity ent2) {
+		double entFacing = ent.getFacingDir();
+		double angle = 0;
+	    double vect_len = Math.sqrt(Math.pow(ent2.getX() - ent.getX(), 2) + Math.pow(ent2.getY() - ent.getY(), 2));
+	    if ((ent2.getY() - ent.getY()) * -1 < 0) {
+	    	angle = Math.PI * 2 - Math.acos((ent2.getX() - ent.getX()) / vect_len);
+	    } else {
+	    	angle = Math.acos((ent2.getX() - ent.getX()) / vect_len);
+	    }
+	    double facingOther = 3 * Math.PI / 2 - angle;
+	    return Math.abs(entFacing - facingOther) < 1;
+	}
 
 	private void collideLogic(double[] playerPos, double playerZ, Graphics g) {
 		int height = getHeight();
@@ -273,7 +285,7 @@ public class GamePanel extends AnimatedPanel {
 							&& (ent2 instanceof Bot && ent2.getDrawWidth() < 120))
 							|| (ent2 instanceof Obstacle && ((Obstacle) ent2).getState().equals("non-moveable")
 									&& (ent instanceof Bot && ent.getDrawWidth() < 120)))) {
-						if ((ent instanceof Obstacle && (((Bot) ent2).getTarget()==null||((Bot) ent2).getTarget().getZ()==3))&&(ent2 instanceof Obstacle && (((Bot) ent).getTarget()==null||((Bot) ent).getTarget().getZ()==3))) {
+						if ((ent instanceof Obstacle && (((Bot) ent2).getTarget()==null||((Bot) ent2).getTarget().getZ()==3))||(ent2 instanceof Obstacle && (((Bot) ent).getTarget()==null||((Bot) ent).getTarget().getZ()==3))) {
 							if (ent instanceof Obstacle) {
 								ent2.setIsUp(true);
 								ent2.setZ(3.0);
@@ -300,6 +312,7 @@ public class GamePanel extends AnimatedPanel {
 							if (ent2 instanceof Bot) {
 								((Bot) ent2).setTarget((MovingEntity) ent);
 							}
+							if(angleCollide((MovingEntity)ent,(MovingEntity)ent2)) {
 							if (((MovingEntity) ent).getHitCooldown() == 0) {								
 								if (ent instanceof Player) {
 								System.out.println(((MovingEntity) ent).getHealth());
@@ -319,6 +332,7 @@ public class GamePanel extends AnimatedPanel {
 									this.player.setTarget(ent2);
 								}
 								((MovingEntity) ent).setHealth(0);
+							}
 							}
 						} else {
 							if (ent instanceof Consumable && ent2 instanceof MovingEntity) {
@@ -350,9 +364,6 @@ public class GamePanel extends AnimatedPanel {
 				if (ent instanceof MovingEntity) {
 					if (this.entities.contains(this.player)) {
 						if (ent instanceof Bot) {
-							if (((Bot) ent).getTarget() == null) {
-								((Bot) ent).setTarget(player);
-							}
 							((Bot) ent).move();
 						}
 					} else {
@@ -398,6 +409,9 @@ public class GamePanel extends AnimatedPanel {
 		}
 		for (int i = 0; i < delete.size(); i++) {
 			try {
+				if(delete.get(i) instanceof MovingEntity) {
+					this.entities.add(new Bot(random(boundingX), random(boundingY),null, boundingX, boundingY));
+				}
 				this.entities.remove(delete.get(i));
 				this.shuffledEntities.remove(delete.get(i));
 			} catch (Exception e) {
@@ -405,11 +419,6 @@ public class GamePanel extends AnimatedPanel {
 			}
 		}
 		delete.clear();
-		if (Math.random() > 0.98) {
-			this.entities.add(new Bot(random(boundingX), random(boundingY),null, boundingX, boundingY));
-//			System.out.println("added");
-//			System.out.println(entities.size());
-		}
 		this.entities.sort((o1, o2) -> o1.getDrawHeight() - o2.getDrawHeight());
 	}
 
@@ -450,9 +459,9 @@ public class GamePanel extends AnimatedPanel {
 		g.setColor(Color.BLACK);
 		collideLogic(playerPos, playerZ, g);
 		// scawy batel woyal
-//		if(Math.random()>0.3) {
-//		this.boundingX-=1;
-//		this.boundingY-=1;
+//		if(Math.random()>0.1&&this.boundingX>200&&this.boundingY>200) {
+//		this.boundingX-=19;
+//		this.boundingY-=19;
 //		}
 	}
 }
