@@ -20,11 +20,11 @@ public class Bot extends MovingEntity {
 	public Bot(double x, double y, int width, int height, int moveSpeedMod, String imgPath, int drawWidth,
 			int drawHeight, double maxSpeed, double lazyLength, double sprintSpeed) {
 		super(x, y, width, height, moveSpeedMod, imgPath, drawWidth, drawHeight, maxSpeed, sprintSpeed);
-		this.lazyLength = 2000;
+		this.lazyLength = 400/this.getDrawWidth()*220;
 	}
 	
 	public Bot(double x, double y,MovingEntity target, int boundingX, int boundingY) {
-		this(x, y, 400, 400, 120, "Hyena-S2.png", 100, 100, Math.sqrt(100), 400, Math.sqrt(192));
+		this(x, y, 400, 400, 30, "Hyena-S2.png", 100, 100, Math.sqrt(100), 400, Math.sqrt(192));
 //		int rnd = (int) (Math.random() * 20 + 100);
 //		this.setDrawHeight(rnd);
 //		this.setDrawWidth(rnd);
@@ -112,6 +112,7 @@ g2d.setColor(new Color(255, 0, 0, (int)this.getHitCooldown()*3));
 	    g2d.setColor(Color.gray);
 	    g2d.fillRect(x+((int) (this.getHealth() * this.getDrawWidth()/100)), y,(int) ((100-this.getHealth()) * this.getDrawWidth()/100), 10);
 	    this.setHitCooldown(this.getHitCooldown()<=0?0:this.getHitCooldown() - 0.5);
+		this.setMoveSpeedMod(this.getHitCooldown()==0?120:30);
 	}
 
 	public void setTarget(MovingEntity target) {

@@ -52,8 +52,8 @@ public class MovingEntity extends Entity {
 		}
 //		this.setDrawHeight(drawHeight);
 //		this.setDrawWidth(drawWidth);
-		this.setDrawHeight(this.skinSize[skin]*2);
-		this.setDrawWidth(this.skinSize[skin]*2);
+		this.setDrawHeight(this.skinSize[skin]);
+		this.setDrawWidth(this.skinSize[skin]);
 	}
 	public void setSkin(int selectRandomSkin) {
 		this.skin=selectRandomSkin;

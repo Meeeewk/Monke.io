@@ -65,7 +65,6 @@ public class GamePanel extends AnimatedPanel {
 						}
 						if(shuffledEntities.get(index) instanceof MovingEntity) {
 							player.target=shuffledEntities.get(index);
-							break;
 						}
 						index++;
 					}
@@ -90,9 +89,8 @@ public class GamePanel extends AnimatedPanel {
 		});
 	}
 
-	//fix this
 	private double random(int bounding) {
-		return Math.random() * 2 * bounding - bounding / 1.5;
+		return Math.random() * 2 * bounding - bounding;
 	}
 
 	public void createObjects() {
@@ -103,7 +101,7 @@ public class GamePanel extends AnimatedPanel {
 		}
 //		
 //
-		for (int j = 0; j < 20; j++) {
+		for (int j = 0; j < 200; j++) {
 			this.entities.add(new Consumable(random(boundingX),random(boundingY), "watermelon",60, 0, 15));
 			this.entities.add(new Consumable(random(boundingX),random(boundingY), "banana",40, 25, 0));
 		}
@@ -113,6 +111,8 @@ public class GamePanel extends AnimatedPanel {
 		for (int i = 0; i < 30; i++) {
 			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "tree", "non-moveable",(int)(Math.random()*500+300),2));
 		}
+		shuffledEntities = new ArrayList<>(this.entities);
+		Collections.shuffle(shuffledEntities);
 	}
 
 	private boolean isTouching(Entity e, Entity e2) {
@@ -236,7 +236,7 @@ public class GamePanel extends AnimatedPanel {
 	private double getBoundingY() {
 		return this.boundingY;
 	}
-	private boolean angleCollide(MovingEntity ent, MovingEntity ent2) {
+	private boolean angleCollide(MovingEntity ent2, MovingEntity ent) {
 		double entFacing = ent.getFacingDir();
 		double angle = 0;
 	    double vect_len = Math.sqrt(Math.pow(ent2.getX() - ent.getX(), 2) + Math.pow(ent2.getY() - ent.getY(), 2));
@@ -246,7 +246,7 @@ public class GamePanel extends AnimatedPanel {
 	    	angle = Math.acos((ent2.getX() - ent.getX()) / vect_len);
 	    }
 	    double facingOther = 3 * Math.PI / 2 - angle;
-	    return Math.abs(entFacing - facingOther) < 1;
+	    return Math.abs(entFacing - facingOther) < Math.toRadians(45);
 	}
 
 	private void collideLogic(double[] playerPos, double playerZ, Graphics g) {
@@ -390,9 +390,7 @@ public class GamePanel extends AnimatedPanel {
 			this.player.move(mouseX, mouseY, !this.entities.contains(this.player));
 		} else {
 			if(this.player.target==null||!this.entities.contains(this.player.target)) {
-				int index=0; 
-				shuffledEntities = new ArrayList<>(this.entities);
-				Collections.shuffle(shuffledEntities);
+				int index=0;
 				while(true) {
 					if(shuffledEntities.get(index) instanceof MovingEntity) {
 						this.player.target=this.shuffledEntities.get(index);
@@ -403,14 +401,12 @@ public class GamePanel extends AnimatedPanel {
 			}
 			this.player.move();
 		}
-		if(shuffledEntities.size()!=this.entities.size()) {
-			shuffledEntities = new ArrayList<>(this.entities);
-			Collections.shuffle(shuffledEntities);
-		}
 		for (int i = 0; i < delete.size(); i++) {
 			try {
 				if(delete.get(i) instanceof MovingEntity) {
-					this.entities.add(new Bot(random(boundingX), random(boundingY),null, boundingX, boundingY));
+					Bot newBot=new Bot(random(boundingX), random(boundingY),null, boundingX, boundingY);
+					this.entities.add(newBot);
+					this.shuffledEntities.add(newBot);
 				}
 				this.entities.remove(delete.get(i));
 				this.shuffledEntities.remove(delete.get(i));
@@ -424,7 +420,6 @@ public class GamePanel extends AnimatedPanel {
 
 	private void displayBorders(double[] playerPos, Graphics g) {
 		// Drawing map borders
-		g.setColor(Color.CYAN);
 		// Top
 		g.fillRect(-boundingX - (int) playerPos[0] - 100, -boundingY - (int) playerPos[1] - getHeight() / 2 - 100,
 				boundingX * 2 + getHeight() + 200, this.getHeight() + 100);
@@ -443,7 +438,7 @@ public class GamePanel extends AnimatedPanel {
 	private void drawGrid(double[] playerPos, Graphics g, int width) {
 		g.setColor(new Color(0, 200, 0));
 		for (int i = -boundingX; i <= boundingX * 2; i += width) {
-			for (int j = -boundingY - width; j <= boundingY; j += width) {
+			for (int j = (int) (-boundingY - width*1.1); j <= boundingY; j += width) {
 				g.drawRect(i - (int) playerPos[0], j - (int) playerPos[1] + getWidth() / 2, width * 3, width * 3);
 			}
 		}
