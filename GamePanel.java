@@ -103,14 +103,14 @@ public class GamePanel extends AnimatedPanel {
 		}
 //		
 //
-		for (int j = 0; j < 0; j++) {
+		for (int j = 0; j < 200; j++) {
 			this.entities.add(new Consumable(random(boundingX),random(boundingY), "watermelon",60, 0, 15));
 			this.entities.add(new Consumable(random(boundingX),random(boundingY), "banana",40, 25, 0));
 		}
-		for (int i = 0; i < 0; i++) {
+		for (int i = 0; i < 30; i++) {
 			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "rock", "moveable",(int)(Math.random()*100+50),1));
 		}
-		for (int i = 0; i < 0; i++) {
+		for (int i = 0; i < 30; i++) {
 			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "tree", "non-moveable",(int)(Math.random()*500+300),2));
 		}
 		shuffledEntities = new ArrayList<>(this.entities);
