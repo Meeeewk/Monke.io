@@ -14,7 +14,7 @@ public class Entity {
 	public Entity(double x, double y) {
 		this.setX(x);
 		this.setY(y);
-		this.setZ(1);
+		this.z=1;
 	}
 	public double getZ() {
 		return this.z;

@@ -11,8 +11,8 @@ import java.util.Random;
 public class MovingEntity extends Entity {
 	public static String[] skins = { "bigfoot.png", "gorilla.png", "elephant.png", "croc.png", "orangutan.png" };
 	public double[] skinsDamage = { 15, 10, 20, 30, 10 };
-	public int[] skinSize = { 200, 119, 250, 150, 170 };
-	public static double[] skinsRarity = { 0.01, 0.5, 0.2, 0.1, 0.4 };
+	private int[] skinSize = { 200, 100, 250, 150, 170 };
+	public static double[] skinsRarity = { 0.01, 0.9, 0.2, 0.1, 0.4 };
 	private double x;
 	private double y;
 	private int width;
@@ -52,30 +52,41 @@ public class MovingEntity extends Entity {
 		}
 //		this.setDrawHeight(drawHeight);
 //		this.setDrawWidth(drawWidth);
-		this.setDrawHeight(this.skinSize[skin]);
-		this.setDrawWidth(this.skinSize[skin]);
+		this.setDrawHeight((int)(this.skinSize[skin]+ this.getZ()*10));
+		this.setDrawWidth((int)(this.skinSize[skin]+ this.getZ()*10));
 	}
+
+	@Override 
+	public void setZ(double z) {
+		super.setZ(z);
+		this.setDrawHeight((int)(this.skinSize[skin]+ z*10));
+		this.setDrawWidth((int)(skinSize[skin]+ z*10));
+	}
+
 	public void setSkin(int selectRandomSkin) {
-		this.skin=selectRandomSkin;
+		this.skin = selectRandomSkin;
 	}
+
 	public static int selectRandomSkin() {
-        Random random = new Random();
-        double rand = random.nextDouble();
-        double cumulativeProbability = 0.0;
-        
-        for (int i = 0; i < skins.length; i++) {
-            cumulativeProbability += skinsRarity[i];
-            if (rand < cumulativeProbability) {
-                return i;
-            }
-        }
-        
-        // If no skin is selected, return a default skin or handle it as needed
-        return 0;
-    }
+		Random random = new Random();
+		double rand = random.nextDouble();
+		double cumulativeProbability = 0.0;
+
+		for (int i = 0; i < skins.length; i++) {
+			cumulativeProbability += skinsRarity[i];
+			if (rand < cumulativeProbability) {
+				return i;
+			}
+		}
+
+		// If no skin is selected, return a default skin or handle it as needed
+		return 0;
+	}
+
 	public double getDamage() {
 		return this.skinsDamage[skin];
 	}
+
 	public double compareTo(Entity e) {
 		return Math.sqrt(Math.pow(this.getX() - e.getX(), 2) + Math.pow(this.getY() - e.getY(), 2));
 	}
@@ -126,6 +137,7 @@ public class MovingEntity extends Entity {
 	public void draw(Graphics g, int playerX, int playerY) {
 
 	}
+
 	public void setSprinting(boolean b) {
 		if (this.getSprintingDisabled() > 0) {
 			this.sprinting = false;

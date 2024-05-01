@@ -52,40 +52,32 @@ public class GamePanel extends AnimatedPanel {
 			}
 		});
 		this.addKeyListener(new KeyAdapter() {
-			public void keyPressed(KeyEvent e) {
-				int keyCode = e.getKeyCode();
-				if (keyCode == KeyEvent.VK_Z) {
-					player.setIsUp(true);
-				}
-				if(player.target!=null&&keyCode == KeyEvent.VK_RIGHT) {
-					int index = shuffledEntities.indexOf(player.target)+1;
-					while(true) {
-						if(index>=shuffledEntities.size()) {
-							index=0;
-						}
-						if(shuffledEntities.get(index) instanceof MovingEntity) {
-							player.target=shuffledEntities.get(index);
-						}
-						index++;
-					}
-				}
-				if(player.target!=null&&keyCode == KeyEvent.VK_LEFT) {
-					int index = shuffledEntities.indexOf(player.target)-1;
-					while(true) {
-						if(index>=shuffledEntities.size()) {
-							index=0;
-						}
-						if(index<0) {
-							index=shuffledEntities.size()-1;
-						}
-						if(shuffledEntities.get(index) instanceof MovingEntity) {
-							player.target=shuffledEntities.get(index);
-							break;
-						}
-						index--;
-					}
-				}
-			}
+		    public void keyPressed(KeyEvent e) {
+		        int keyCode = e.getKeyCode();
+		        if (keyCode == KeyEvent.VK_Z) {
+		            player.setIsUp(true);
+		        }
+		        if (player.target != null && keyCode == KeyEvent.VK_RIGHT) {
+		            int currentIndex = shuffledEntities.indexOf(player.target);
+		            for (int i = currentIndex + 1; i < shuffledEntities.size(); i++) {
+		                Entity entity = shuffledEntities.get(i);
+		                if (entity instanceof MovingEntity) {
+		                    player.target = entity;
+		                    break;
+		                }
+		            }
+		        }
+		        if (player.target != null && keyCode == KeyEvent.VK_LEFT) {
+		            int currentIndex = shuffledEntities.indexOf(player.target);
+		            for (int i = currentIndex - 1; i >= 0; i--) {
+		                Entity entity = shuffledEntities.get(i);
+		                if (entity instanceof MovingEntity) {
+		                    player.target = entity;
+		                    break;
+		                }
+		            }
+		        }
+		    }
 		});
 	}
 
@@ -132,7 +124,7 @@ public class GamePanel extends AnimatedPanel {
 //		if(e instanceof Player&&rotDiff>2.5&&rotDiff<4.5) {
 //		System.out.println(rotDiff);
 //		}
-		return (zDiff < 1 )
+		return (zDiff ==0 )
 				&& distanceSquared < (radius1 + radius2) * (radius1 + radius2); // Adjust the condition to // consider
 																				// the Z-coordinate
 		// difference
@@ -187,6 +179,11 @@ public class GamePanel extends AnimatedPanel {
 		}if(e2 instanceof Obstacle&&((Obstacle) e2).getState().equals("moveable")) {
 			offset=0;
 		}
+		if(e instanceof Consumable) {
+			offset=0;
+		}if(e2 instanceof Consumable) {
+			offset=2;
+		}
 		if (isTouching(e, e2)) {
 			if (e2 instanceof Obstacle && ((Obstacle) e2).getState().equals("non-moveable")) {
 				double j = (value(e2, e, false) - (value(e, e2, false) + value(e2, e, false)) / 2);
@@ -236,7 +233,7 @@ public class GamePanel extends AnimatedPanel {
 	private double getBoundingY() {
 		return this.boundingY;
 	}
-	private boolean angleCollide(MovingEntity ent2, MovingEntity ent) {
+	private boolean angleCollide(Entity ent2, MovingEntity ent) {
 		double entFacing = ent.getFacingDir();
 		double angle = 0;
 	    double vect_len = Math.sqrt(Math.pow(ent2.getX() - ent.getX(), 2) + Math.pow(ent2.getY() - ent.getY(), 2));
@@ -270,9 +267,9 @@ public class GamePanel extends AnimatedPanel {
 			for (Entity ent2 : this.entities) {
 				if (ent != ent2 && isTouching2(ent, ent2)) {
 					if (((ent instanceof Obstacle && ((Obstacle) ent).getState().equals("non-moveable")
-							&& (ent2 instanceof MovingEntity && ent2.getIsUp() && ent2.getDrawWidth() < 120))
+							&& (ent2 instanceof MovingEntity && ent2.getIsUp() && ent2.getDrawWidth() < 160))
 							|| (ent2 instanceof Obstacle && ((Obstacle) ent2).getState().equals("non-moveable")
-									&& (ent.getIsUp() && ent instanceof MovingEntity && ent.getDrawWidth() < 120)))) {
+									&& (ent.getIsUp() && ent instanceof MovingEntity && ent.getDrawWidth() < 160)))) {
 
 						if (ent instanceof Obstacle) {
 							ent2.setZ(3.0);
@@ -282,9 +279,9 @@ public class GamePanel extends AnimatedPanel {
 						}
 						zSet = true; // Set flag to true after setting Z-coordinate
 					} else if (((ent instanceof Obstacle && ((Obstacle) ent).getState().equals("non-moveable")
-							&& (ent2 instanceof Bot && ent2.getDrawWidth() < 120))
+							&& (ent2 instanceof Bot && ent2.getDrawWidth() < 160))
 							|| (ent2 instanceof Obstacle && ((Obstacle) ent2).getState().equals("non-moveable")
-									&& (ent instanceof Bot && ent.getDrawWidth() < 120)))) {
+									&& (ent instanceof Bot && ent.getDrawWidth() < 160)))) {
 						if ((ent instanceof Obstacle && (((Bot) ent2).getTarget()==null||((Bot) ent2).getTarget().getZ()==3))||(ent2 instanceof Obstacle && (((Bot) ent).getTarget()==null||((Bot) ent).getTarget().getZ()==3))) {
 							if (ent instanceof Obstacle) {
 								ent2.setIsUp(true);
@@ -335,10 +332,10 @@ public class GamePanel extends AnimatedPanel {
 							}
 							}
 						} else {
-							if (ent instanceof Consumable && ent2 instanceof MovingEntity) {
+							if (ent instanceof Consumable && ent2 instanceof MovingEntity&&angleCollide((Consumable)ent,(MovingEntity)ent2)) {
 								((Consumable) ent).consume((MovingEntity) ent2);
 								delete.add(ent);
-							} else if (ent2 instanceof Consumable && ent instanceof MovingEntity) {
+							} else if (ent2 instanceof Consumable && ent instanceof MovingEntity&&angleCollide((Consumable)ent2,(MovingEntity)ent)) {
 								((Consumable) ent2).consume((MovingEntity) ent);
 								delete.add(ent2);
 							} else {
@@ -352,7 +349,6 @@ public class GamePanel extends AnimatedPanel {
 				if (ent.getZ() > 1.0) {
 					ent.setIsUp(false);
 				}
-				ent.setZ(1.0);
 			}
 			// Draw entities and handle movement
 			if (ent instanceof Player) {
@@ -452,7 +448,16 @@ public class GamePanel extends AnimatedPanel {
 		drawGrid(playerPos, g, 100);
 		displayBorders(playerPos, g);
 		g.setColor(Color.BLACK);
-		collideLogic(playerPos, playerZ, g);
+		collideLogic(playerPos, playerZ, g);    
+		for (Entity entity : entities) {
+	        if (entity instanceof MovingEntity && !((MovingEntity)entity).getIsUp() && entity.getZ() > 1.0) {
+	            double newZ = entity.getZ()+(0.5-entity.getZ())/10; // Adjust the descent speed as needed
+	            if (newZ < 1.0) {
+	                newZ = 1.0; // Ensure Z does not go below ground level (Z = 1)
+	            }
+	            entity.setZ(newZ);
+	        }
+	    }
 		// scawy batel woyal
 //		if(Math.random()>0.1&&this.boundingX>200&&this.boundingY>200) {
 //		this.boundingX-=19;
