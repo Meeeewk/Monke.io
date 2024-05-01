@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.util.Arrays;
 
 public class Bot extends MovingEntity {
 	private double lazyLength;
@@ -109,6 +110,8 @@ g2d.setColor(new Color(255, 0, 0, (int)this.getHitCooldown()*3));
 	    g2d.fillRect(x, y,(int) (this.getHealth() * this.getDrawWidth()/100), 10);
 //	    g2d.setColor(Color.red);
 //	    g2d.drawString("z: "+this.getZ(), x, y-30);
+	    g2d.setColor(Color.black);
+	    g2d.drawString("chunk: " + Arrays.toString(getChunk()), x, y-30);
 	    g2d.setColor(Color.gray);
 	    g2d.fillRect(x+((int) (this.getHealth() * this.getDrawWidth()/100)), y,(int) ((100-this.getHealth()) * this.getDrawWidth()/100), 10);
 	    this.setHitCooldown(this.getHitCooldown()<=0?0:this.getHitCooldown() - 0.5);

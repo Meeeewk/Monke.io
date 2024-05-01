@@ -9,6 +9,7 @@ public class Entity {
 	private int drawHeight;
 	private Image playerImage;
 	private double facingDir;
+	private int[] chunk = new int[2];
 	private double z;
 	private boolean isUp=false;
 	public Entity(double x, double y) {
@@ -39,6 +40,12 @@ public class Entity {
 	}
 	public int getWidth() {
 		return width;
+	}
+	public int[] getChunk() {
+		return this.chunk;
+	}
+	public void setChunk(int[] chnk) {
+		this.chunk = chnk;
 	}
 	public void setWidth(int width) {
 		this.setX(this.getX() + -1 * (width - this.getWidth()) / 2);

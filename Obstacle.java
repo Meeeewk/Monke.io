@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
@@ -70,6 +71,10 @@ public class Obstacle extends Entity{
 		Graphics2D g2d = (Graphics2D) g;
 	    AffineTransform old = g2d.getTransform();
 	    this.setFacingDir(3 * Math.PI / 2 - angle);
+	    int x=(int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + this.getWidth() / 2);
+	    int y=(int) (this.getY() - playerY - (this.getDrawHeight() * 0.72) / 2.0 + this.getHeight() / 2)-20;
+	    g2d.setColor(Color.black);
+	    g2d.drawString("chunk: " + Arrays.toString(getChunk()), x, y-30);
 	    g2d.rotate(this.getFacingDir(), (int) (this.getX() - playerX + this.getWidth() / 2), (int) (this.getY() - playerY + this.getHeight() / 2));
 		g2d.drawImage(this.getPlayerImage(),(int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + this.getWidth() / 2),(int) (this.getY() - playerY - this.getDrawHeight() / 2.0 + this.getHeight() / 2), this.getDrawWidth(), this.getDrawHeight(), null);
 //		g2d.setColor(Color.red);
