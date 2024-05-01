@@ -103,14 +103,14 @@ public class GamePanel extends AnimatedPanel {
 		}
 //		
 //
-		for (int j = 0; j < 0; j++) {
+		for (int j = 0; j < 200; j++) {
 			this.entities.add(new Consumable(random(boundingX),random(boundingY), "watermelon",60, 0, 15));
 			this.entities.add(new Consumable(random(boundingX),random(boundingY), "banana",40, 25, 0));
 		}
-		for (int i = 0; i < 0; i++) {
+		for (int i = 0; i < 30; i++) {
 			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "rock", "moveable",(int)(Math.random()*100+50),1));
 		}
-		for (int i = 0; i < 0; i++) {
+		for (int i = 0; i < 30; i++) {
 			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "tree", "non-moveable",(int)(Math.random()*500+300),2));
 		}
 		shuffledEntities = new ArrayList<>(this.entities);
@@ -270,16 +270,12 @@ public class GamePanel extends AnimatedPanel {
 				return 0;
 			}
 		});
-		System.out.println("\n\n\n");
 		for (Entity ent : this.entities) {
 			boolean zSet = false; // Flag to track if Z-coordinate has been set for the current entity
 			int[] chunk = ent.getChunk();
 			// Check for collision and set Z-coordinate
 			for (int i = Math.max(chunk[0] - 1, 0); i < Math.min(chunk[0] + 2, this.chunkedEntities.length); i++) { 
 				for (int j = Math.max(chunk[1] - 1, 0); j < Math.min(chunk[1] + 2, this.chunkedEntities[0].length); j++) {
-					if (ent == this.player) {
-						System.out.println("checked: " + i + "   " + j);
-					}
 					for (Entity ent2 : this.chunkedEntities[i][j]) {
 						if (ent != ent2 && isTouching2(ent, ent2)) {
 							if (((ent instanceof Obstacle && ((Obstacle) ent).getState().equals("non-moveable")
