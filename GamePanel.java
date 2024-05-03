@@ -60,6 +60,18 @@ public class GamePanel extends AnimatedPanel {
 					player.setSprinting(false);
 				}
 			}
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char[] abilityKeys = player.getAbilityKeys();
+				for (int i = 0; i < abilityKeys.length; i++) {
+					System.out.println(abilityKeys[i]);
+					if (abilityKeys[i] == e.getKeyChar()) {
+						player.activateAbility(i);
+						break;
+					}
+				}
+			}
 		});
 		this.addKeyListener(new KeyAdapter() {
 		    public void keyPressed(KeyEvent e) {
