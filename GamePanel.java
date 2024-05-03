@@ -282,12 +282,16 @@ public class GamePanel extends AnimatedPanel {
 				return 0;
 			}
 		});
+		System.out.println("\n\n\n");
 		for (Entity ent : this.entities) {
 			boolean zSet = false; // Flag to track if Z-coordinate has been set for the current entity
 			int[] chunk = ent.getChunk();
 			// Check for collision and set Z-coordinate
 			for (int i = Math.max(chunk[0] - 1, 0); i < Math.min(chunk[0] + 2, this.chunkedEntities.length); i++) { 
 				for (int j = Math.max(chunk[1] - 1, 0); j < Math.min(chunk[1] + 2, this.chunkedEntities[0].length); j++) {
+					if (ent == this.player) {
+						System.out.println("checked: " + i + "   " + j);
+					}
 					for (Entity ent2 : this.chunkedEntities[i][j]) {
 						if (ent != ent2 && isTouching2(ent, ent2)) {
 							if (((ent instanceof Obstacle && ((Obstacle) ent).getState().equals("non-moveable")

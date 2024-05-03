@@ -80,9 +80,9 @@ public class Consumable extends Entity{
 	    AffineTransform old = g2d.getTransform();
 	    double angle = 0;
 	    this.setFacingDir(3 * Math.PI / 2 - angle);
-//	    int x=(int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + this.getWidth() / 2);
-//	    int y=(int) (this.getY() - playerY - (this.getDrawHeight() * 0.72) / 2.0 + this.getHeight() / 2)-20;
-//	    g2d.setColor(Color.black);
+	    int x=(int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + this.getWidth() / 2);
+	    int y=(int) (this.getY() - playerY - (this.getDrawHeight() * 0.72) / 2.0 + this.getHeight() / 2)-20;
+	    g2d.setColor(Color.black);
 //	    g2d.drawString("chunk: " + Arrays.toString(getChunk()), x, y-30);
 	    g2d.rotate(this.getFacingDir(), (int) (this.getX() - playerX + this.getWidth() / 2), (int) (this.getY() - playerY + this.getHeight() / 2));
 	    //		Predator red circle behind
