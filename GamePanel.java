@@ -180,12 +180,12 @@ public class GamePanel extends AnimatedPanel {
 
 	private void collide(Entity e, Entity e2) {
 		double offset = 0;
+		if (e instanceof MovingEntity || e2 instanceof MovingEntity) {
+			offset = 1;
+		}
 		if (e2 instanceof Player || e instanceof Player) {
 			offset = 1.5;
-		}
-		if (e2 instanceof Consumable && e instanceof MovingEntity) {
-			offset = 2;
-		}
+		}		
 		if(e2 instanceof Obstacle&&((Obstacle) e2).getState().equals("non-moveable")) {
 			offset=2;
 		}
@@ -296,9 +296,11 @@ public class GamePanel extends AnimatedPanel {
 											&& (ent.getIsUp() && ent instanceof MovingEntity && ent.getDrawWidth() < 160)))) {
 
 								if (ent instanceof Obstacle) {
+									ent2.setIsUp(true);
 									ent2.setZ(3.0);
 								} else {
 									zSet = true;
+									ent.setIsUp(true);
 									ent.setZ(3.0);
 								}
 								zSet = true; // Set flag to true after setting Z-coordinate
@@ -363,12 +365,39 @@ public class GamePanel extends AnimatedPanel {
 								}
 							}
 						}
+						if(ent2 instanceof Obstacle && ent instanceof MovingEntity&& ent.getZ() > 1.0&& !((MovingEntity)ent).getIsUp()) {
+							double newZ = ent.getZ()+(0.5-ent.getZ())/10;
+							if(ent.getZ()>=(ent2.getZ()+1)&&newZ<(ent2.getZ()+1)) {
+								ent.setIsUp(true);
+								ent.setZ((ent2.getZ()+1));
+							}
+						}
 					}
 				}
 			}
-//			for (Entity ent2 : this.entities) {
-//				
-//			}
+			if(ent instanceof MovingEntity && ent.getIsUp()==true) {
+				boolean isUp=false;
+				for (int i = Math.max(chunk[0] - 1, 0); i < Math.min(chunk[0] + 2, this.chunkedEntities.length); i++) { 
+					for (int j = Math.max(chunk[1] - 1, 0); j < Math.min(chunk[1] + 2, this.chunkedEntities[0].length); j++) { 
+						for (Entity ent2 : this.chunkedEntities[i][j]) {
+							if(ent2 instanceof Obstacle&&isTouching2(ent2, ent)&& ((Obstacle) ent2).getState().equals("non-moveable")) {
+								isUp=true;
+							}
+						}
+					}
+				}
+				ent.setIsUp(isUp);
+			}
+			if(ent.getZ()<2) {
+				ent.setIsUp(false);
+			}
+			if (ent instanceof MovingEntity && !((MovingEntity)ent).getIsUp() && ent.getZ() > 1.0) {
+	            double newZ = ent.getZ()+(0.5-ent.getZ())/10; // Adjust the descent speed as needed
+	            if (newZ < 1.0) {
+	                newZ = 1.0; // Ensure Z does not go below ground level (Z = 1)
+	            }
+	            ent.setZ(newZ);
+	        }
 			if (!zSet && !(ent instanceof Obstacle)) {
 				if (ent.getZ() > 1.0) {
 					ent.setIsUp(false);
@@ -486,16 +515,7 @@ public class GamePanel extends AnimatedPanel {
 		drawGrid(playerPos, g, 100);
 		displayBorders(playerPos, g);
 		g.setColor(Color.BLACK);
-		collideLogic(playerPos, playerZ, g);    
-		for (Entity entity : entities) {
-	        if (entity instanceof MovingEntity && !((MovingEntity)entity).getIsUp() && entity.getZ() > 1.0) {
-	            double newZ = entity.getZ()+(0.5-entity.getZ())/10; // Adjust the descent speed as needed
-	            if (newZ < 1.0) {
-	                newZ = 1.0; // Ensure Z does not go below ground level (Z = 1)
-	            }
-	            entity.setZ(newZ);
-	        }
-	    }
+		collideLogic(playerPos, playerZ, g);
 		// scawy batel woyal
 //		if(Math.random()>0.1&&this.boundingX>200&&this.boundingY>200) {
 //		this.boundingX-=19;
