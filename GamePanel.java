@@ -52,30 +52,7 @@ public class GamePanel extends AnimatedPanel {
 				if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
 					player.setSprinting(true);
 				}
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
-					player.setSprinting(false);
-				}
-			}
-			
-			@Override
-			public void keyTyped(KeyEvent e) {
-				char[] abilityKeys = player.getAbilityKeys();
-				for (int i = 0; i < abilityKeys.length; i++) {
-					System.out.println(abilityKeys[i]);
-					if (abilityKeys[i] == e.getKeyChar()) {
-						player.activateAbility(i);
-						break;
-					}
-				}
-			}
-		});
-		this.addKeyListener(new KeyAdapter() {
-		    public void keyPressed(KeyEvent e) {
-		        int keyCode = e.getKeyCode();
+				int keyCode = e.getKeyCode();
 		        if (keyCode == KeyEvent.VK_Z) {
 		            player.setIsUp(true);
 		        }
@@ -99,7 +76,26 @@ public class GamePanel extends AnimatedPanel {
 		                }
 		            }
 		        }
-		    }
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+					player.setSprinting(false);
+				}
+			}
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char[] abilityKeys = player.getAbilityKeys();
+				for (int i = 0; i < abilityKeys.length; i++) {
+					System.out.println(abilityKeys[i]);
+					if (abilityKeys[i] == e.getKeyChar()) {
+						player.activateAbility(i);
+						break;
+					}
+				}
+			}
 		});
 	}
 
