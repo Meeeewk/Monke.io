@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.util.Arrays;
 
@@ -10,6 +11,9 @@ public class Player extends MovingEntity {
     private int frames = 0;
     private double xRoam = Math.random() * 200 - 100;
     private double yRoam = Math.random() * 200 - 100;
+    private int jumpingFrames = 0;
+    private char[] abilityKeys = {' '};
+    private String[] abilities = {"JUMP"};
     public Entity target;
     private double viewPOV = 55; // Default value
 
@@ -82,6 +86,11 @@ public class Player extends MovingEntity {
     public void move(double cursorX, double cursorY, boolean isDead) {
         cursorX -= this.getWidth() / 2;
         cursorY -= this.getHeight() / 2;
+        System.out.println(this.getZ());
+        if (jumpingFrames > 0) {
+        	this.setZ(this.getZ() + 0.8);
+        	jumpingFrames--;
+        }
         super.move(cursorX, cursorY, this.getZ());
     }
 
@@ -105,4 +114,20 @@ public class Player extends MovingEntity {
     public void setViewPOV(double viewPOV) {
         this.viewPOV = viewPOV;
     }
+
+	public char[] getAbilityKeys() {
+		return this.abilityKeys;
+	}
+
+	public void activateAbility(int index) {
+		String ability = this.abilities[index];
+		switch (ability) {
+		case "JUMP":
+			if (jumpingFrames == 0 && this.getSprintEndurance() > 70 && this.getSprintingDisabled() == 0) {
+				this.jumpingFrames = 20;
+				this.setSprintEndurance(this.getSprintEndurance() - 70);
+				this.setSprintingDisabled(20);
+			}
+		}
+	}
 }
