@@ -12,7 +12,7 @@ public class MovingEntity extends Entity {
 	public static String[] skins = { "bigfoot.png", "gorilla.png", "elephant.png", "croc.png", "orangutan.png" };
 	public double[] skinsDamage = { 15, 10, 20, 30, 10 };
 	private int[] skinSize = { 200, 100, 250, 150, 170 };
-	public static double[] skinsRarity = { 0.01, 0.9, 0.2, 0.1, 0.4 };
+	public static double[] skinsRarity = { 0.01, 0.1, 0.2, 0.1, 0.4 };
 	private double x;
 	private double y;
 	private int width;

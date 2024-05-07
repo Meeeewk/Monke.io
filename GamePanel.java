@@ -17,8 +17,8 @@ public class GamePanel extends AnimatedPanel {
 	private Player player;
 	private int mouseX;
 	private int mouseY;
-	private int boundingX = 3000;
-	private int boundingY = 3000;
+	private int boundingX = 600;
+	private int boundingY = 600;
 	private ArrayList<Entity> shuffledEntities = new ArrayList<>();
 	@Override
 	public void updateAnimation() {
@@ -106,19 +106,19 @@ public class GamePanel extends AnimatedPanel {
 	public void createObjects() {
 		this.player = new Player();
 		this.entities.add(this.player);
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < (boundingX+boundingY)/200; i++) {
 			this.entities.add(new Bot(random(boundingX), random(boundingY),null, boundingX, boundingY));
 		}
 //		
 //
-		for (int j = 0; j < 200; j++) {
+		for (int j = 0; j < (boundingX+boundingY)/30; j++) {
 			this.entities.add(new Consumable(random(boundingX),random(boundingY), "watermelon",60, 0, 15));
 			this.entities.add(new Consumable(random(boundingX),random(boundingY), "banana",40, 25, 0));
 		}
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < (boundingX+boundingY)/200; i++) {
 			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "rock", "moveable",(int)(Math.random()*100+50),1));
 		}
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < (boundingX+boundingY)/500; i++) {
 			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "tree", "non-moveable",(int)(Math.random()*500+300),2));
 		}
 		shuffledEntities = new ArrayList<>(this.entities);
