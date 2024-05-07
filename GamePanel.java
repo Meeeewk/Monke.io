@@ -346,9 +346,6 @@ public class GamePanel extends AnimatedPanel {
 									if (ent instanceof Consumable && ent2 instanceof MovingEntity&&angleCollide((Consumable)ent,(MovingEntity)ent2)) {
 										((Consumable) ent).consume((MovingEntity) ent2);
 										delete.add(ent);
-									} else if (ent2 instanceof Consumable && ent instanceof MovingEntity&&angleCollide((Consumable)ent2,(MovingEntity)ent)) {
-										((Consumable) ent2).consume((MovingEntity) ent);
-										delete.add(ent2);
 									} else {
 										collide(ent, ent2);
 									}
@@ -448,7 +445,7 @@ public class GamePanel extends AnimatedPanel {
 	}
 
 	private void drawGrid(double[] playerPos, Graphics g, int width) {
-		g.setColor(new Color(0, 200, 0));
+		g.setColor(new Color(0, 210, 0));
 		for (int i = -boundingX; i <= boundingX * 2; i += width) {
 			for (int j = (int) (-boundingY - width*1.1); j <= boundingY; j += width) {
 				g.drawRect(i - (int) playerPos[0], j - (int) playerPos[1] + getWidth() / 2, width * 3, width * 3);
