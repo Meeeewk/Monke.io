@@ -37,20 +37,23 @@ public class Player extends MovingEntity {
         } else {
             angle = Math.acos(getxVelocity() / vect_len);
         }
-        this.setFacingDir(3 * Math.PI / 2 - angle);
+        this.setFacingDir(3 * Math.PI / 2 - angle);g2d.setColor(new Color(0, 0, 0, 30));
+        g2d.fillOval((int) (this.getWidth() / 2 - (this.skinSize[this.getSkin()] * 0.72) / 2+(this.getZ()-1)*6), (int) (this.getHeight() / 2 - (this.skinSize[this.getSkin()] * 0.72) / 2+(this.getZ()-1)*6), (int) (this.skinSize[this.getSkin()] * 0.72), (int) (this.skinSize[this.getSkin()] * 0.72));
         g2d.rotate(this.getFacingDir(), this.getWidth() / 2, this.getHeight() / 2);
         g2d.drawImage(this.getPlayerImage(), this.getWidth() / 2 - this.getDrawWidth() / 2, this.getHeight() / 2 - this.getDrawHeight() / 2, this.getDrawWidth(), this.getDrawHeight(), null);
         g2d.setColor(new Color(255, 0, 0, (int) this.getHitCooldown() * 3));
         g2d.fillOval((int) (this.getWidth() / 2 - (this.getDrawWidth() * 0.72) / 2), (int) (this.getHeight() / 2 - (this.getDrawHeight() * 0.72) / 2), (int) (this.getDrawWidth() * 0.72), (int) (this.getDrawHeight() * 0.72));
-        g2d.setColor(Color.black);
+        
 //        g2d.drawString("z: " + this.getZ(), (int) (this.getWidth() / 2 - (this.getDrawWidth() * 0.72) / 2), (int) (this.getHeight() / 2 - (this.getDrawHeight() * 0.72) / 2) - 30);
-        g2d.drawString("chunk: " + Arrays.toString(getChunk()), (int) (this.getWidth() / 2 - (this.getDrawWidth() * 0.72) / 2), (int) (this.getHeight() / 2 - (this.getDrawHeight() * 0.72) / 2) - 30);
+//        g2d.setColor(Color.black);
+//        g2d.drawString("chunk: " + Arrays.toString(getChunk()), (int) (this.getWidth() / 2 - (this.getDrawWidth() * 0.72) / 2), (int) (this.getHeight() / 2 - (this.getDrawHeight() * 0.72) / 2) - 30);
         g2d.setColor(Color.red);
         this.setHitCooldown(this.getHitCooldown() <= 0 ? 0 : this.getHitCooldown() - 0.5);
         g2d.setTransform(old);
     }
 
-    public void drawUI(Graphics g) {
+
+	public void drawUI(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.gray);
         g2d.fillRect((int) (this.getWidth() / 2 - xpGoal * 3.2 / 2), 80, (int) (this.xpGoal * 3.2), 20);
@@ -86,7 +89,6 @@ public class Player extends MovingEntity {
     public void move(double cursorX, double cursorY, boolean isDead) {
         cursorX -= this.getWidth() / 2;
         cursorY -= this.getHeight() / 2;
-        System.out.println(this.getZ());
         if (jumpingFrames > 0) {
         	this.setZ(this.getZ() + 0.8);
         	jumpingFrames--;
