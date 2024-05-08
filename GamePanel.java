@@ -106,21 +106,26 @@ public class GamePanel extends AnimatedPanel {
 	public void createObjects() {
 		this.player = new Player();
 		this.entities.add(this.player);
-		for (int i = 0; i < (boundingX+boundingY)/200; i++) {
-			this.entities.add(new Bot(random(boundingX), random(boundingY),null, boundingX, boundingY));
-		}
-//		
-//
-		for (int j = 0; j < (boundingX+boundingY)/30; j++) {
-			this.entities.add(new Consumable(random(boundingX),random(boundingY), "watermelon",60, 0, 15));
-			this.entities.add(new Consumable(random(boundingX),random(boundingY), "banana",40, 25, 0));
-		}
-		for (int i = 0; i < (boundingX+boundingY)/200; i++) {
-			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "rock", "moveable",(int)(Math.random()*100+50),1));
-		}
-		for (int i = 0; i < (boundingX+boundingY)/500; i++) {
-			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "tree", "non-moveable",(int)(Math.random()*500+300),2));
-		}
+//		for (int i = 0; i < (boundingX+boundingY)/200; i++) {
+//			this.entities.add(new Bot(random(boundingX), random(boundingY),null, boundingX, boundingY));
+//		}
+////		
+////
+//		for (int j = 0; j < (boundingX+boundingY)/30; j++) {
+//			this.entities.add(new Consumable(random(boundingX),random(boundingY), "watermelon",60, 0, 15));
+//			this.entities.add(new Consumable(random(boundingX),random(boundingY), "banana",40, 25, 0));
+//		}
+//		for (int i = 0; i < (boundingX+boundingY)/200; i++) {
+//			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "rock", "moveable",(int)(Math.random()*100+50),1));
+//		}
+		int bounding=boundingX*10000;
+		this.entities.add(new Obstacle(0, 0, "rock", "moveable",(int)(Math.random()*100+50),1));
+		this.entities.add(new Obstacle(bounding, bounding, "rock", "moveable",(int)(Math.random()*100+50),1));
+		this.entities.add(new Obstacle(bounding, 0, "rock", "moveable",(int)(Math.random()*100+50),1));
+		this.entities.add(new Obstacle(0, bounding, "rock", "moveable",(int)(Math.random()*100+50),1));
+//		for (int i = 0; i < (boundingX+boundingY)/500; i++) {
+//			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "tree", "non-moveable",(int)(Math.random()*500+300),2));
+//		}
 		shuffledEntities = new ArrayList<>(this.entities);
 		Collections.shuffle(shuffledEntities);
 	}
@@ -185,7 +190,9 @@ public class GamePanel extends AnimatedPanel {
 		}
 		if (e2 instanceof Player || e instanceof Player) {
 			offset = 1.5;
-		}		
+		}	if(e instanceof Obstacle&&e2 instanceof Obstacle) {
+			offset=1;
+		}	
 		if(e2 instanceof Obstacle&&((Obstacle) e2).getState().equals("non-moveable")) {
 			offset=2;
 		}
@@ -193,14 +200,16 @@ public class GamePanel extends AnimatedPanel {
 			offset=0;
 		}
 		if(e instanceof Obstacle&&((Obstacle) e).getState().equals("moveable")) {
-			offset=0;
+			offset=e.getDrawWidth()/100.0-e2.getDrawWidth()/200.0;
 		}if(e2 instanceof Obstacle&&((Obstacle) e2).getState().equals("moveable")) {
-			offset=0;
+			offset=2-e.getDrawWidth()/100.0+e2.getDrawWidth()/200.0;
 		}
 		if(e instanceof Consumable) {
 			offset=0;
 		}if(e2 instanceof Consumable) {
 			offset=2;
+		}if(e instanceof Consumable&&e2 instanceof Consumable) {
+			offset=1;
 		}
 		if (isTouching(e, e2)) {
 			if (e2 instanceof Obstacle && ((Obstacle) e2).getState().equals("non-moveable")) {
