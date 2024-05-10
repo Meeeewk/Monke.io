@@ -373,11 +373,7 @@ public class GamePanel extends AnimatedPanel {
 											if (angleCollide((MovingEntity) ent, (MovingEntity) ent2)) {
 												if (((MovingEntity) ent).getHitCooldown() == 0) {
 
-													if (ent instanceof Player) {
-														System.out.println(this.entities);
-														System.out.println(this.entities.indexOf(ent2));
-														System.out.println(ent2);
-													}
+
 													((MovingEntity) ent).setHitCooldown(30);
 													((MovingEntity) ent).setHealth(((MovingEntity) ent).getHealth()
 															- ((MovingEntity) ent2).getDamage());

@@ -19,8 +19,9 @@ public class Player extends MovingEntity {
     private double yRoam = Math.random() * 200 - 100;
     private int jumpingFrames = 0;
     private int dmgIncrease = 0;
-    private char[] abilityKeys = {' '};
-    private String[] abilities = {"JUMP"};
+    private int dashingFrames = 0;
+    private char[] abilityKeys = {' ', 'd'};
+    private String[] abilities = {"JUMP", "DASH"};
     public Entity target;
     private boolean showEvoOption = false;
     private GamePanel gamePanel;
@@ -135,11 +136,13 @@ public class Player extends MovingEntity {
     public void move(double cursorX, double cursorY, boolean isDead) {
         cursorX -= this.getWidth() / 2;
         cursorY -= this.getHeight() / 2;
-        System.out.println(this.getZ());
         if (jumpingFrames > 0) {
         	this.setZ(this.getZ() + 0.8);
         	jumpingFrames--;
         }
+        if (getDashingFrames() > 0) {
+			setDashingFrames(getDashingFrames() - 1);
+		}
         super.move(cursorX, cursorY, this.getZ());
     }
     
@@ -204,6 +207,7 @@ public class Player extends MovingEntity {
 	}
 
 	public void activateAbility(int index) {
+		System.out.println(index);
 		String ability = this.abilities[index];
 		switch (ability) {
 		case "JUMP":
@@ -212,6 +216,21 @@ public class Player extends MovingEntity {
 				this.setSprintEndurance(this.getSprintEndurance() - 70);
 				this.setSprintingDisabled(20);
 			}
+			break;
+		case "DASH":
+			if (getDashingFrames() == 0 && this.getSprintEndurance() > 70 && this.getSprintingDisabled() == 0) {
+				this.setDashingFrames(40);
+				System.out.println("true");
+			} 
+			break;
 		}
+	}
+
+	public int getDashingFrames() {
+		return dashingFrames;
+	}
+
+	public void setDashingFrames(int dashingFrames) {
+		this.dashingFrames = dashingFrames;
 	}
 }

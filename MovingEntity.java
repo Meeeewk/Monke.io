@@ -125,9 +125,16 @@ public class MovingEntity extends Entity {
 		if (this.getSprintingDisabled() > 0) {
 			this.setSprintingDisabled(this.getSprintingDisabled() - 1);
 		}
+		if (this instanceof Player) {
+			if (((Player) this).getDashingFrames() > 0) {
+				this.setxVelocity(this.getxVelocity() * 1.5);
+				this.setyVelocity(this.getyVelocity() * 1.5);
+				evaluatingMax = this.getMaxSpeed() * 1.5;
+			}
+		}
 		if (vectLen > evaluatingMax) {
-			this.setxVelocity(evaluatingMax * this.getxVelocity() / vectLen);
-			this.setyVelocity(evaluatingMax * this.getyVelocity() / vectLen);
+			this.setxVelocity(evaluatingMax * (this.getxVelocity()) / vectLen);
+			this.setyVelocity(evaluatingMax * (this.getyVelocity()) / vectLen);
 		}
 		this.setX(this.getX() + (int) (this.getxVelocity()));
 		this.setY(this.getY() + (int) (this.getyVelocity()));
