@@ -19,6 +19,7 @@ public class GamePanel extends AnimatedPanel {
 	private int mouseY;
 	private int boundingX = 2000;
 	private int boundingY = 2000;
+	private boolean paused = false;
 	private ArrayList<Entity> shuffledEntities = new ArrayList<>();
 
 	@Override
@@ -102,9 +103,13 @@ public class GamePanel extends AnimatedPanel {
 	private double random(int bounding) {
 		return Math.random() * 2 * bounding - bounding;
 	}
+	
+	public void pause(boolean b) {
+		this.paused = b;
+	}
 
 	public void createObjects() {
-		this.player = new Player();
+		this.player = new Player(this);
 		this.entities.add(this.player);
 		for (int i = 0; i < (boundingX + boundingY) / 200; i++) {
 			this.entities.add(new Bot(random(boundingX), random(boundingY), null, boundingX, boundingY));
@@ -303,41 +308,23 @@ public class GamePanel extends AnimatedPanel {
 			}
 		});
 		for (Entity ent : this.entities) {
-			boolean zSet = false; // Flag to track if Z-coordinate has been set for the current entity
-			int[] chunk = ent.getChunk();
-			// Check for collision and set Z-coordinate
-			for (int i = Math.max(chunk[0] - 1, 0); i < Math.min(chunk[0] + 2, this.chunkedEntities.length); i++) {
-				for (int j = Math.max(chunk[1] - 1, 0); j < Math.min(chunk[1] + 2,
-						this.chunkedEntities[0].length); j++) {
-					for (Entity ent2 : this.chunkedEntities[i][j]) {
-						if (this.entities.indexOf(ent2) != -1) {
-							if (ent != ent2 && isTouching2(ent, ent2)) {
-								if (((ent instanceof Obstacle && ((Obstacle) ent).getState().equals("non-moveable")
-										&& (ent2 instanceof MovingEntity && ent2.getIsUp()
-												&& ent2.getDrawWidth() < 160))
-										|| (ent2 instanceof Obstacle
-												&& ((Obstacle) ent2).getState().equals("non-moveable") && (ent.getIsUp()
-														&& ent instanceof MovingEntity && ent.getDrawWidth() < 160)))) {
+			if (!paused) {
+				boolean zSet = false; // Flag to track if Z-coordinate has been set for the current entity
+				int[] chunk = ent.getChunk();
+				// Check for collision and set Z-coordinate
+				for (int i = Math.max(chunk[0] - 1, 0); i < Math.min(chunk[0] + 2, this.chunkedEntities.length); i++) {
+					for (int j = Math.max(chunk[1] - 1, 0); j < Math.min(chunk[1] + 2,
+							this.chunkedEntities[0].length); j++) {
+						for (Entity ent2 : this.chunkedEntities[i][j]) {
+							if (this.entities.indexOf(ent2) != -1) {
+								if (ent != ent2 && isTouching2(ent, ent2)) {
+									if (((ent instanceof Obstacle && ((Obstacle) ent).getState().equals("non-moveable")
+											&& (ent2 instanceof MovingEntity && ent2.getIsUp()
+													&& ent2.getDrawWidth() < 160))
+											|| (ent2 instanceof Obstacle
+													&& ((Obstacle) ent2).getState().equals("non-moveable") && (ent.getIsUp()
+															&& ent instanceof MovingEntity && ent.getDrawWidth() < 160)))) {
 
-									if (ent instanceof Obstacle) {
-										ent2.setIsUp(true);
-										ent2.setZ(3.0);
-									} else {
-										zSet = true;
-										ent.setIsUp(true);
-										ent.setZ(3.0);
-									}
-									zSet = true; // Set flag to true after setting Z-coordinate
-								} else if (((ent instanceof Obstacle
-										&& ((Obstacle) ent).getState().equals("non-moveable")
-										&& (ent2 instanceof Bot && ent2.getDrawWidth() < 160))
-										|| (ent2 instanceof Obstacle
-												&& ((Obstacle) ent2).getState().equals("non-moveable")
-												&& (ent instanceof Bot && ent.getDrawWidth() < 160)))) {
-									if ((ent instanceof Obstacle && (((Bot) ent2).getTarget() == null
-											|| ((Bot) ent2).getTarget().getZ() == 3))
-											|| (ent2 instanceof Obstacle && (((Bot) ent).getTarget() == null
-													|| ((Bot) ent).getTarget().getZ() == 3))) {
 										if (ent instanceof Obstacle) {
 											ent2.setIsUp(true);
 											ent2.setZ(3.0);
@@ -346,133 +333,169 @@ public class GamePanel extends AnimatedPanel {
 											ent.setIsUp(true);
 											ent.setZ(3.0);
 										}
-									}
-								}
-								// Handle collision effects
-								if (isTouching(ent, ent2)) {
-									if (ent2 instanceof MovingEntity && ent instanceof MovingEntity) {
-										if (ent2 instanceof Player) {
-											collide(ent2, ent);
-										} else if (ent instanceof Player) {
-											collide(ent, ent2);
-										} else {
-											collide(ent, ent2);
-										}
-										if (ent instanceof Bot) {
-											((Bot) ent).setTarget((MovingEntity) ent2);
-										}
-										if (ent2 instanceof Bot) {
-											((Bot) ent2).setTarget((MovingEntity) ent);
-										}
-										if (angleCollide((MovingEntity) ent, (MovingEntity) ent2)) {
-											if (((MovingEntity) ent).getHitCooldown() == 0) {
-
-												if (ent instanceof Player) {
-													System.out.println(this.entities);
-													System.out.println(this.entities.indexOf(ent2));
-													System.out.println(ent2);
-												}
-												((MovingEntity) ent).setHitCooldown(30);
-												((MovingEntity) ent).setHealth(((MovingEntity) ent).getHealth()
-														- ((MovingEntity) ent2).getDamage());
-
+										zSet = true; // Set flag to true after setting Z-coordinate
+									} else if (((ent instanceof Obstacle
+											&& ((Obstacle) ent).getState().equals("non-moveable")
+											&& (ent2 instanceof Bot && ent2.getDrawWidth() < 160))
+											|| (ent2 instanceof Obstacle
+													&& ((Obstacle) ent2).getState().equals("non-moveable")
+													&& (ent instanceof Bot && ent.getDrawWidth() < 160)))) {
+										if ((ent instanceof Obstacle && (((Bot) ent2).getTarget() == null
+												|| ((Bot) ent2).getTarget().getZ() == 3))
+												|| (ent2 instanceof Obstacle && (((Bot) ent).getTarget() == null
+														|| ((Bot) ent).getTarget().getZ() == 3))) {
+											if (ent instanceof Obstacle) {
+												ent2.setIsUp(true);
+												ent2.setZ(3.0);
+											} else {
+												zSet = true;
+												ent.setIsUp(true);
+												ent.setZ(3.0);
 											}
+										}
+									}
+									// Handle collision effects
+									if (isTouching(ent, ent2)) {
+										if (ent2 instanceof MovingEntity && ent instanceof MovingEntity) {
+											if (ent2 instanceof Player) {
+												collide(ent2, ent);
+											} else if (ent instanceof Player) {
+												collide(ent, ent2);
+											} else {
+												collide(ent, ent2);
+											}
+											if (ent instanceof Bot) {
+												((Bot) ent).setTarget((MovingEntity) ent2);
+											}
+											if (ent2 instanceof Bot) {
+												((Bot) ent2).setTarget((MovingEntity) ent);
+											}
+											if (angleCollide((MovingEntity) ent, (MovingEntity) ent2)) {
+												if (((MovingEntity) ent).getHitCooldown() == 0) {
 
-											if (((MovingEntity) ent).getHealth() <= 0) {
+													if (ent instanceof Player) {
+														System.out.println(this.entities);
+														System.out.println(this.entities.indexOf(ent2));
+														System.out.println(ent2);
+													}
+													((MovingEntity) ent).setHitCooldown(30);
+													((MovingEntity) ent).setHealth(((MovingEntity) ent).getHealth()
+															- ((MovingEntity) ent2).getDamage());
+
+												}
+
+												if (((MovingEntity) ent).getHealth() <= 0) {
+													delete.add(ent);
+													if (this.player.target == ent || ent instanceof Player) {
+														this.player.setTarget(ent2);
+													}
+													((MovingEntity) ent).setHealth(0);
+												}
+											}
+										} else {
+											if (ent instanceof Consumable && ent2 instanceof MovingEntity
+													&& angleCollide((Consumable) ent, (MovingEntity) ent2)) {
+												((Consumable) ent).consume((MovingEntity) ent2);
 												delete.add(ent);
-												if (this.player.target == ent || ent instanceof Player) {
-													this.player.setTarget(ent2);
-												}
-												((MovingEntity) ent).setHealth(0);
+											} else {
+												collide(ent, ent2);
 											}
-										}
-									} else {
-										if (ent instanceof Consumable && ent2 instanceof MovingEntity
-												&& angleCollide((Consumable) ent, (MovingEntity) ent2)) {
-											((Consumable) ent).consume((MovingEntity) ent2);
-											delete.add(ent);
-										} else {
-											collide(ent, ent2);
 										}
 									}
 								}
-							}
-							if (ent2 instanceof Obstacle && ent instanceof MovingEntity && ent.getZ() > 1.0
-									&& !((MovingEntity) ent).getIsUp()) {
-								double newZ = ent.getZ() + (0.5 - ent.getZ()) / 10;
-								if (ent.getZ() >= (ent2.getZ() + 1) && newZ < (ent2.getZ() + 1)) {
-									ent.setIsUp(true);
-									ent.setZ((ent2.getZ() + 1));
+								if (ent2 instanceof Obstacle && ent instanceof MovingEntity && ent.getZ() > 1.0
+										&& !((MovingEntity) ent).getIsUp()) {
+									double newZ = ent.getZ() + (0.5 - ent.getZ()) / 10;
+									if (ent.getZ() >= (ent2.getZ() + 1) && newZ < (ent2.getZ() + 1)) {
+										ent.setIsUp(true);
+										ent.setZ((ent2.getZ() + 1));
+									}
 								}
 							}
 						}
 					}
 				}
-			}
-			if (ent instanceof MovingEntity && ent.getIsUp() == true) {
-				boolean isUp = false;
-				for (int i = Math.max(chunk[0] - 1, 0); i < Math.min(chunk[0] + 2, this.chunkedEntities.length); i++) {
-					for (int j = Math.max(chunk[1] - 1, 0); j < Math.min(chunk[1] + 2,
-							this.chunkedEntities[0].length); j++) {
-						for (Entity ent2 : this.chunkedEntities[i][j]) {
-							if (ent2 instanceof Obstacle && isTouching2(ent2, ent)
-									&& ((Obstacle) ent2).getState().equals("non-moveable")) {
-								isUp = true;
+				if (ent instanceof MovingEntity && ent.getIsUp() == true) {
+					boolean isUp = false;
+					for (int i = Math.max(chunk[0] - 1, 0); i < Math.min(chunk[0] + 2, this.chunkedEntities.length); i++) {
+						for (int j = Math.max(chunk[1] - 1, 0); j < Math.min(chunk[1] + 2,
+								this.chunkedEntities[0].length); j++) {
+							for (Entity ent2 : this.chunkedEntities[i][j]) {
+								if (ent2 instanceof Obstacle && isTouching2(ent2, ent)
+										&& ((Obstacle) ent2).getState().equals("non-moveable")) {
+									isUp = true;
+								}
 							}
 						}
 					}
+					ent.setIsUp(isUp);
 				}
-				ent.setIsUp(isUp);
-			}
-			if (ent.getZ() < 2) {
-				ent.setIsUp(false);
-			}
-			if (ent instanceof MovingEntity && !((MovingEntity) ent).getIsUp() && ent.getZ() > 1.0) {
-				double newZ = ent.getZ() + (0.5 - ent.getZ()) / 10; // Adjust the descent speed as needed
-				if (newZ < 1.0) {
-					newZ = 1.0; // Ensure Z does not go below ground level (Z = 1)
-				}
-				ent.setZ(newZ);
-			}
-			if (!zSet && !(ent instanceof Obstacle)) {
-				if (ent.getZ() > 1.0) {
+				if (ent.getZ() < 2) {
 					ent.setIsUp(false);
 				}
-			}
-			// Draw entities and handle movement
-			if (ent instanceof Player) {
-				// Adjust Z-coordinate for player entity when near edges of other entities or
-				// objects
-				this.player.draw(g, this.mouseX, this.mouseY);
-			} else {
-				ent.draw(g, (int) playerPos[0], (int) playerPos[1]);
-				if (ent instanceof MovingEntity) {
-					if (this.entities.contains(this.player)) {
-						if (ent instanceof Bot) {
-							((Bot) ent).move();
-						}
-					} else {
-						((Bot) ent).move();
+				if (ent instanceof MovingEntity && !((MovingEntity) ent).getIsUp() && ent.getZ() > 1.0) {
+					double newZ = ent.getZ() + (0.5 - ent.getZ()) / 10; // Adjust the descent speed as needed
+					if (newZ < 1.0) {
+						newZ = 1.0; // Ensure Z does not go below ground level (Z = 1)
+					}
+					ent.setZ(newZ);
+				}
+				if (!zSet && !(ent instanceof Obstacle)) {
+					if (ent.getZ() > 1.0) {
+						ent.setIsUp(false);
 					}
 				}
-			}
-			// Draw player UI over everything else
-			if (this.player.getHealth() > 0) {
-				this.player.drawUI(g);
-			}
-			// Check if entity is past bounding and adjust position if necessary
-			if (isPastBounding(ent)) {
-				movePastBounding(ent);
-			}
+				// Draw entities and handle movement
+				if (ent instanceof Player) {
+					// Adjust Z-coordinate for player entity when near edges of other entities or
+					// objects
+					this.player.draw(g, this.mouseX, this.mouseY);
+				} else {
+					ent.draw(g, (int) playerPos[0], (int) playerPos[1]);
+					if (ent instanceof MovingEntity) {
+						if (this.entities.contains(this.player)) {
+							if (ent instanceof Bot) {
+								((Bot) ent).move();
+							}
+						} else {
+							((Bot) ent).move();
+						}
+					}
+				}
+				// Draw player UI over everything else
+				if (ent instanceof Player && this.player.getHealth() > 0) {
+					this.player.drawUI(g);
+				}
+				// Check if entity is past bounding and adjust position if necessary
+				if (isPastBounding(ent)) {
+					movePastBounding(ent);
+				}
 
-			// Update entity dimensions
-			ent.setHeight(height);
-			ent.setWidth(width);
+				// Update entity dimensions
+				ent.setHeight(height);
+				ent.setWidth(width);
+
+			}
+			else {
+				if (ent instanceof Player) {
+					// Adjust Z-coordinate for player entity when near edges of other entities or
+					// objects
+					this.player.draw(g, this.mouseX, this.mouseY);
+				} else {
+					ent.draw(g, (int) playerPos[0], (int) playerPos[1]);
+				}
+				
+				
+			}
 
 		}
-
+		// Draw player UI over everything else
+		this.player.drawUI(g);
 		if (this.entities.contains(this.player)) {
-			this.player.move(mouseX, mouseY, !this.entities.contains(this.player));
+			if (!paused) {
+				this.player.move(mouseX, mouseY, !this.entities.contains(this.player));
+			}
+
 		} else {
 			if (this.player.target == null || !this.entities.contains(this.player.target)) {
 				int index = 0;
