@@ -115,7 +115,7 @@ g2d.setColor(new Color(255, 0, 0, (int)this.getHitCooldown()*3));
 	    g2d.setColor(Color.gray);
 	    g2d.fillRect(x+((int) (this.getHealth() * this.getDrawWidth()/100)), y,(int) ((100-this.getHealth()) * this.getDrawWidth()/100), 10);
 	    this.setHitCooldown(this.getHitCooldown()<=0?0:this.getHitCooldown() - 0.5);
-		this.setMoveSpeedMod(this.getHitCooldown()==0?120:30);
+		this.setMoveSpeedMod(this.getHitCooldown()==0?140:90);
 	}
 
 	public void setTarget(MovingEntity target) {

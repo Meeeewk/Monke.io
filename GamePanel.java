@@ -231,6 +231,21 @@ public class GamePanel extends AnimatedPanel {
 				e.setY(e.getY() + offset * t);
 				e2.setX(e2.getX() - (2 - offset) * j);
 				e2.setY(e2.getY() - (2 - offset) * t);
+				if(isPastBounding(e2)) {
+					e.setX(e.getX() - offset * j);
+					e.setY(e.getY() - offset * t);
+					e2.setX(e2.getX() + (2 - offset) * j);
+					e2.setY(e2.getY() + (2 - offset) * t);
+					e.setX(e.getX() + 2 * j);
+					e.setY(e.getY() + 2 * t);
+				}if(isPastBounding(e)) {
+					e.setX(e.getX() - offset * j);
+					e.setY(e.getY() - offset * t);
+					e2.setX(e2.getX() + (2 - offset) * j);
+					e2.setY(e2.getY() + (2 - offset) * t);
+					e2.setX(e2.getX() - 2 * j);
+					e2.setY(e2.getY() - 2 * t);
+				}
 				
 			} else {
 				double j = (value(e, e2, false) - (value(e2, e, false) + value(e, e2, false)) / 2);
@@ -244,6 +259,21 @@ public class GamePanel extends AnimatedPanel {
 				e2.setY(e2.getY() + offset * t);
 				e.setX(e.getX() - (2 - offset) * j);
 				e.setY(e.getY() - (2 - offset) * t);
+				if(isPastBounding(e2)) {
+					e2.setX(e2.getX() - offset * j);
+					e2.setY(e2.getY() - offset * t);
+					e.setX(e.getX() + (2 - offset) * j);
+					e.setY(e.getY() + (2 - offset) * t);
+					e.setX(e.getX() - 2 * j);
+					e.setY(e.getY() - 2 * t);
+				}if(isPastBounding(e)) {
+					e2.setX(e2.getX() - offset * j);
+					e2.setY(e2.getY() - offset * t);
+					e.setX(e.getX() + (2 - offset) * j);
+					e.setY(e.getY() + (2 - offset) * t);
+					e2.setX(e2.getX() + 2 * j);
+					e2.setY(e2.getY() + 2 * t);
+				}
 			}
 		}
 	}
@@ -364,13 +394,10 @@ public class GamePanel extends AnimatedPanel {
 											} else {
 												collide(ent, ent2);
 											}
-											if (ent instanceof Bot) {
-												((Bot) ent).setTarget((MovingEntity) ent2);
-											}
-											if (ent2 instanceof Bot) {
-												((Bot) ent2).setTarget((MovingEntity) ent);
-											}
 											if (angleCollide((MovingEntity) ent, (MovingEntity) ent2)) {
+												if (ent instanceof Bot) {
+													((Bot) ent).setTarget((MovingEntity) ent2);
+												}
 												if (((MovingEntity) ent).getHitCooldown() == 0) {
 
 													if (ent instanceof Player) {
