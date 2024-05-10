@@ -17,9 +17,10 @@ public class GamePanel extends AnimatedPanel {
 	private Player player;
 	private int mouseX;
 	private int mouseY;
-	private int boundingX = 3000;
-	private int boundingY = 3000;
+	private int boundingX = 2000;
+	private int boundingY = 2000;
 	private ArrayList<Entity> shuffledEntities = new ArrayList<>();
+
 	@Override
 	public void updateAnimation() {
 		this.requestFocusInWindow();
@@ -29,7 +30,7 @@ public class GamePanel extends AnimatedPanel {
 		addEventHandlers();
 		this.setBackground(Color.GREEN);
 		createObjects();
-		this.chunkedEntities = new Set[2 * (boundingX/500)][2 * (boundingY/500)];
+		this.chunkedEntities = new Set[2 * (boundingX / 500)][2 * (boundingY / 500)];
 		this.entities.sort((o1, o2) -> o1.getDrawHeight() - o2.getDrawHeight());
 		for (int i = 0; i < this.chunkedEntities.length; i++) {
 			for (int j = 0; j < this.chunkedEntities[0].length; j++) {
@@ -53,29 +54,29 @@ public class GamePanel extends AnimatedPanel {
 					player.setSprinting(true);
 				}
 				int keyCode = e.getKeyCode();
-		        if (keyCode == KeyEvent.VK_Z) {
-		            player.setIsUp(true);
-		        }
-		        if (player.target != null && keyCode == KeyEvent.VK_RIGHT) {
-		            int currentIndex = shuffledEntities.indexOf(player.target);
-		            for (int i = currentIndex + 1; i < shuffledEntities.size(); i++) {
-		                Entity entity = shuffledEntities.get(i);
-		                if (entity instanceof MovingEntity) {
-		                    player.target = entity;
-		                    break;
-		                }
-		            }
-		        }
-		        if (player.target != null && keyCode == KeyEvent.VK_LEFT) {
-		            int currentIndex = shuffledEntities.indexOf(player.target);
-		            for (int i = currentIndex - 1; i >= 0; i--) {
-		                Entity entity = shuffledEntities.get(i);
-		                if (entity instanceof MovingEntity) {
-		                    player.target = entity;
-		                    break;
-		                }
-		            }
-		        }
+				if (keyCode == KeyEvent.VK_Z) {
+					player.setIsUp(true);
+				}
+				if (player.target != null && keyCode == KeyEvent.VK_RIGHT) {
+					int currentIndex = shuffledEntities.indexOf(player.target);
+					for (int i = currentIndex + 1; i < shuffledEntities.size(); i++) {
+						Entity entity = shuffledEntities.get(i);
+						if (entity instanceof MovingEntity) {
+							player.target = entity;
+							break;
+						}
+					}
+				}
+				if (player.target != null && keyCode == KeyEvent.VK_LEFT) {
+					int currentIndex = shuffledEntities.indexOf(player.target);
+					for (int i = currentIndex - 1; i >= 0; i--) {
+						Entity entity = shuffledEntities.get(i);
+						if (entity instanceof MovingEntity) {
+							player.target = entity;
+							break;
+						}
+					}
+				}
 			}
 
 			@Override
@@ -84,12 +85,11 @@ public class GamePanel extends AnimatedPanel {
 					player.setSprinting(false);
 				}
 			}
-			
+
 			@Override
 			public void keyTyped(KeyEvent e) {
 				char[] abilityKeys = player.getAbilityKeys();
 				for (int i = 0; i < abilityKeys.length; i++) {
-					System.out.println(abilityKeys[i]);
 					if (abilityKeys[i] == e.getKeyChar()) {
 						player.activateAbility(i);
 						break;
@@ -106,19 +106,24 @@ public class GamePanel extends AnimatedPanel {
 	public void createObjects() {
 		this.player = new Player();
 		this.entities.add(this.player);
-		for (int i = 0; i < 30; i++) {
-			this.entities.add(new Bot(random(boundingX), random(boundingY),null, boundingX, boundingY));
+		for (int i = 0; i < (boundingX + boundingY) / 200; i++) {
+			this.entities.add(new Bot(random(boundingX), random(boundingY), null, boundingX, boundingY));
 		}
-//		
-//
-		for (int j = 0; j < 200; j++) {
+		
+
+		for (int j = 0; j < (boundingX+boundingY)/30; j++) {
 			this.entities.add(new Consumable(random(boundingX),random(boundingY), "watermelon",60, 0, 15));
 			this.entities.add(new Consumable(random(boundingX),random(boundingY), "banana",40, 25, 0));
 		}
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < (boundingX+boundingY)/200; i++) {
 			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "rock", "moveable",(int)(Math.random()*100+50),1));
 		}
-		for (int i = 0; i < 30; i++) {
+		int bounding=boundingX*10000;
+		this.entities.add(new Obstacle(0, 0, "rock", "moveable",(int)(Math.random()*100+50),1));
+		this.entities.add(new Obstacle(bounding, bounding, "rock", "moveable",(int)(Math.random()*100+50),1));
+		this.entities.add(new Obstacle(bounding, 0, "rock", "moveable",(int)(Math.random()*100+50),1));
+		this.entities.add(new Obstacle(0, bounding, "rock", "moveable",(int)(Math.random()*100+50),1));
+		for (int i = 0; i < (boundingX+boundingY)/500; i++) {
 			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "tree", "non-moveable",(int)(Math.random()*500+300),2));
 		}
 		shuffledEntities = new ArrayList<>(this.entities);
@@ -142,9 +147,9 @@ public class GamePanel extends AnimatedPanel {
 //		if(e instanceof Player&&rotDiff>2.5&&rotDiff<4.5) {
 //		System.out.println(rotDiff);
 //		}
-		return (zDiff ==0 )
-				&& distanceSquared < (radius1 + radius2) * (radius1 + radius2); // Adjust the condition to // consider
-																				// the Z-coordinate
+		return (zDiff == 0) && distanceSquared < (radius1 + radius2) * (radius1 + radius2); // Adjust the condition to
+																							// // consider
+																							// the Z-coordinate
 		// difference
 	}
 
@@ -180,39 +185,56 @@ public class GamePanel extends AnimatedPanel {
 
 	private void collide(Entity e, Entity e2) {
 		double offset = 0;
+		if (e instanceof MovingEntity || e2 instanceof MovingEntity) {
+			offset = 1;
+		}
 		if (e2 instanceof Player || e instanceof Player) {
 			offset = 1.5;
 		}
-		if (e2 instanceof Consumable && e instanceof MovingEntity) {
+		if (e instanceof Obstacle && e2 instanceof Obstacle) {
+			offset = 1;
+		}
+		if (e2 instanceof Obstacle && ((Obstacle) e2).getState().equals("non-moveable")) {
+			offset = 2;
+		} else if (e instanceof Obstacle && ((Obstacle) e).getState().equals("non-moveable")) {
+			offset = 0;
+		}
+		if (e instanceof Obstacle && ((Obstacle) e).getState().equals("moveable")) {
+			offset = e.getDrawWidth() / 100.0 - e2.getDrawWidth() / 200.0;
+		}
+		if (e2 instanceof Obstacle && ((Obstacle) e2).getState().equals("moveable")) {
+			offset = 2 - e.getDrawWidth() / 100.0 + e2.getDrawWidth() / 200.0;
+		}
+		if (e instanceof Consumable) {
+			offset = 0;
+		}
+		if (e2 instanceof Consumable) {
 			offset = 2;
 		}
-		if(e2 instanceof Obstacle&&((Obstacle) e2).getState().equals("non-moveable")) {
-			offset=2;
-		}
-		else if(e instanceof Obstacle&&((Obstacle) e).getState().equals("non-moveable")) {
-			offset=0;
-		}
-		if(e instanceof Obstacle&&((Obstacle) e).getState().equals("moveable")) {
-			offset=0;
-		}if(e2 instanceof Obstacle&&((Obstacle) e2).getState().equals("moveable")) {
-			offset=0;
-		}
-		if(e instanceof Consumable) {
-			offset=0;
-		}if(e2 instanceof Consumable) {
-			offset=2;
+		if (e instanceof Consumable && e2 instanceof Consumable) {
+			offset = 1;
 		}
 		if (isTouching(e, e2)) {
 			if (e2 instanceof Obstacle && ((Obstacle) e2).getState().equals("non-moveable")) {
 				double j = (value(e2, e, false) - (value(e, e2, false) + value(e2, e, false)) / 2);
 				double t = (value(e2, e, true) - (value(e, e2, true) + value(e2, e, true)) / 2);
+//				if(Math.abs((2 - offset) * j)>14||Math.abs(offset * j)>14) {
+//					j/=9;
+//					t/=9;
+//				}
 				e.setX(e.getX() + offset * j);
 				e.setY(e.getY() + offset * t);
 				e2.setX(e2.getX() - (2 - offset) * j);
 				e2.setY(e2.getY() - (2 - offset) * t);
+				
 			} else {
 				double j = (value(e, e2, false) - (value(e2, e, false) + value(e, e2, false)) / 2);
 				double t = (value(e, e2, true) - (value(e2, e, true) + value(e, e2, true)) / 2);
+				//Checks if it is moving entity too far and then makes it go slower bit by bit
+//				if(Math.abs((2 - offset) * j)>14||Math.abs(offset * j)>14) {
+//					j/=9;
+//					t/=9;
+//				}
 				e2.setX(e2.getX() + offset * j);
 				e2.setY(e2.getY() + offset * t);
 				e.setX(e.getX() - (2 - offset) * j);
@@ -230,6 +252,7 @@ public class GamePanel extends AnimatedPanel {
 		}
 		return false;
 	}
+
 	private void movePastBounding(Entity e) {
 		int offset = e.getDrawWidth() / 3;
 		if (e.getX() > this.getBoundingX() - offset) {
@@ -251,17 +274,18 @@ public class GamePanel extends AnimatedPanel {
 	private double getBoundingY() {
 		return this.boundingY;
 	}
+
 	private boolean angleCollide(Entity ent2, MovingEntity ent) {
 		double entFacing = ent.getFacingDir();
 		double angle = 0;
-	    double vect_len = Math.sqrt(Math.pow(ent2.getX() - ent.getX(), 2) + Math.pow(ent2.getY() - ent.getY(), 2));
-	    if ((ent2.getY() - ent.getY()) * -1 < 0) {
-	    	angle = Math.PI * 2 - Math.acos((ent2.getX() - ent.getX()) / vect_len);
-	    } else {
-	    	angle = Math.acos((ent2.getX() - ent.getX()) / vect_len);
-	    }
-	    double facingOther = 3 * Math.PI / 2 - angle;
-	    return Math.abs(entFacing - facingOther) < Math.toRadians(45);
+		double vect_len = Math.sqrt(Math.pow(ent2.getX() - ent.getX(), 2) + Math.pow(ent2.getY() - ent.getY(), 2));
+		if ((ent2.getY() - ent.getY()) * -1 < 0) {
+			angle = Math.PI * 2 - Math.acos((ent2.getX() - ent.getX()) / vect_len);
+		} else {
+			angle = Math.acos((ent2.getX() - ent.getX()) / vect_len);
+		}
+		double facingOther = 3 * Math.PI / 2 - angle;
+		return Math.abs(entFacing - facingOther) < Math.toRadians(45);
 	}
 
 	private void collideLogic(double[] playerPos, double playerZ, Graphics g) {
@@ -278,35 +302,23 @@ public class GamePanel extends AnimatedPanel {
 				return 0;
 			}
 		});
-		System.out.println("\n\n\n");
 		for (Entity ent : this.entities) {
 			boolean zSet = false; // Flag to track if Z-coordinate has been set for the current entity
 			int[] chunk = ent.getChunk();
 			// Check for collision and set Z-coordinate
-			for (int i = Math.max(chunk[0] - 1, 0); i < Math.min(chunk[0] + 2, this.chunkedEntities.length); i++) { 
-				for (int j = Math.max(chunk[1] - 1, 0); j < Math.min(chunk[1] + 2, this.chunkedEntities[0].length); j++) {
-					if (ent == this.player) {
-						System.out.println("checked: " + i + "   " + j);
-					}
+			for (int i = Math.max(chunk[0] - 1, 0); i < Math.min(chunk[0] + 2, this.chunkedEntities.length); i++) {
+				for (int j = Math.max(chunk[1] - 1, 0); j < Math.min(chunk[1] + 2,
+						this.chunkedEntities[0].length); j++) {
 					for (Entity ent2 : this.chunkedEntities[i][j]) {
-						if (ent != ent2 && isTouching2(ent, ent2)) {
-							if (((ent instanceof Obstacle && ((Obstacle) ent).getState().equals("non-moveable")
-									&& (ent2 instanceof MovingEntity && ent2.getIsUp() && ent2.getDrawWidth() < 160))
-									|| (ent2 instanceof Obstacle && ((Obstacle) ent2).getState().equals("non-moveable")
-											&& (ent.getIsUp() && ent instanceof MovingEntity && ent.getDrawWidth() < 160)))) {
+						if (this.entities.indexOf(ent2) != -1) {
+							if (ent != ent2 && isTouching2(ent, ent2)) {
+								if (((ent instanceof Obstacle && ((Obstacle) ent).getState().equals("non-moveable")
+										&& (ent2 instanceof MovingEntity && ent2.getIsUp()
+												&& ent2.getDrawWidth() < 160))
+										|| (ent2 instanceof Obstacle
+												&& ((Obstacle) ent2).getState().equals("non-moveable") && (ent.getIsUp()
+														&& ent instanceof MovingEntity && ent.getDrawWidth() < 160)))) {
 
-								if (ent instanceof Obstacle) {
-									ent2.setZ(3.0);
-								} else {
-									zSet = true;
-									ent.setZ(3.0);
-								}
-								zSet = true; // Set flag to true after setting Z-coordinate
-							} else if (((ent instanceof Obstacle && ((Obstacle) ent).getState().equals("non-moveable")
-									&& (ent2 instanceof Bot && ent2.getDrawWidth() < 160))
-									|| (ent2 instanceof Obstacle && ((Obstacle) ent2).getState().equals("non-moveable")
-											&& (ent instanceof Bot && ent.getDrawWidth() < 160)))) {
-								if ((ent instanceof Obstacle && (((Bot) ent2).getTarget()==null||((Bot) ent2).getTarget().getZ()==3))||(ent2 instanceof Obstacle && (((Bot) ent).getTarget()==null||((Bot) ent).getTarget().getZ()==3))) {
 									if (ent instanceof Obstacle) {
 										ent2.setIsUp(true);
 										ent2.setZ(3.0);
@@ -315,60 +327,113 @@ public class GamePanel extends AnimatedPanel {
 										ent.setIsUp(true);
 										ent.setZ(3.0);
 									}
+									zSet = true; // Set flag to true after setting Z-coordinate
+								} else if (((ent instanceof Obstacle
+										&& ((Obstacle) ent).getState().equals("non-moveable")
+										&& (ent2 instanceof Bot && ent2.getDrawWidth() < 160))
+										|| (ent2 instanceof Obstacle
+												&& ((Obstacle) ent2).getState().equals("non-moveable")
+												&& (ent instanceof Bot && ent.getDrawWidth() < 160)))) {
+									if ((ent instanceof Obstacle && (((Bot) ent2).getTarget() == null
+											|| ((Bot) ent2).getTarget().getZ() == 3))
+											|| (ent2 instanceof Obstacle && (((Bot) ent).getTarget() == null
+													|| ((Bot) ent).getTarget().getZ() == 3))) {
+										if (ent instanceof Obstacle) {
+											ent2.setIsUp(true);
+											ent2.setZ(3.0);
+										} else {
+											zSet = true;
+											ent.setIsUp(true);
+											ent.setZ(3.0);
+										}
+									}
+								}
+								// Handle collision effects
+								if (isTouching(ent, ent2)) {
+									if (ent2 instanceof MovingEntity && ent instanceof MovingEntity) {
+										if (ent2 instanceof Player) {
+											collide(ent2, ent);
+										} else if (ent instanceof Player) {
+											collide(ent, ent2);
+										} else {
+											collide(ent, ent2);
+										}
+										if (ent instanceof Bot) {
+											((Bot) ent).setTarget((MovingEntity) ent2);
+										}
+										if (ent2 instanceof Bot) {
+											((Bot) ent2).setTarget((MovingEntity) ent);
+										}
+										if (angleCollide((MovingEntity) ent, (MovingEntity) ent2)) {
+											if (((MovingEntity) ent).getHitCooldown() == 0) {
+
+												if (ent instanceof Player) {
+													System.out.println(this.entities);
+													System.out.println(this.entities.indexOf(ent2));
+													System.out.println(ent2);
+												}
+												((MovingEntity) ent).setHitCooldown(30);
+												((MovingEntity) ent).setHealth(((MovingEntity) ent).getHealth()
+														- ((MovingEntity) ent2).getDamage());
+
+											}
+
+											if (((MovingEntity) ent).getHealth() <= 0) {
+												delete.add(ent);
+												if (this.player.target == ent || ent instanceof Player) {
+													this.player.setTarget(ent2);
+												}
+												((MovingEntity) ent).setHealth(0);
+											}
+										}
+									} else {
+										if (ent instanceof Consumable && ent2 instanceof MovingEntity
+												&& angleCollide((Consumable) ent, (MovingEntity) ent2)) {
+											((Consumable) ent).consume((MovingEntity) ent2);
+											delete.add(ent);
+										} else {
+											collide(ent, ent2);
+										}
+									}
 								}
 							}
-							// Handle collision effects
-							if (isTouching(ent, ent2)) {
-								if (ent2 instanceof MovingEntity && ent instanceof MovingEntity) {
-									if (ent2 instanceof Player) {
-										collide(ent2, ent);
-									} else if (ent instanceof Player) {
-										collide(ent, ent2);
-									} else {
-										collide(ent, ent2);
-									}
-									if (ent instanceof Bot) {
-										((Bot) ent).setTarget((MovingEntity) ent2);
-									}
-									if (ent2 instanceof Bot) {
-										((Bot) ent2).setTarget((MovingEntity) ent);
-									}
-									if(angleCollide((MovingEntity)ent,(MovingEntity)ent2)) {
-									if (((MovingEntity) ent).getHitCooldown() == 0) {								
-										if (ent instanceof Player) {
-									}
-										((MovingEntity) ent).setHitCooldown(30);
-										((MovingEntity) ent).setHealth(((MovingEntity) ent).getHealth() - ((MovingEntity) ent2).getDamage());
-
-									}
-
-									if (((MovingEntity) ent).getHealth() <= 0) {
-										delete.add(ent);
-										if(this.player.target==ent||ent instanceof Player) {
-											this.player.setTarget(ent2);
-										}
-										((MovingEntity) ent).setHealth(0);
-									}
-									}
-								} else {
-									if (ent instanceof Consumable && ent2 instanceof MovingEntity&&angleCollide((Consumable)ent,(MovingEntity)ent2)) {
-										((Consumable) ent).consume((MovingEntity) ent2);
-										delete.add(ent);
-									} else if (ent2 instanceof Consumable && ent instanceof MovingEntity&&angleCollide((Consumable)ent2,(MovingEntity)ent)) {
-										((Consumable) ent2).consume((MovingEntity) ent);
-										delete.add(ent2);
-									} else {
-										collide(ent, ent2);
-									}
+							if (ent2 instanceof Obstacle && ent instanceof MovingEntity && ent.getZ() > 1.0
+									&& !((MovingEntity) ent).getIsUp()) {
+								double newZ = ent.getZ() + (0.5 - ent.getZ()) / 10;
+								if (ent.getZ() >= (ent2.getZ() + 1) && newZ < (ent2.getZ() + 1)) {
+									ent.setIsUp(true);
+									ent.setZ((ent2.getZ() + 1));
 								}
 							}
 						}
 					}
 				}
 			}
-//			for (Entity ent2 : this.entities) {
-//				
-//			}
+			if (ent instanceof MovingEntity && ent.getIsUp() == true) {
+				boolean isUp = false;
+				for (int i = Math.max(chunk[0] - 1, 0); i < Math.min(chunk[0] + 2, this.chunkedEntities.length); i++) {
+					for (int j = Math.max(chunk[1] - 1, 0); j < Math.min(chunk[1] + 2,
+							this.chunkedEntities[0].length); j++) {
+						for (Entity ent2 : this.chunkedEntities[i][j]) {
+							if (ent2 instanceof Obstacle && isTouching2(ent2, ent)
+									&& ((Obstacle) ent2).getState().equals("non-moveable")) {
+								isUp = true;
+							}
+						}
+					}
+				}
+				ent.setIsUp(isUp);
+			}
+			if (ent.getZ() < 2) {
+				ent.setIsUp(false);
+			}
+			if (ent instanceof MovingEntity && !((MovingEntity) ent).getIsUp() && ent.getZ() > 1.0) {
+				double newZ = ent.getZ() + (0.5 - ent.getZ()) / 10; // Adjust the descent speed as needed
+				if (newZ < 1.0) {
+					newZ = 1.0; // Ensure Z does not go below ground level (Z = 1)
+				}
+				ent.setZ(newZ);
+			}
 			if (!zSet && !(ent instanceof Obstacle)) {
 				if (ent.getZ() > 1.0) {
 					ent.setIsUp(false);
@@ -409,11 +474,11 @@ public class GamePanel extends AnimatedPanel {
 		if (this.entities.contains(this.player)) {
 			this.player.move(mouseX, mouseY, !this.entities.contains(this.player));
 		} else {
-			if(this.player.target==null||!this.entities.contains(this.player.target)) {
-				int index=0;
-				while(true) {
-					if(shuffledEntities.get(index) instanceof MovingEntity) {
-						this.player.target=this.shuffledEntities.get(index);
+			if (this.player.target == null || !this.entities.contains(this.player.target)) {
+				int index = 0;
+				while (true) {
+					if (shuffledEntities.get(index) instanceof MovingEntity) {
+						this.player.target = this.shuffledEntities.get(index);
 						break;
 					}
 					index++;
@@ -423,7 +488,7 @@ public class GamePanel extends AnimatedPanel {
 		}
 		for (int i = 0; i < delete.size(); i++) {
 			try {
-				if(delete.get(i) instanceof MovingEntity) {
+				if (delete.get(i) instanceof MovingEntity) {
 					Bot newBot=new Bot(random(boundingX), random(boundingY),null, boundingX, boundingY);
 					this.entities.add(newBot);
 					this.shuffledEntities.add(newBot);
@@ -456,18 +521,23 @@ public class GamePanel extends AnimatedPanel {
 	}
 
 	private void drawGrid(double[] playerPos, Graphics g, int width) {
-		g.setColor(new Color(0, 200, 0));
+		g.setColor(new Color(0, 210, 0));
 		for (int i = -boundingX; i <= boundingX * 2; i += width) {
-			for (int j = (int) (-boundingY - width*1.1); j <= boundingY; j += width) {
+			for (int j = (int) (-boundingY - width * 1.1); j <= boundingY; j += width) {
 				g.drawRect(i - (int) playerPos[0], j - (int) playerPos[1] + getWidth() / 2, width * 3, width * 3);
 			}
 		}
 	}
-	
+
 	private void calcChunks() {
 		for (Entity ent : this.entities) {
 			double[] pos = ent.getPos();
-			int[] calculatedChunk = {Math.max(0, Math.min(this.chunkedEntities.length - 1, (int) (pos[0]/500 + this.chunkedEntities.length / 2))),Math.max(0, Math.min(this.chunkedEntities[0].length - 1, (int) (pos[1]/500 + this.chunkedEntities.length / 2)))};
+			int[] calculatedChunk = {
+					Math.max(0,
+							Math.min(this.chunkedEntities.length - 1,
+									(int) (pos[0] / 500 + this.chunkedEntities.length / 2))),
+					Math.max(0, Math.min(this.chunkedEntities[0].length - 1,
+							(int) (pos[1] / 500 + this.chunkedEntities.length / 2))) };
 			int[] entChunk = ent.getChunk();
 			if (!calculatedChunk.equals(entChunk)) {
 				this.chunkedEntities[entChunk[0]][entChunk[1]].remove(ent);
@@ -486,16 +556,7 @@ public class GamePanel extends AnimatedPanel {
 		drawGrid(playerPos, g, 100);
 		displayBorders(playerPos, g);
 		g.setColor(Color.BLACK);
-		collideLogic(playerPos, playerZ, g);    
-		for (Entity entity : entities) {
-	        if (entity instanceof MovingEntity && !((MovingEntity)entity).getIsUp() && entity.getZ() > 1.0) {
-	            double newZ = entity.getZ()+(0.5-entity.getZ())/10; // Adjust the descent speed as needed
-	            if (newZ < 1.0) {
-	                newZ = 1.0; // Ensure Z does not go below ground level (Z = 1)
-	            }
-	            entity.setZ(newZ);
-	        }
-	    }
+		collideLogic(playerPos, playerZ, g);
 		// scawy batel woyal
 //		if(Math.random()>0.1&&this.boundingX>200&&this.boundingY>200) {
 //		this.boundingX-=19;
