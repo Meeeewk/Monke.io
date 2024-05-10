@@ -142,6 +142,32 @@ public class Player extends MovingEntity {
         }
         super.move(cursorX, cursorY, this.getZ());
     }
+    
+    @Override
+    public void setWidth(int width) {
+    	super.setWidth(width);
+    	if (this.evoBtns == null) {
+    		return;
+    	}
+    	int numSections = this.evoBtns.size() + 1;
+    	for (int i = 0; i < this.evoBtns.size(); i++) {
+    		JButton btn = this.evoBtns.get(i);
+    		btn.setBounds(((i + 1) * this.getWidth() / numSections) - (this.getWidth() / (4 * numSections)), this.getHeight() / 3, (this.getWidth() / (2 * numSections)), this.getHeight() / 6);
+    	}
+    }
+    
+    @Override
+    public void setHeight(int height) {
+    	super.setHeight(height);
+    	if (this.evoBtns == null) {
+    		return;
+    	}
+    	int numSections = this.evoBtns.size() + 1;
+    	for (int i = 0; i < this.evoBtns.size(); i++) {
+    		JButton btn = this.evoBtns.get(i);
+    		btn.setBounds((this.getWidth() / numSections) - (this.getWidth() / (4 * numSections)), this.getHeight() / 3, (this.getWidth() / (2 * numSections)), this.getHeight() / 6);
+    	}
+    }
 
     public void setTarget(Entity ent) {
         this.target = ent;
