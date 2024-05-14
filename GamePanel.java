@@ -310,7 +310,8 @@ public class GamePanel extends AnimatedPanel {
 		return this.boundingY;
 	}
 
-	private boolean angleCollide(Entity ent2, MovingEntity ent) {
+	private boolean angleCollide(Entity ent2, MovingEntity ent, int range) {
+		//ent2 facing on ent
 		double entFacing = ent.getFacingDir();
 		double angle = 0;
 		double vect_len = Math.sqrt(Math.pow(ent2.getX() - ent.getX(), 2) + Math.pow(ent2.getY() - ent.getY(), 2));
@@ -320,7 +321,7 @@ public class GamePanel extends AnimatedPanel {
 			angle = Math.acos((ent2.getX() - ent.getX()) / vect_len);
 		}
 		double facingOther = 3 * Math.PI / 2 - angle;
-		return Math.abs(entFacing - facingOther) < Math.toRadians(45);
+		return Math.abs(entFacing - facingOther) < Math.toRadians(range / 2);
 	}
 
 	private void collideLogic(double[] playerPos, double playerZ, Graphics g) {
@@ -394,14 +395,19 @@ public class GamePanel extends AnimatedPanel {
 											} else {
 												collide(ent, ent2);
 											}
-											if (angleCollide((MovingEntity) ent, (MovingEntity) ent2)) {
+											if (angleCollide((MovingEntity) ent, (MovingEntity) ent2, 90) || (ent2 instanceof Player && ((Player) ent2).getDashingFrames() > 0 && angleCollide((MovingEntity) ent2, (MovingEntity) ent, 160))) {
 												if (ent instanceof Bot) {
 													((Bot) ent).setTarget((MovingEntity) ent2);
 												}
+												//damage being added
 												if (((MovingEntity) ent).getHitCooldown() == 0) {
 
 
 													((MovingEntity) ent).setHitCooldown(30);
+													if (ent2 instanceof Player && ((Player) ent2).getDashingFrames() > 0) {
+														((MovingEntity) ent).setHealth(((MovingEntity) ent).getHealth()
+																- ((MovingEntity) ent2).getDamage() * 2.2);
+													}
 													((MovingEntity) ent).setHealth(((MovingEntity) ent).getHealth()
 															- ((MovingEntity) ent2).getDamage());
 
@@ -417,7 +423,7 @@ public class GamePanel extends AnimatedPanel {
 											}
 										} else {
 											if (ent instanceof Consumable && ent2 instanceof MovingEntity
-													&& angleCollide((Consumable) ent, (MovingEntity) ent2)) {
+													&& angleCollide((Consumable) ent, (MovingEntity) ent2, 90)) {
 												((Consumable) ent).consume((MovingEntity) ent2);
 												delete.add(ent);
 											} else {

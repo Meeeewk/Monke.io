@@ -18,7 +18,7 @@ public class Player extends MovingEntity {
     private double xRoam = Math.random() * 200 - 100;
     private double yRoam = Math.random() * 200 - 100;
     private int jumpingFrames = 0;
-    private int dmgIncrease = 0;
+    private double dmgIncrease = 1;
     private int dashingFrames = 0;
     private char[] abilityKeys = {' ', 'd'};
     private String[] abilities = {"JUMP", "DASH"};
@@ -49,7 +49,7 @@ public class Player extends MovingEntity {
 				if (ting.equals("Add speed")) {
 					setMaxSpeed(getMaxSpeed() * 1.08);
 				} else if (ting.equals("Add damage")) {
-					dmgIncrease += 10;
+					dmgIncrease += 0.05;
 				}
 				gamePanel.pause(false);
 				showEvoOption = false;
@@ -207,20 +207,24 @@ public class Player extends MovingEntity {
 	}
 
 	public void activateAbility(int index) {
-		System.out.println(index);
 		String ability = this.abilities[index];
 		switch (ability) {
 		case "JUMP":
 			if (jumpingFrames == 0 && this.getSprintEndurance() > 70 && this.getSprintingDisabled() == 0) {
 				this.jumpingFrames = 20;
 				this.setSprintEndurance(this.getSprintEndurance() - 70);
-				this.setSprintingDisabled(20);
+				this.setSprintingDisabled(25);
 			}
 			break;
 		case "DASH":
 			if (getDashingFrames() == 0 && this.getSprintEndurance() > 70 && this.getSprintingDisabled() == 0) {
-				this.setDashingFrames(40);
-				System.out.println("true");
+				this.setDashingFrames(12);
+				if (this.getSprintEndurance() < 75 && this.getSprintEndurance() > 65) {
+					this.setSprintEndurance(0);
+				} else {
+					this.setSprintEndurance(this.getSprintEndurance() - 70);
+				}
+				this.setSprintingDisabled(25);
 			} 
 			break;
 		}

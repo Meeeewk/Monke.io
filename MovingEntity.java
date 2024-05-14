@@ -107,6 +107,13 @@ public class MovingEntity extends Entity {
 	}
 
 	public void move(double x, double y, double z) {
+		if (this instanceof Player && ((Player) this).getDashingFrames() > 0) {
+			this.setX(this.getX() + (int) (this.getxVelocity() * 5));
+			this.setY(this.getY() + (int) (this.getyVelocity() * 5));
+			this.setxVelocity(this.getxVelocity() * 5 / 6);
+			this.setyVelocity(this.getyVelocity() * 5 / 6);
+			return;
+		}
 		this.setxVelocity(this.getxVelocity() + x / this.getMoveSpeedMod());
 		this.setyVelocity(this.getyVelocity() + y / this.getMoveSpeedMod());
 		double vectLen = Math.sqrt(Math.pow(this.getxVelocity(), 2) + Math.pow(this.getyVelocity(), 2));
@@ -125,13 +132,7 @@ public class MovingEntity extends Entity {
 		if (this.getSprintingDisabled() > 0) {
 			this.setSprintingDisabled(this.getSprintingDisabled() - 1);
 		}
-		if (this instanceof Player) {
-			if (((Player) this).getDashingFrames() > 0) {
-				this.setxVelocity(this.getxVelocity() * 1.5);
-				this.setyVelocity(this.getyVelocity() * 1.5);
-				evaluatingMax = this.getMaxSpeed() * 1.5;
-			}
-		}
+		
 		if (vectLen > evaluatingMax) {
 			this.setxVelocity(evaluatingMax * (this.getxVelocity()) / vectLen);
 			this.setyVelocity(evaluatingMax * (this.getyVelocity()) / vectLen);
@@ -279,6 +280,9 @@ public class MovingEntity extends Entity {
 	}
 
 	public void setSprintEndurance(double sprintEndurance) {
+		if (sprintEndurance == 0) {
+			this.disableSprinting(180);
+		}
 		this.sprintEndurance = sprintEndurance;
 	}
 
