@@ -89,9 +89,9 @@ public class GamePanel extends AnimatedPanel {
 
 			@Override
 			public void keyTyped(KeyEvent e) {
-				char[] abilityKeys = player.getAbilityKeys();
-				for (int i = 0; i < abilityKeys.length; i++) {
-					if (abilityKeys[i] == e.getKeyChar()) {
+				ArrayList<Character> abilityKeys = player.getCurrentAbilityKeys();
+				for (int i = 0; i < abilityKeys.size(); i++) {
+					if (abilityKeys.get(i) == e.getKeyChar()) {
 						player.activateAbility(i);
 						break;
 					}
@@ -118,7 +118,7 @@ public class GamePanel extends AnimatedPanel {
 
 		for (int j = 0; j < (boundingX+boundingY)/30; j++) {
 			this.entities.add(new Consumable(random(boundingX),random(boundingY), "watermelon",60, 0, 15));
-			this.entities.add(new Consumable(random(boundingX),random(boundingY), "banana",40, 25, 0));
+			this.entities.add(new Consumable(random(boundingX),random(boundingY), "banana",40, 45, 0));
 		}
 		for (int i = 0; i < (boundingX+boundingY)/200; i++) {
 			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "rock", "moveable",(int)(Math.random()*100+50),1));
@@ -325,6 +325,7 @@ public class GamePanel extends AnimatedPanel {
 	}
 
 	private void collideLogic(double[] playerPos, double playerZ, Graphics g) {
+		//basically everything for each frame
 		int height = getHeight();
 		int width = getWidth();
 		ArrayList<Entity> delete = new ArrayList<>();
@@ -375,6 +376,7 @@ public class GamePanel extends AnimatedPanel {
 												|| ((Bot) ent2).getTarget().getZ() == 3))
 												|| (ent2 instanceof Obstacle && (((Bot) ent).getTarget() == null
 														|| ((Bot) ent).getTarget().getZ() == 3))) {
+											//CHECKME: Moving stuff up trees i think
 											if (ent instanceof Obstacle) {
 												ent2.setIsUp(true);
 												ent2.setZ(3.0);

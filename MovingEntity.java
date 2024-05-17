@@ -85,6 +85,21 @@ public class MovingEntity extends Entity {
 		// If no skin is selected, return a default skin or handle it as needed
 		return 0;
 	}
+	
+	public static int selectRandomSkin(int notThis) {
+		Random random = new Random();
+		double rand = random.nextDouble();
+		double cumulativeProbability = 0.0;
+		int retrn = notThis;
+		
+		while (retrn == notThis) {
+			retrn = (int) (random.nextDouble() * skins.length + 1);
+		}
+		
+
+		// If no skin is selected, return a default skin or handle it as needed
+		return retrn;
+	}
 
 	public double getDamage() {
 		return this.skinsDamage[skin];
@@ -300,8 +315,8 @@ public class MovingEntity extends Entity {
 
 	public void setHealth(double d) {
 		this.health = d;
-		if (this.health > this.maxHealth) {
-			this.health = this.maxHealth;
+		if (this.health > this.getMaxHealth()) {
+			this.health = this.getMaxHealth();
 		}
 	}
 
@@ -311,5 +326,13 @@ public class MovingEntity extends Entity {
 
 	public void setHitCooldown(double hitCooldown) {
 		this.hitCooldown = hitCooldown;
+	}
+
+	public double getMaxHealth() {
+		return maxHealth;
+	}
+
+	public void setMaxHealth(double maxHealth) {
+		this.maxHealth = maxHealth;
 	}
 }

@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -6,25 +7,34 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.geom.AffineTransform;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 
 public class Player extends MovingEntity {
     private int xp = 0;
     private int xpGoal = 200;
+    private int xpBarWidth = 640;
+    private int energyBarWidth = 480;
+    private int healthBarHeight = 610;
     private int frames = 0;
     private double xRoam = Math.random() * 200 - 100;
     private double yRoam = Math.random() * 200 - 100;
     private int jumpingFrames = 0;
     private double dmgIncrease = 1;
     private int dashingFrames = 0;
-    private char[] abilityKeys = {' ', 'd'};
-    private String[] abilities = {"JUMP", "DASH"};
+    private ArrayList<Character> currentAbilityKeys = new ArrayList<>();
+    private ArrayList<String> currentAbilities = new ArrayList<>();
+    private ArrayList<Character> availableAbilityKeys = new ArrayList<>(Arrays.asList(' ', 'd'));
+    private ArrayList<String> availableAbilities = new ArrayList<>(Arrays.asList("JUMP", "DASH"));
     public Entity target;
     private boolean showEvoOption = false;
     private GamePanel gamePanel;
+    private ActionListener listener;
     private ArrayList<JButton> evoBtns = new ArrayList<JButton>();
     private double viewPOV = 55; // Default value
 
@@ -35,38 +45,84 @@ public class Player extends MovingEntity {
     public Player() {
         this(0.0, 0.0, 400, 400, 60, 100, 100, "elephant.png", Math.sqrt(162), Math.sqrt(243));
 //        super.setZ(5);
-        JButton speedBtn = new JButton("Add speed");
-		JButton dmgBtn = new JButton("Add damage");
-		speedBtn.setBounds(this.getWidth() / 6, this.getHeight() / 3, this.getWidth() / 6, this.getHeight() / 6);
-		dmgBtn.setBounds(this.getWidth() * 2 / 3, this.getHeight() / 3, this.getWidth() / 6, this.getHeight() / 6);
-		speedBtn.setBackground(Color.orange);
-		dmgBtn.setBackground(Color.red);
-		ActionListener listen = new ActionListener() {
+       this.listener = new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String ting = e.getActionCommand();
-				if (ting.equals("Add speed")) {
-					setMaxSpeed(getMaxSpeed() * 1.08);
-				} else if (ting.equals("Add damage")) {
-					dmgIncrease += 0.05;
-				}
+				
 				gamePanel.pause(false);
 				showEvoOption = false;
-				gamePanel.remove(speedBtn);
-				gamePanel.remove(dmgBtn);
+				for (Component cmp : gamePanel.getComponents()) {
+					if (cmp instanceof JButton) {
+						gamePanel.remove(cmp);
+					}
+				}
+				handleLevelUp(ting);
 			}
 		};
-		speedBtn.addActionListener(listen);
-		dmgBtn.addActionListener(listen);
-		this.evoBtns.add(speedBtn);
-		this.evoBtns.add(dmgBtn);
+		for (int i = 0; i < this.availableAbilities.size(); i++) {
+			JButton btn = new JButton(this.availableAbilities.get(i));
+			btn.setBackground(Color.orange);
+			btn.addActionListener(listener);
+			this.evoBtns.add(btn);
+		}
     }
     
     public Player(GamePanel gamePanel) {
     	this();
     	this.gamePanel = gamePanel;
     	
+    }
+    
+    private void handleLevelUp(String ting) {
+    	try {
+        	int index = this.availableAbilities.indexOf(ting);
+        	this.evoBtns.remove(index);
+        	this.currentAbilities.add(ting);
+        	this.currentAbilityKeys.add(this.availableAbilityKeys.get(index));
+        	this.availableAbilities.remove(index);
+        	this.availableAbilityKeys.remove(index);
+    	} catch (Exception e) {
+    		// If caught then it isnt a new ability, but a stat boost
+    		int index = -1;
+    		for (JButton btn : this.evoBtns) {
+    			if (btn.getActionCommand().equals(ting)) {
+    				index = this.evoBtns.indexOf(btn);
+    			}
+    		}
+    		this.evoBtns.remove(index);
+    		switch (ting) {
+    			case "DMG":
+    				this.dmgIncrease += 0.05;
+    				break;
+    			case "SPEED":
+    				this.setMaxSpeed(this.getMaxSpeed() * 1.05);
+    				break;
+    			case "HEALTH":
+    				this.setHealth(this.getHealth() + 15);
+    				this.setMaxHealth(this.getMaxHealth() + 15);
+    				break;
+    			case "ENERGY":
+    				this.setMaxSprintEndurance(this.getMaxSprintEndurance() + 45);
+    				break;
+    			case "HCD":
+    				this.setHitCooldown(this.getHitCooldown() + 1);
+    				break;
+    			case "EVO":
+    				this.setSkin(selectRandomSkin(this.getSkin()));
+    				try {
+    					this.setPlayerImage(ImageIO.read(new File(skins[this.getSkin()])));
+    				} catch (IOException ex) {
+    					// TODO Auto-generated catch block
+    					ex.printStackTrace();
+    				}
+//    				this.setDrawHeight(drawHeight);
+//    				this.setDrawWidth(drawWidth);
+    				this.setDrawHeight((int)(this.skinSize[this.getSkin()]+ this.getZ()*10));
+    				this.setDrawWidth((int)(this.skinSize[this.getSkin()]+ this.getZ()*10));
+    		}
+    	}
     }
 
     @Override
@@ -97,24 +153,63 @@ public class Player extends MovingEntity {
 
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.gray);
-        g2d.fillRect((int) (this.getWidth() / 2 - xpGoal * 3.2 / 2), 80, (int) (this.xpGoal * 3.2), 20);
+        g2d.fillRect((int) (this.getWidth() / 2 - xpBarWidth / 2), 80, (int) (this.xpGoal)  * xpBarWidth / xpGoal, 20);
         g2d.setColor(Color.yellow);
-        g2d.fillRect((int) (this.getWidth() / 2 - xpGoal * 3.2 / 2), 80, (int) (this.getXp() * 3.2), 20);
+        g2d.fillRect((int) (this.getWidth() / 2 - xpBarWidth / 2), 80, (int) (this.getXp())  * xpBarWidth / xpGoal, 20);
         g2d.setColor(Color.gray);
-        g2d.fillRect((int) (this.getWidth() / 2 - this.getMaxSprintEndurance()), this.getHeight() - 80, (int) (this.getMaxSprintEndurance() * 2), 20);
+        g2d.fillRect((int) (this.getWidth() / 2 - energyBarWidth / 2), this.getHeight() - 80, (int) ((this.getMaxSprintEndurance()) * energyBarWidth / this.getMaxSprintEndurance()), 20);
         if (this.getSprintingDisabled() > 0) {
             g2d.setColor(Color.red);
         } else {
             g2d.setColor(Color.orange);
         }
-        g2d.fillRect((int) (this.getWidth() / 2 - this.getMaxSprintEndurance()), this.getHeight() - 80, (int) (this.getSprintEndurance() * 2), 20);
+        g2d.fillRect((int) (this.getWidth() / 2 - energyBarWidth / 2), this.getHeight() - 80, (int) ((this.getSprintEndurance()) * energyBarWidth / this.getMaxSprintEndurance()), 20);
         g2d.setColor(Color.gray);
-        g2d.fillRect(65, this.getHeight() / 2 - 300 - 5, 30, 610);
-        g2d.setColor(this.healthToColor(this.getHealth() / 100.0));
-        g2d.fillRect(70, (int) (this.getHeight() / 2 + 300 - (this.getHealth() * 6)), 20, (int) this.getHealth() * 6);
+        g2d.fillRect(65, this.getHeight() / 2 - 300 - 5, 30, healthBarHeight);
+        g2d.setColor(this.healthToColor(this.getHealth() / this.getMaxHealth()));
+        g2d.fillRect(70, (int) (this.getHeight() / 2 + 300 - (this.getHealth() * 6)), 20, (int) (this.getHealth() * healthBarHeight / this.getMaxHealth()) - 10);
     	if (this.showEvoOption) {
-    		for (JButton btn : this.evoBtns) {
-    			this.gamePanel.add(btn);
+    		if (this.evoBtns.size() < 3) {
+				while (this.evoBtns.size() < 6) {
+					double rand = Math.random();
+					JButton btn = new JButton();
+					if (rand < 0.01) {
+						btn.setText("<html><center>"+"Increase"+"<br>"+"Damage"+"</center></html>");
+						btn.setActionCommand("DMG");
+					} else if (rand < 0.01) {
+						btn.setText("<html><center>"+"Increase"+"<br>"+"Speed"+"</center></html>");
+						btn.setActionCommand("SPEED");
+					} else if (rand < 0.01) {
+						btn.setText("<html><center>"+"Increase"+"<br>"+"Health"+"</center></html>");
+						btn.setActionCommand("HEALTH");
+					} else if (rand < 0.01) {
+						btn.setText("<html><center>"+"Increase"+"<br>"+"Energy"+"</center></html>");
+						btn.setActionCommand("ENERGY");
+					} else if (rand < 0.01) {
+						btn.setText("<html><center>"+"Increase"+"<br>"+"Hit-cooldown"+"</center></html>");
+						btn.setActionCommand("HCD");
+					} else {
+						btn.setText("EVOLVE");
+						btn.setActionCommand("EVO");
+					}
+					btn.addActionListener(this.listener);
+					this.evoBtns.add(btn);
+				}
+			}
+    		int rnd1 = (int) (Math.random() * this.evoBtns.size());
+    		int rnd2 = (int) (Math.random() * this.evoBtns.size());
+    		int rnd3 = (int) (Math.random() * this.evoBtns.size());
+    		while (rnd2 == rnd1) {
+    			rnd2 = (int) (Math.random() * this.evoBtns.size());
+    		}
+    		while (rnd3 == rnd2 || rnd3 == rnd1) {
+    			rnd3 = (int) (Math.random() * this.evoBtns.size());
+    		}
+    		int[] rands = {rnd1, rnd2, rnd3};
+    		for (int i = 0; i < 3; i++) {
+    			JButton rnd = this.evoBtns.get(rands[i]);
+    			rnd.setBounds(this.getWidth() * (i + 1) / 4 - this.getWidth() / 16, this.getHeight() / 3, this.getWidth() / 8, this.getHeight() / 12);
+    			this.gamePanel.add(rnd);
     		}
     		this.showEvoOption = false;
     	}
@@ -186,6 +281,7 @@ public class Player extends MovingEntity {
         	this.gamePanel.pause(true);
         	this.showEvoOption = true;
         	this.xp %= this.xpGoal;
+        	this.xpGoal *= 1.03;
         }
     }
     
@@ -202,12 +298,12 @@ public class Player extends MovingEntity {
         this.viewPOV = viewPOV;
     }
 
-	public char[] getAbilityKeys() {
-		return this.abilityKeys;
+	public ArrayList<Character> getCurrentAbilityKeys() {
+		return this.currentAbilityKeys;
 	}
 
 	public void activateAbility(int index) {
-		String ability = this.abilities[index];
+		String ability = this.currentAbilities.get(index);
 		switch (ability) {
 		case "JUMP":
 			if (jumpingFrames == 0 && this.getSprintEndurance() > 70 && this.getSprintingDisabled() == 0) {
