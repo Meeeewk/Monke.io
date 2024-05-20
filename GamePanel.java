@@ -521,8 +521,9 @@ public class GamePanel extends AnimatedPanel {
 
 		}
 		// Draw player UI over everything else
-		this.player.drawUI(g);
+
 		if (this.entities.contains(this.player)) {
+			this.player.drawUI(g);
 			if (!paused) {
 				this.player.move(mouseX, mouseY, !this.entities.contains(this.player));
 			}

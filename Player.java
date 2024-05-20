@@ -167,25 +167,25 @@ public class Player extends MovingEntity {
         g2d.setColor(Color.gray);
         g2d.fillRect(65, this.getHeight() / 2 - 300 - 5, 30, healthBarHeight);
         g2d.setColor(this.healthToColor(this.getHealth() / this.getMaxHealth()));
-        g2d.fillRect(70, (int) (this.getHeight() / 2 + 300 - (this.getHealth() * 6)), 20, (int) (this.getHealth() * healthBarHeight / this.getMaxHealth()) - 10);
+        g2d.fillRect(70, (int) (this.getHeight() / 2 - 300 + 5 + (healthBarHeight * (1 - (this.getHealth() / this.getMaxHealth())))), 20, (int) (this.getHealth() * healthBarHeight / this.getMaxHealth()) - 15);
     	if (this.showEvoOption) {
     		if (this.evoBtns.size() < 3) {
-				while (this.evoBtns.size() < 6) {
+				while (this.evoBtns.size() < 9) {
 					double rand = Math.random();
 					JButton btn = new JButton();
-					if (rand < 0.01) {
+					if (rand < 0.2) {
 						btn.setText("<html><center>"+"Increase"+"<br>"+"Damage"+"</center></html>");
 						btn.setActionCommand("DMG");
-					} else if (rand < 0.01) {
+					} else if (rand < 0.4) {
 						btn.setText("<html><center>"+"Increase"+"<br>"+"Speed"+"</center></html>");
 						btn.setActionCommand("SPEED");
-					} else if (rand < 0.01) {
+					} else if (rand < 0.6) {
 						btn.setText("<html><center>"+"Increase"+"<br>"+"Health"+"</center></html>");
 						btn.setActionCommand("HEALTH");
-					} else if (rand < 0.01) {
+					} else if (rand < 0.8) {
 						btn.setText("<html><center>"+"Increase"+"<br>"+"Energy"+"</center></html>");
 						btn.setActionCommand("ENERGY");
-					} else if (rand < 0.01) {
+					} else if (rand < 0.96) {
 						btn.setText("<html><center>"+"Increase"+"<br>"+"Hit-cooldown"+"</center></html>");
 						btn.setActionCommand("HCD");
 					} else {

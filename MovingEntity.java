@@ -93,7 +93,7 @@ public class MovingEntity extends Entity {
 		int retrn = notThis;
 		
 		while (retrn == notThis) {
-			retrn = (int) (random.nextDouble() * skins.length + 1);
+			retrn = (int) (random.nextDouble() * skins.length);
 		}
 		
 
