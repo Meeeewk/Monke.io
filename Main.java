@@ -2,6 +2,7 @@ import java.awt.event.InputEvent;
 import javax.swing.*;
 
 class Main extends JFrame{
+	public static boolean showHitBoxes=false;
     private static volatile boolean done = false;
     private AnimatedPanel gamePanel;
     public static void main(String[] args) throws InterruptedException{

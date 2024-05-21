@@ -103,7 +103,10 @@ public class Bot extends MovingEntity {
 	    g2d.setTransform(old);
 g2d.setColor(new Color(255, 0, 0, (int)this.getHitCooldown()*3));
 	    g2d.fillOval((int) (this.getX() - playerX - (this.getDrawWidth() * 0.72) / 2.0 + this.getWidth() / 2), (int) (this.getY() - playerY - (this.getDrawHeight() * 0.72) / 2.0 + this.getHeight() / 2), (int) (this.getDrawWidth() * 0.72), (int) (this.getDrawHeight() * 0.72));
-		g2d.drawOval((int) (this.getX() - playerX - (this.getDrawWidth() * 0.72) / 2.0 + this.getWidth() / 2), (int) (this.getY() - playerY - (this.getDrawHeight() * 0.72) / 2.0 + this.getHeight() / 2), (int) (this.getDrawWidth() * 0.72), (int) (this.getDrawHeight() * 0.72));
+
+		if(Main.showHitBoxes) {
+	    g2d.drawOval((int) (this.getX() - playerX - (this.getDrawWidth() * 0.72) / 2.0 + this.getWidth() / 2), (int) (this.getY() - playerY - (this.getDrawHeight() * 0.72) / 2.0 + this.getHeight() / 2), (int) (this.getDrawWidth() * 0.72), (int) (this.getDrawHeight() * 0.72));
+		}
 	    g2d.setColor(this.healthToColor(this.getHealth() / 100));
 	    int x=(int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + this.getWidth() / 2);
 	    int y=(int) (this.getY() - playerY - (this.getDrawHeight() * 0.72) / 2.0 + this.getHeight() / 2)-20;
