@@ -12,6 +12,7 @@ public class Entity {
 	private int[] chunk = new int[2];
 	private double z;
 	private boolean isUp=false;
+	private boolean isDown=false;
 	public Entity(double x, double y) {
 		this.setX(x);
 		this.setY(y);
@@ -93,5 +94,12 @@ public class Entity {
 	}
 	public void setY(double y) {
 		this.y = y;
+	}
+	public void setIsDown(boolean b) {
+		this.isDown=b;
+		
+	}
+	public boolean getIsDown() {
+		return this.isDown;
 	}
 }

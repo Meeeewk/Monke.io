@@ -110,34 +110,34 @@ public class GamePanel extends AnimatedPanel {
 	private void createRandomWater(ArrayList<Entity> entities) {
 		double randomX=random(boundingX);
 		double randomY=random(boundingY);
-		randomX=300;
-		randomY=300;
 		int mainSize=(int)(Math.random()*100+1000);
 		double mainSize2=(Math.random()*100+1000)/1.3;
 		entities.add(new Obstacle(randomX, randomY, "water", "water",mainSize,0));
 		for(int i=0;i<10;i++) {
-		entities.add(new Obstacle(randomX-(Math.random()*mainSize2-mainSize2/2), randomY-(Math.random()*mainSize2-mainSize2/2), "water", "water",(int)(Math.random()*20*i+250),0));
+		entities.add(new Obstacle(randomX-(Math.random()*mainSize2-mainSize2/2), randomY-(Math.random()*mainSize2-mainSize2/2), "water", "water",(int)(Math.random()*20*i+250),-1));
 		}
 		}
 	public void createObjects() {
 		this.player = new Player(this);
 		this.entities.add(this.player);
-//		for (int i = 0; i < (boundingX + boundingY) / 200; i++) {
-//			this.entities.add(new Bot(random(boundingX), random(boundingY), null, boundingX, boundingY));
-//		}
-//		
-//
-//		for (int j = 0; j < (boundingX+boundingY)/30; j++) {
-//			this.entities.add(new Consumable(random(boundingX),random(boundingY), "watermelon",60, 0, 15));
-//			this.entities.add(new Consumable(random(boundingX),random(boundingY), "banana",40, 45, 0));
-//		}
-//		for (int i = 0; i < (boundingX+boundingY)/200; i++) {
-//			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "rock", "moveable",(int)(Math.random()*100+50),1));
-//		}
-//		for (int i = 0; i < (boundingX+boundingY)/500; i++) {
-//			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "tree", "non-moveable",(int)(Math.random()*500+300),2));
-//		}
+		for (int i = 0; i < (boundingX + boundingY) / 200; i++) {
+			this.entities.add(new Bot(random(boundingX), random(boundingY), null, boundingX, boundingY));
+		}
+		
+
+		for (int j = 0; j < (boundingX+boundingY)/30; j++) {
+			this.entities.add(new Consumable(random(boundingX),random(boundingY), "watermelon",60, 0, 15));
+			this.entities.add(new Consumable(random(boundingX),random(boundingY), "banana",40, 45, 0));
+		}
+		for (int i = 0; i < (boundingX+boundingY)/200; i++) {
+			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "rock", "moveable",(int)(Math.random()*100+50),1));
+		}
+		for (int i = 0; i < (boundingX+boundingY)/500; i++) {
+			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "tree", "non-moveable",(int)(Math.random()*500+300),2));
+		}
+		for (int i = 0; i < (boundingX+boundingY)/700; i++) {
 		createRandomWater(entities);
+		}
 		shuffledEntities = new ArrayList<>(this.entities);
 		Collections.shuffle(shuffledEntities);
 	}
@@ -347,6 +347,11 @@ public class GamePanel extends AnimatedPanel {
 			}
 		});
 		for (Entity ent : this.entities) {
+			boolean isWater=(ent instanceof Obstacle&&((Obstacle)ent).getState()=="water");
+		
+			if(isWater) {
+				System.out.println(ent.getZ());
+			}
 			if (!paused) {
 				boolean zSet = false; // Flag to track if Z-coordinate has been set for the current entity
 				int[] chunk = ent.getChunk();
@@ -355,7 +360,8 @@ public class GamePanel extends AnimatedPanel {
 					for (int j = Math.max(chunk[1] - 1, 0); j < Math.min(chunk[1] + 2,
 							this.chunkedEntities[0].length); j++) {
 						for (Entity ent2 : this.chunkedEntities[i][j]) {
-							if (this.entities.indexOf(ent2) != -1 && !(ent instanceof Obstacle&&((Obstacle)ent).getState()=="water")) {
+							boolean isWater2=(ent2 instanceof Obstacle&&((Obstacle)ent2).getState()=="water");
+							if (this.entities.indexOf(ent2) != -1 && !isWater) {
 								if (ent != ent2 && isTouching2(ent, ent2)) {
 									if (((ent instanceof Obstacle && ((Obstacle) ent).getState().equals("non-moveable")
 											&& (ent2 instanceof MovingEntity && ent2.getIsUp()
@@ -394,8 +400,18 @@ public class GamePanel extends AnimatedPanel {
 											}
 										}
 									}
+									else if((ent2 instanceof Obstacle&&((Obstacle)ent2).getState()=="water")) {
+											double newZ = ent.getZ() + (-1.0 - ent.getZ()) / 10;
+											if (newZ< 0.0) {
+												newZ = 0.0; // Ensure Z does not go below ground level (Z = 1)
+											}
+											ent.setZ(newZ);
+										
+										ent.setIsDown(true);
+										zSet=true;
+									}
 									// Handle collision effects
-									if (isTouching(ent, ent2)) {
+									if (isTouching(ent, ent2)&&!isWater2) {
 										if (ent2 instanceof MovingEntity && ent instanceof MovingEntity) {
 											if (ent2 instanceof Player) {
 												collide(ent2, ent);
@@ -441,8 +457,8 @@ public class GamePanel extends AnimatedPanel {
 										}
 									}
 								}
-								if (ent2 instanceof Obstacle && ent instanceof MovingEntity && ent.getZ() > 1.0
-										&& !((MovingEntity) ent).getIsUp()) {
+								if (ent2 instanceof Obstacle && ent.getZ() > 1.0
+										&& !ent.getIsUp()) {
 									double newZ = ent.getZ() + (0.5 - ent.getZ()) / 10;
 									if (ent.getZ() >= (ent2.getZ() + 1) && newZ < (ent2.getZ() + 1)) {
 										ent.setIsUp(true);
@@ -471,9 +487,20 @@ public class GamePanel extends AnimatedPanel {
 				if (ent.getZ() < 2) {
 					ent.setIsUp(false);
 				}
+				if(!zSet) {
+					ent.setIsDown(false);
+				}
 				if (ent instanceof MovingEntity && !((MovingEntity) ent).getIsUp() && ent.getZ() > 1.0) {
 					double newZ = ent.getZ() + (0.5 - ent.getZ()) / 10; // Adjust the descent speed as needed
 					if (newZ < 1.0) {
+						newZ = 1.0; // Ensure Z does not go below ground level (Z = 1)
+					}
+					ent.setZ(newZ);
+				}
+				else if(ent.getZ() < 1.0
+						&& !ent.getIsDown()&&!isWater) {
+					double newZ = ent.getZ() + (1.5 - ent.getZ()) / 10;
+					if (newZ > 1.0) {
 						newZ = 1.0; // Ensure Z does not go below ground level (Z = 1)
 					}
 					ent.setZ(newZ);

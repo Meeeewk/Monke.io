@@ -133,6 +133,9 @@ public class MovingEntity extends Entity {
 		this.setyVelocity(this.getyVelocity() + y / this.getMoveSpeedMod());
 		double vectLen = Math.sqrt(Math.pow(this.getxVelocity(), 2) + Math.pow(this.getyVelocity(), 2));
 		double evaluatingMax = this.getMaxSpeed();
+		if(this.getIsDown()) {
+			evaluatingMax/=1.5;
+		}
 		if (sprinting) {
 			evaluatingMax = this.getSprintSpeed();
 			this.setSprintEndurance(this.getSprintEndurance() - 2);
