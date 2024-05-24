@@ -143,14 +143,21 @@ public class GamePanel extends AnimatedPanel {
 	}
 
 	private boolean isTouching(Entity e, Entity e2) {
+		
 		double x1 = e2.getX();
 		double y1 = e2.getY();
 		double x2 = e.getX();
 		double y2 = e.getY();
+		boolean isWater=(e instanceof Obstacle&&((Obstacle)e).getState()=="water");
+		boolean isWater2=(e2 instanceof Obstacle&&((Obstacle)e2).getState()=="water");
 		int radius1 = (e2.getDrawWidth()) / 2;
+		if(!isWater2) {
 		radius1 = (int) (radius1 * 0.72);
+		}
 		int radius2 = (e.getDrawWidth()) / 2;
+		if(!isWater) {
 		radius2 = (int) (radius2 * 0.72);
+		}
 		double xDif = x1 - x2;
 		double yDif = y1 - y2;
 		double distanceSquared = xDif * xDif + yDif * yDif;
@@ -170,11 +177,17 @@ public class GamePanel extends AnimatedPanel {
 		double y1 = e2.getY();
 		double x2 = e.getX();
 		double y2 = e.getY();
+		boolean isWater=(e instanceof Obstacle&&((Obstacle)e).getState()=="water");
+		boolean isWater2=(e2 instanceof Obstacle&&((Obstacle)e2).getState()=="water");
 		// radius is sketchy, change the 28 to different numbers and see
 		int radius1 = (e2.getDrawWidth()) / 2;
+		if(!isWater2) {
 		radius1 = (int) (radius1 * 0.72);
+		}
 		int radius2 = (e.getDrawWidth()) / 2;
+		if(!isWater) {
 		radius2 = (int) (radius2 * 0.72);
+		}
 		double xDif = x1 - x2;
 		double yDif = y1 - y2;
 		double distanceSquared = xDif * xDif + yDif * yDif;
@@ -187,7 +200,10 @@ public class GamePanel extends AnimatedPanel {
 		double x2 = e2.getX();
 		double y2 = e2.getY();
 		int radius1 = (e.getDrawWidth()) / 2;
+		boolean isWater=(e instanceof Obstacle&&((Obstacle)e).getState()=="water");
+		if(!isWater) {
 		radius1 = (int) (radius1 * 0.72);
+		}
 		if (isY) {
 			return y1 + (e.compareTo(e2) == 0 ? 0 : radius1 * (y2 - y1) / e.compareTo(e2));
 		} else {
@@ -338,6 +354,14 @@ public class GamePanel extends AnimatedPanel {
 		ArrayList<Entity> delete = new ArrayList<>();
 		Collections.sort(this.entities, new Comparator<>() {
 			public int compare(Entity e, Entity e2) {
+				boolean isWater=(e instanceof Obstacle&&((Obstacle)e).getState()=="water");
+				boolean isWater2=(e2 instanceof Obstacle&&((Obstacle)e2).getState()=="water");
+				if(isWater) {
+					return -1;
+				}
+				if(isWater2) {
+					return 1;
+				}
 				if (e.getZ() - e2.getZ() > 0) {
 					return 1;
 				} else if (e.getZ() - e2.getZ() < 0) {
@@ -400,7 +424,7 @@ public class GamePanel extends AnimatedPanel {
 											}
 										}
 									}
-									else if((ent2 instanceof Obstacle&&((Obstacle)ent2).getState()=="water")) {
+									else if(!(ent instanceof Obstacle && ((Obstacle)ent).getState()!="moveable")&&(ent2 instanceof Obstacle&&((Obstacle)ent2).getState()=="water")&&ent.getZ()<2) {
 											double newZ = ent.getZ() + (-1.0 - ent.getZ()) / 10;
 											if (newZ< 0.0) {
 												newZ = 0.0; // Ensure Z does not go below ground level (Z = 1)
@@ -458,7 +482,7 @@ public class GamePanel extends AnimatedPanel {
 									}
 								}
 								if (ent2 instanceof Obstacle && ent.getZ() > 1.0
-										&& !ent.getIsUp()) {
+										&& !ent.getIsUp()&&!(isWater)) {
 									double newZ = ent.getZ() + (0.5 - ent.getZ()) / 10;
 									if (ent.getZ() >= (ent2.getZ() + 1) && newZ < (ent2.getZ() + 1)) {
 										ent.setIsUp(true);
