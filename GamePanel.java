@@ -464,6 +464,9 @@ public class GamePanel extends AnimatedPanel {
 
 												if (((MovingEntity) ent).getHealth() <= 0) {
 													delete.add(ent);
+													if (ent2 instanceof Player) {
+														this.player.setXp(this.player.getXp() + 75);
+													}
 													if (this.player.target == ent || ent instanceof Player) {
 														this.player.setTarget(ent2);
 													}
