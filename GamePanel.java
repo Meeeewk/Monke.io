@@ -473,6 +473,7 @@ public class GamePanel extends AnimatedPanel {
 														this.player.setTarget(ent2);
 													}
 													((MovingEntity) ent).setHealth(0);
+													((MovingEntity) ent2).changeKillCount(1);
 												}
 											}
 										} else {
