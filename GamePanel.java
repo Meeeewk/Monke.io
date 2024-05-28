@@ -12,7 +12,6 @@ import java.util.HashSet;
 
 public class GamePanel extends AnimatedPanel {
 	private ArrayList<Entity> entities = new ArrayList<>();
-	private ArrayList<Consumable> consumables = new ArrayList<>();
 	private Set<Entity>[][] chunkedEntities;
 	private Player player;
 	private int mouseX;
@@ -125,10 +124,10 @@ public class GamePanel extends AnimatedPanel {
 		}
 		
 
-		for (int j = 0; j < (boundingX+boundingY)/30; j++) {
-			this.entities.add(new Consumable(random(boundingX),random(boundingY), "watermelon",60, 0, 15));
-			this.entities.add(new Consumable(random(boundingX),random(boundingY), "banana",40, 45, 0));
-		}
+//		for (int j = 0; j < (boundingX+boundingY)/30; j++) {
+//			this.entities.add(new Consumable(random(boundingX),random(boundingY), "watermelon",60, 0, 15));
+//			this.entities.add(new Consumable(random(boundingX),random(boundingY), "banana",40, 45, 0));
+//		}
 		for (int i = 0; i < (boundingX+boundingY)/200; i++) {
 			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "rock", "moveable",(int)(Math.random()*100+50),1));
 		}
@@ -586,6 +585,7 @@ public class GamePanel extends AnimatedPanel {
 		}
 		// Draw player UI over everything else
 		System.out.println(this.entities.size());
+		System.out.println(this.shuffledEntities.size())
 		
 		if (this.entities.contains(this.player)) {
 			this.player.drawUI(g);
@@ -608,13 +608,14 @@ public class GamePanel extends AnimatedPanel {
 		}
 		for (int i = 0; i < delete.size(); i++) {
 			try {
-				if (delete.get(i) instanceof MovingEntity) {
+				boolean didRemove = this.entities.remove(delete.get(i));
+				this.shuffledEntities.remove(delete.get(i));
+				
+				if (delete.get(i) instanceof MovingEntity && didRemove) {
 					Bot newBot=new Bot(random(boundingX), random(boundingY),null, boundingX, boundingY);
 					this.entities.add(newBot);
 					this.shuffledEntities.add(newBot);
 				}
-				this.entities.remove(delete.get(i));
-				this.shuffledEntities.remove(delete.get(i));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
