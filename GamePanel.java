@@ -124,10 +124,10 @@ public class GamePanel extends AnimatedPanel {
 		}
 		
 
-//		for (int j = 0; j < (boundingX+boundingY)/30; j++) {
-//			this.entities.add(new Consumable(random(boundingX),random(boundingY), "watermelon",60, 0, 15));
-//			this.entities.add(new Consumable(random(boundingX),random(boundingY), "banana",40, 45, 0));
-//		}
+		for (int j = 0; j < (boundingX+boundingY)/30; j++) {
+			this.entities.add(new Consumable(random(boundingX),random(boundingY), "watermelon",60, 0, 15));
+			this.entities.add(new Consumable(random(boundingX),random(boundingY), "banana",40, 45, 0));
+		}
 		for (int i = 0; i < (boundingX+boundingY)/200; i++) {
 			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "rock", "moveable",(int)(Math.random()*100+50),1));
 		}
@@ -234,7 +234,7 @@ public class GamePanel extends AnimatedPanel {
 			offset = 0;
 		}
 		if (e instanceof Obstacle && ((Obstacle) e).getState().equals("moveable")) {
-			offset = e.getDrawWidth() / 100.0 - e2.getDrawWidth() / 200.0;
+			offset = 1+e.getDrawWidth() / 100.0 - e2.getDrawWidth() / 200.0;
 		}
 		if (e2 instanceof Obstacle && ((Obstacle) e2).getState().equals("moveable")) {
 			offset = 2 - e.getDrawWidth() / 100.0 + e2.getDrawWidth() / 200.0;
