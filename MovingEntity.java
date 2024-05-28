@@ -34,6 +34,7 @@ public class MovingEntity extends Entity {
 	private double maxHealth = 100;
 	private double hitCooldown = 10;
 	private int skin;
+	private int killCount=0;
 
 	public MovingEntity(double x, double y, int width, int height, int moveSpeedMod, String imgPath, int drawWidth,
 			int drawHeight, double maxSpeed, double sprintSpeed) {
@@ -56,6 +57,12 @@ public class MovingEntity extends Entity {
 		this.setDrawWidth((int)(this.skinSize[skin]+ this.getZ()*10));
 	}
 
+	public int getKillCount() {
+		return this.killCount;
+	}
+	public void changeKillCount() {
+		this.killCount++;
+	}
 	@Override 
 	public void setZ(double z) {
 		super.setZ(z);
