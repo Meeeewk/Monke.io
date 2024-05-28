@@ -584,8 +584,6 @@ public class GamePanel extends AnimatedPanel {
 
 		}
 		// Draw player UI over everything else
-		System.out.println(this.entities.size());
-		System.out.println(this.shuffledEntities.size())
 		
 		if (this.entities.contains(this.player)) {
 			this.player.drawUI(g);
