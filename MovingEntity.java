@@ -60,8 +60,8 @@ public class MovingEntity extends Entity {
 	public int getKillCount() {
 		return this.killCount;
 	}
-	public void changeKillCount() {
-		this.killCount++;
+	public void changeKillCount(int count) {
+		this.killCount+=count;
 	}
 	@Override 
 	public void setZ(double z) {
