@@ -97,8 +97,8 @@ public class Obstacle extends Entity {
 					this.getDrawWidth(), this.getDrawHeight(), null);
 		}
 		g2d.setColor(Color.black);
-		// g2d.setColor(Color.red);
-//	    g2d.drawString("z: "+this.getZ(), (int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + this.getWidth() / 2), (int) (this.getY() - playerY - this.getDrawHeight() / 2.0 + this.getHeight() / 2));
+		 g2d.setColor(Color.red);
+	    g2d.drawString("z: "+this.getZ(), (int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + this.getWidth() / 2), (int) (this.getY() - playerY - this.getDrawHeight() / 2.0 + this.getHeight() / 2));
 		g2d.setTransform(old);
 		if(Main.showHitBoxes) {
 		g2d.drawOval((int) (this.getX() - playerX - (this.getDrawWidth() * 0.72) / 2.0 + this.getWidth() / 2),

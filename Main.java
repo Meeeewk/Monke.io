@@ -2,7 +2,7 @@ import java.awt.event.InputEvent;
 import javax.swing.*;
 
 class Main extends JFrame{
-	public static boolean showHitBoxes=false;
+	public static boolean showHitBoxes=true;
     private static volatile boolean done = false;
     private AnimatedPanel gamePanel;
     public static void main(String[] args) throws InterruptedException{
@@ -40,7 +40,7 @@ class Main extends JFrame{
 
                 repaint();
 
-                Thread.sleep(20);
+                Thread.sleep(0);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
