@@ -162,6 +162,13 @@ public class GamePanel extends AnimatedPanel {
 		double yDif = y1 - y2;
 		double distanceSquared = xDif * xDif + yDif * yDif;
 		double zDiff = Math.abs(e.getZ() - e2.getZ()); // Calculate the absolute difference in Z-coordinates
+		if(e.getZ()<1&&e2.getZ()<2) {
+			zDiff=0;
+		}
+		if(e.getZ()<2&&e2.getZ()<1) {
+			zDiff=0;
+		}
+		
 //		double rotDiff=e.getFacingDir()-e2.getFacingDir();
 //		if(e instanceof Player&&rotDiff>2.5&&rotDiff<4.5) {
 //		System.out.println(rotDiff);
@@ -636,7 +643,7 @@ public class GamePanel extends AnimatedPanel {
 	private void drawGrid(double[] playerPos, Graphics g, int width) {
 		g.setColor(new Color(0, 210, 0));
 		for (int i = -boundingX; i <= boundingX * 2; i += width) {
-			for (int j = (int) (-boundingY - width * 1.1); j <= boundingY; j += width) {
+			for (int j = (int) (-boundingY - this.getHeight()); j <= boundingY; j += width) {
 				g.drawRect(i - (int) playerPos[0], j - (int) playerPos[1] + getWidth() / 2, width * 3, width * 3);
 			}
 		}
