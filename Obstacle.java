@@ -83,14 +83,20 @@ public class Obstacle extends Entity {
 		this.setFacingDir(3 * Math.PI / 2 - angle);
 		g2d.setColor(Color.black);
 //	    g2d.drawString("chunk: " + Arrays.toString(getChunk()), x, y-30);
-		g2d.rotate(this.getFacingDir(), (int) (this.getX() - playerX + this.getWidth() / 2),
-				(int) (this.getY() - playerY + this.getHeight() / 2));
-		if (this.state == "water") {
+		if(this.name!="river"){g2d.rotate(this.getFacingDir(), (int) (this.getX() - playerX + this.getWidth() / 2),
+				(int) (this.getY() - playerY + this.getHeight() / 2));}
+		if(this.name=="river"){
+			this.setFacingDir(0);
+			g2d.setColor(new Color(0,105,148));
+			g2d.drawImage(this.getPlayerImage(),(int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + this.getWidth() / 2),
+					(int) (this.getY() - playerY - this.getDrawHeight() / 2.0 + this.getHeight() / 2),
+					this.getDrawWidth(), this.getDrawHeight(),null);
+		}else if (this.state == "water") {
 			g2d.setColor(new Color(0,105,148));
 			g2d.fillOval((int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + this.getWidth() / 2),
 					(int) (this.getY() - playerY - this.getDrawHeight() / 2.0 + this.getHeight() / 2),
 					this.getDrawWidth(), this.getDrawHeight());
-		} else {
+		}  else {
 			g2d.drawImage(this.getPlayerImage(),
 					(int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + this.getWidth() / 2),
 					(int) (this.getY() - playerY - this.getDrawHeight() / 2.0 + this.getHeight() / 2),
@@ -98,7 +104,7 @@ public class Obstacle extends Entity {
 		}
 		g2d.setColor(Color.black);
 		 g2d.setColor(Color.red);
-	    g2d.drawString("z: "+this.getZ(), (int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + this.getWidth() / 2), (int) (this.getY() - playerY - this.getDrawHeight() / 2.0 + this.getHeight() / 2));
+//	    g2d.drawString("z: "+this.getZ(), (int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + this.getWidth() / 2), (int) (this.getY() - playerY - this.getDrawHeight() / 2.0 + this.getHeight() / 2));
 		g2d.setTransform(old);
 		if(Main.showHitBoxes) {
 		g2d.drawOval((int) (this.getX() - playerX - (this.getDrawWidth() * 0.72) / 2.0 + this.getWidth() / 2),
