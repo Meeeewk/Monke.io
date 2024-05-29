@@ -27,10 +27,11 @@ public class Player extends MovingEntity {
     private int jumpingFrames = 0;
     private double dmgIncrease = 1;
     private int dashingFrames = 0;
+    private int throwingFrames = 0;
     private ArrayList<Character> currentAbilityKeys = new ArrayList<>();
     private ArrayList<String> currentAbilities = new ArrayList<>();
-    private ArrayList<Character> availableAbilityKeys = new ArrayList<>(Arrays.asList(' ', 'd'));
-    private ArrayList<String> availableAbilities = new ArrayList<>(Arrays.asList("JUMP", "DASH"));
+    private ArrayList<Character> availableAbilityKeys = new ArrayList<>(Arrays.asList(' ', 'd', 'f'));
+    private ArrayList<String> availableAbilities = new ArrayList<>(Arrays.asList("JUMP", "DASH", "THROW"));
     public Entity target;
     private boolean showEvoOption = false;
     private GamePanel gamePanel;
@@ -148,6 +149,8 @@ public class Player extends MovingEntity {
 	    g2d.drawString("kill count: "+this.getKillCount(), (int) (this.getWidth() / 2 - (this.getDrawWidth() * 0.72) / 2), (int) (this.getHeight() / 2 - (this.getDrawHeight() * 0.72) / 2) - 30);
         this.setHitCooldown(this.getHitCooldown() <= 0 ? 0 : this.getHitCooldown() - 0.5);
         g2d.setTransform(old);
+        
+        g2d.fillOval((int) (this.getxVelocity() * 10 + getWidth() / 2),(int) (this.getyVelocity() * 10 + getHeight() / 2), 40, 40);
     }
 
     public void drawUI(Graphics g) {
@@ -236,9 +239,12 @@ public class Player extends MovingEntity {
         	this.setZ(this.getZ() + 0.8);
         	jumpingFrames--;
         }
-        if (getDashingFrames() > 0) {
-			setDashingFrames(getDashingFrames() - 1);
+        if (dashingFrames > 0) {
+			dashingFrames--;
 		}
+        if (throwingFrames > 0) {
+        	throwingFrames--;
+        }
         super.move(cursorX, cursorY, this.getZ());
     }
     
@@ -323,6 +329,19 @@ public class Player extends MovingEntity {
 				}
 				this.setSprintingDisabled(25);
 			} 
+			break;
+		case "THROW":
+			if (throwingFrames == 0 && this.getSprintEndurance() > 70 && this.getSprintingDisabled() == 0) {
+				throwingFrames = 45;
+				if (this.getSprintEndurance() < 75 && this.getSprintEndurance() > 65) {
+					this.setSprintEndurance(0);
+				} else {
+					this.setSprintEndurance(this.getSprintEndurance() - 70);
+				}
+				this.setSprintingDisabled(30);
+				ThrownParticle thrown = new ThrownParticle(this.getX() + this.getxVelocity() * 10 + this.getWidth() / 2, this.getY() + this.getyVelocity() * 10 + this.getHeight() / 2, this.getZ(), this.getxVelocity() * 4, this.getyVelocity() * 4, 25, 40, "rock.png",this);
+				this.gamePanel.addEntity(thrown);
+			}
 			break;
 		}
 	}
