@@ -16,8 +16,8 @@ public class GamePanel extends AnimatedPanel {
 	private Player player;
 	private int mouseX;
 	private int mouseY;
-	private int boundingX = 2000;
-	private int boundingY = 2000;
+	private int boundingX = 3000;
+	private int boundingY = 3000;
 	private boolean paused = false;
 	private ArrayList<Entity> shuffledEntities = new ArrayList<>();
 
@@ -102,72 +102,127 @@ public class GamePanel extends AnimatedPanel {
 	private double random(int bounding) {
 		return Math.random() * 2 * bounding - bounding;
 	}
-	
+
 	public void pause(boolean b) {
 		this.paused = b;
 	}
+
 	private void createRandomWater(ArrayList<Entity> entities) {
-		double randomX=random(boundingX);
-		double randomY=random(boundingY);
-		int mainSize=(int)(Math.random()*100+1000);
-		double mainSize2=(Math.random()*100+1000)/1.3;
-		entities.add(new Obstacle(randomX, randomY, "water", "water",mainSize,0));
-		for(int i=0;i<10;i++) {
-		entities.add(new Obstacle(randomX-(Math.random()*mainSize2-mainSize2/2), randomY-(Math.random()*mainSize2-mainSize2/2), "water", "water",(int)(Math.random()*20*i+250),-1));
+		double randomX = random(boundingX);
+		double randomY = random(boundingY);
+		int mainSize = (int) (Math.random() * 100 + 1000);
+		double mainSize2 = (Math.random() * 100 + 1000) / 1.3;
+		entities.add(new Obstacle(randomX, randomY, "water", "water", mainSize, 0));
+		for (int i = 0; i < 10; i++) {
+			entities.add(new Obstacle(randomX - (Math.random() * mainSize2 - mainSize2 / 2),
+					randomY - (Math.random() * mainSize2 - mainSize2 / 2), "water", "water",
+					(int) (Math.random() * 20 * i + 250), -1));
 		}
+	}
+
+	private boolean checkForWater(double y) {
+		ArrayList<Entity> list = new ArrayList<>(entities);
+		Collections.sort(list, new Comparator<>() {
+			public int compare(Entity e, Entity e2) {
+				boolean isWater = (e instanceof Obstacle && ((Obstacle) e).getState() == "water");
+				boolean isWater2 = (e2 instanceof Obstacle && ((Obstacle) e2).getState() == "water");
+				if (isWater) {
+					return -1;
+				}
+				if (isWater2) {
+					return 1;
+				}
+				if (e.getZ() - e2.getZ() > 0) {
+					return 1;
+				} else if (e.getZ() - e2.getZ() < 0) {
+					return -1;
+				}
+				return 0;
+			}
+		});
+		for (Entity e2 : list) {
+			boolean isWater = (e2 instanceof Obstacle && ((Obstacle) e2).getState() == "water");
+			if (!isWater) {
+				break;
+			}
+			if (e2.getY() - 120 < y && e2.getY() + 120 > y) {
+				return false;
+			}
 		}
+		return true;
+
+	}
+
+	private void createRiver(ArrayList<Entity> entities) {
+		double randomY = random(boundingY);
+		double randomX = -1260 - boundingX;
+//		randomY=200;
+
+		while (!checkForWater(randomY)) {
+			randomY = random(boundingY);
+		}
+		for (int i = 0; i < boundingX / 150; i++) {
+			entities.add(new Obstacle(randomX + i * 500, randomY + (i * 10), "river", "water", 500, 0));
+		}
+	}
+
 	public void createObjects() {
 		this.player = new Player(this);
 		this.entities.add(this.player);
 		for (int i = 0; i < (boundingX + boundingY) / 200; i++) {
 			this.entities.add(new Bot(random(boundingX), random(boundingY), null, boundingX, boundingY));
 		}
-		
 
-		for (int j = 0; j < (boundingX+boundingY)/30; j++) {
-			this.entities.add(new Consumable(random(boundingX),random(boundingY), "watermelon",60, 0, 15));
-			this.entities.add(new Consumable(random(boundingX),random(boundingY), "banana",40, 45, 0));
+		for (int j = 0; j < (boundingX + boundingY) / 30; j++) {
+			this.entities.add(new Consumable(random(boundingX), random(boundingY), "watermelon", 60, 0, 15));
+			this.entities.add(new Consumable(random(boundingX), random(boundingY), "banana", 40, 45, 0));
 		}
-		for (int i = 0; i < (boundingX+boundingY)/200; i++) {
-			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "rock", "moveable",(int)(Math.random()*100+50),1));
+		for (int i = 0; i < (boundingX + boundingY) / 200; i++) {
+			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "rock", "moveable",
+					(int) (Math.random() * 100 + 50), 1));
 		}
-		for (int i = 0; i < (boundingX+boundingY)/500; i++) {
-			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "tree", "non-moveable",(int)(Math.random()*500+300),2));
+		for (int i = 0; i < (boundingX + boundingY) / 500; i++) {
+			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "tree", "non-moveable",
+					(int) (Math.random() * 500 + 300), 2));
 		}
-		for (int i = 0; i < (boundingX+boundingY)/700; i++) {
-		createRandomWater(entities);
+		for (int i = 0; i < (boundingX + boundingY) / 700; i++) {
+			createRandomWater(entities);
+		}
+
+		for (int i = 0; i < (boundingX + boundingY) / 3000; i++) {
+			createRiver(entities);
 		}
 		shuffledEntities = new ArrayList<>(this.entities);
 		Collections.shuffle(shuffledEntities);
 	}
 
 	private boolean isTouching(Entity e, Entity e2) {
-		
+
 		double x1 = e2.getX();
 		double y1 = e2.getY();
 		double x2 = e.getX();
 		double y2 = e.getY();
-		boolean isWater=(e instanceof Obstacle&&((Obstacle)e).getState()=="water");
-		boolean isWater2=(e2 instanceof Obstacle&&((Obstacle)e2).getState()=="water");
+		boolean isWater = (e instanceof Obstacle && ((Obstacle) e).getState() == "water");
+		boolean isWater2 = (e2 instanceof Obstacle && ((Obstacle) e2).getState() == "water");
 		int radius1 = (e2.getDrawWidth()) / 2;
-		if(!isWater2) {
-		radius1 = (int) (radius1 * 0.72);
+		if (!isWater2) {
+			radius1 = (int) (radius1 * 0.72);
 		}
 		int radius2 = (e.getDrawWidth()) / 2;
-		if(!isWater) {
-		radius2 = (int) (radius2 * 0.72);
+		if (!isWater) {
+			radius2 = (int) (radius2 * 0.72);
 		}
 		double xDif = x1 - x2;
 		double yDif = y1 - y2;
 		double distanceSquared = xDif * xDif + yDif * yDif;
 		double zDiff = Math.abs(e.getZ() - e2.getZ()); // Calculate the absolute difference in Z-coordinates
-		if(e.getZ()<1&&e2.getZ()<2) {
-			zDiff=0;
+		if (e.getZ() < 1 && e2.getZ() < 2) {
+			zDiff = 0;
 		}
-		if(e.getZ()<2&&e2.getZ()<1) {
-			zDiff=0;
+		if (e.getZ() < 2 && e2.getZ() < 1) {
+			zDiff = 0;
 		}
-		
+
 //		double rotDiff=e.getFacingDir()-e2.getFacingDir();
 //		if(e instanceof Player&&rotDiff>2.5&&rotDiff<4.5) {
 //		System.out.println(rotDiff);
@@ -183,16 +238,16 @@ public class GamePanel extends AnimatedPanel {
 		double y1 = e2.getY();
 		double x2 = e.getX();
 		double y2 = e.getY();
-		boolean isWater=(e instanceof Obstacle&&((Obstacle)e).getState()=="water");
-		boolean isWater2=(e2 instanceof Obstacle&&((Obstacle)e2).getState()=="water");
+		boolean isWater = (e instanceof Obstacle && ((Obstacle) e).getState() == "water");
+		boolean isWater2 = (e2 instanceof Obstacle && ((Obstacle) e2).getState() == "water");
 		// radius is sketchy, change the 28 to different numbers and see
 		int radius1 = (e2.getDrawWidth()) / 2;
-		if(!isWater2) {
-		radius1 = (int) (radius1 * 0.72);
+		if (!isWater2) {
+			radius1 = (int) (radius1 * 0.72);
 		}
 		int radius2 = (e.getDrawWidth()) / 2;
-		if(!isWater) {
-		radius2 = (int) (radius2 * 0.72);
+		if (!isWater) {
+			radius2 = (int) (radius2 * 0.72);
 		}
 		double xDif = x1 - x2;
 		double yDif = y1 - y2;
@@ -206,9 +261,9 @@ public class GamePanel extends AnimatedPanel {
 		double x2 = e2.getX();
 		double y2 = e2.getY();
 		int radius1 = (e.getDrawWidth()) / 2;
-		boolean isWater=(e instanceof Obstacle&&((Obstacle)e).getState()=="water");
-		if(!isWater) {
-		radius1 = (int) (radius1 * 0.72);
+		boolean isWater = (e instanceof Obstacle && ((Obstacle) e).getState() == "water");
+		if (!isWater) {
+			radius1 = (int) (radius1 * 0.72);
 		}
 		if (isY) {
 			return y1 + (e.compareTo(e2) == 0 ? 0 : radius1 * (y2 - y1) / e.compareTo(e2));
@@ -219,6 +274,9 @@ public class GamePanel extends AnimatedPanel {
 
 	private void collide(Entity e, Entity e2) {
 		double offset = 0;
+		if (e instanceof ThrownParticle || e2 instanceof ThrownParticle) {
+			return;
+		}
 		if (e instanceof MovingEntity || e2 instanceof MovingEntity) {
 			offset = 1;
 		}
@@ -234,7 +292,7 @@ public class GamePanel extends AnimatedPanel {
 			offset = 0;
 		}
 		if (e instanceof Obstacle && ((Obstacle) e).getState().equals("moveable")) {
-			offset = 1+e.getDrawWidth() / 100.0 - e2.getDrawWidth() / 200.0;
+			offset = 1 + e.getDrawWidth() / 100.0 - e2.getDrawWidth() / 200.0;
 		}
 		if (e2 instanceof Obstacle && ((Obstacle) e2).getState().equals("moveable")) {
 			offset = 2 - e.getDrawWidth() / 100.0 + e2.getDrawWidth() / 200.0;
@@ -260,14 +318,15 @@ public class GamePanel extends AnimatedPanel {
 				e.setY(e.getY() + offset * t);
 				e2.setX(e2.getX() - (2 - offset) * j);
 				e2.setY(e2.getY() - (2 - offset) * t);
-				if(isPastBounding(e2)) {
+				if (isPastBounding(e2)) {
 					e.setX(e.getX() - offset * j);
 					e.setY(e.getY() - offset * t);
 					e2.setX(e2.getX() + (2 - offset) * j);
 					e2.setY(e2.getY() + (2 - offset) * t);
 					e.setX(e.getX() + 2 * j);
 					e.setY(e.getY() + 2 * t);
-				}if(isPastBounding(e)) {
+				}
+				if (isPastBounding(e)) {
 					e.setX(e.getX() - offset * j);
 					e.setY(e.getY() - offset * t);
 					e2.setX(e2.getX() + (2 - offset) * j);
@@ -275,11 +334,11 @@ public class GamePanel extends AnimatedPanel {
 					e2.setX(e2.getX() - 2 * j);
 					e2.setY(e2.getY() - 2 * t);
 				}
-				
+
 			} else {
 				double j = (value(e, e2, false) - (value(e2, e, false) + value(e, e2, false)) / 2);
 				double t = (value(e, e2, true) - (value(e2, e, true) + value(e, e2, true)) / 2);
-				//Checks if it is moving entity too far and then makes it go slower bit by bit
+				// Checks if it is moving entity too far and then makes it go slower bit by bit
 //				if(Math.abs((2 - offset) * j)>14||Math.abs(offset * j)>14) {
 //					j/=9;
 //					t/=9;
@@ -288,14 +347,15 @@ public class GamePanel extends AnimatedPanel {
 				e2.setY(e2.getY() + offset * t);
 				e.setX(e.getX() - (2 - offset) * j);
 				e.setY(e.getY() - (2 - offset) * t);
-				if(isPastBounding(e2)) {
+				if (isPastBounding(e2)) {
 					e2.setX(e2.getX() - offset * j);
 					e2.setY(e2.getY() - offset * t);
 					e.setX(e.getX() + (2 - offset) * j);
 					e.setY(e.getY() + (2 - offset) * t);
 					e.setX(e.getX() - 2 * j);
 					e.setY(e.getY() - 2 * t);
-				}if(isPastBounding(e)) {
+				}
+				if (isPastBounding(e)) {
 					e2.setX(e2.getX() - offset * j);
 					e2.setY(e2.getY() - offset * t);
 					e.setX(e.getX() + (2 - offset) * j);
@@ -308,6 +368,10 @@ public class GamePanel extends AnimatedPanel {
 	}
 
 	private boolean isPastBounding(Entity e) {
+		boolean isWater = (e instanceof Obstacle && ((Obstacle) e).getState() == "water");
+		if (isWater) {
+			return false;
+		}
 		int offset = e.getDrawWidth() / 3;
 		if (e.getX() > this.getBoundingX() - offset || e.getX() < -this.getBoundingX() + offset) {
 			return true;
@@ -340,7 +404,7 @@ public class GamePanel extends AnimatedPanel {
 	}
 
 	private boolean angleCollide(Entity ent2, MovingEntity ent, int range) {
-		//ent2 facing on ent
+		// ent2 facing on ent
 		double entFacing = ent.getFacingDir();
 		double angle = 0;
 		double vect_len = Math.sqrt(Math.pow(ent2.getX() - ent.getX(), 2) + Math.pow(ent2.getY() - ent.getY(), 2));
@@ -354,6 +418,7 @@ public class GamePanel extends AnimatedPanel {
 	}
 
 	private void collideLogic(double[] playerPos, double playerZ, Graphics g) {
+		boolean bordersCreated=false;
 		//basically everything for each frame
 		int height = getHeight();
 		int width = getWidth();
@@ -378,6 +443,10 @@ public class GamePanel extends AnimatedPanel {
 		});
 		for (Entity ent : this.entities) {
 			boolean isWater=(ent instanceof Obstacle&&((Obstacle)ent).getState()=="water");
+			if(!isWater &&!bordersCreated) {
+				bordersCreated=true;
+				displayBorders(playerPos, g);
+			}
 			if (!paused) {
 				boolean zSet = false; // Flag to track if Z-coordinate has been set for the current entity
 				int[] chunk = ent.getChunk();
@@ -481,7 +550,24 @@ public class GamePanel extends AnimatedPanel {
 													&& angleCollide((Consumable) ent, (MovingEntity) ent2, 90)) {
 												((Consumable) ent).consume((MovingEntity) ent2);
 												delete.add(ent);
-											} else {
+											}  else if (ent instanceof ThrownParticle && ent2 instanceof MovingEntity) {
+												if (ent2 != ((ThrownParticle) ent).getOrigin()) {
+													((ThrownParticle) ent).hit((MovingEntity) ent2);
+													delete.add(ent);
+													MovingEntity org = ((ThrownParticle) ent).getOrigin();
+														
+													if (((MovingEntity) ent2).getHealth() <= 0) {
+														delete.add(ent2);
+														if (org instanceof Player) {
+															this.player.setXp(this.player.getXp() + 75);
+														}
+														if (this.player.target == ent2 || ent2 instanceof Player) {
+															this.player.setTarget(org);
+														}
+														((MovingEntity) ent2).setHealth(0);
+														((MovingEntity) org).changeKillCount(1);
+													}
+else {
 												collide(ent, ent2);
 											}
 										}
@@ -555,7 +641,12 @@ public class GamePanel extends AnimatedPanel {
 						} else {
 							((Bot) ent).move();
 						}
-					}
+					}else if (ent instanceof ThrownParticle) {
+						ThrownParticle casted = (ThrownParticle) ent;
+						casted.move();
+						if (casted.getLifeFrames() <= 0) {
+							delete.add(ent);
+						}
 				}
 				// Draw player UI over everything else
 				if (ent instanceof Player && this.player.getHealth() > 0) {
@@ -622,8 +713,14 @@ public class GamePanel extends AnimatedPanel {
 		delete.clear();
 		this.entities.sort((o1, o2) -> o1.getDrawHeight() - o2.getDrawHeight());
 	}
+				public void addEntity(Entity ent) {
+					this.entities.add(ent);
+				}
+
+
 
 	private void displayBorders(double[] playerPos, Graphics g) {
+		g.setColor(new Color(0, 210, 0));
 		// Drawing map borders
 		// Top
 		g.fillRect(-boundingX - (int) playerPos[0] - 100, -boundingY - (int) playerPos[1] - getHeight() / 2 - 100,
@@ -674,7 +771,6 @@ public class GamePanel extends AnimatedPanel {
 		double[] playerPos = player.getPos();
 		double playerZ = player.getZ();
 		drawGrid(playerPos, g, 100);
-		displayBorders(playerPos, g);
 		g.setColor(Color.BLACK);
 		collideLogic(playerPos, playerZ, g);
 		// scawy batel woyal
