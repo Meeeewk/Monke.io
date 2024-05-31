@@ -125,12 +125,8 @@ public class GamePanel extends AnimatedPanel {
 		Collections.sort(list, new Comparator<>() {
 			public int compare(Entity e, Entity e2) {
 				boolean isWater = (e instanceof Obstacle && ((Obstacle) e).getState() == "water");
-				boolean isWater2 = (e2 instanceof Obstacle && ((Obstacle) e2).getState() == "water");
 				if (isWater) {
 					return -1;
-				}
-				if (isWater2) {
-					return 1;
 				}
 				if (e.getZ() - e2.getZ() > 0) {
 					return 1;
@@ -418,20 +414,16 @@ public class GamePanel extends AnimatedPanel {
 	}
 
 	private void collideLogic(double[] playerPos, double playerZ, Graphics g) {
-		boolean bordersCreated=false;
-		//basically everything for each frame
+		boolean bordersCreated = false;
+		// basically everything for each frame
 		int height = getHeight();
 		int width = getWidth();
 		ArrayList<Entity> delete = new ArrayList<>();
-		Collections.sort(this.entities, new Comparator<>() {
+		Collections.sort(this.entities, new Comparator<Entity>() {
 			public int compare(Entity e, Entity e2) {
-				boolean isWater=(e instanceof Obstacle&&((Obstacle)e).getState()=="water");
-				boolean isWater2=(e2 instanceof Obstacle&&((Obstacle)e2).getState()=="water");
-				if(isWater) {
+				boolean isWater = (e instanceof Obstacle && ((Obstacle) e).getState() == "water");
+				if (isWater) {
 					return -1;
-				}
-				if(isWater2) {
-					return 1;
 				}
 				if (e.getZ() - e2.getZ() > 0) {
 					return 1;
@@ -442,9 +434,9 @@ public class GamePanel extends AnimatedPanel {
 			}
 		});
 		for (Entity ent : this.entities) {
-			boolean isWater=(ent instanceof Obstacle&&((Obstacle)ent).getState()=="water");
-			if(!isWater &&!bordersCreated) {
-				bordersCreated=true;
+			boolean isWater = (ent instanceof Obstacle && ((Obstacle) ent).getState() == "water");
+			if (!isWater && !bordersCreated) {
+				bordersCreated = true;
 				displayBorders(playerPos, g);
 			}
 			if (!paused) {
@@ -455,15 +447,16 @@ public class GamePanel extends AnimatedPanel {
 					for (int j = Math.max(chunk[1] - 1, 0); j < Math.min(chunk[1] + 2,
 							this.chunkedEntities[0].length); j++) {
 						for (Entity ent2 : this.chunkedEntities[i][j]) {
-							boolean isWater2=(ent2 instanceof Obstacle&&((Obstacle)ent2).getState()=="water");
+							boolean isWater2 = (ent2 instanceof Obstacle && ((Obstacle) ent2).getState() == "water");
 							if (this.entities.indexOf(ent2) != -1 && !isWater) {
 								if (ent != ent2 && isTouching2(ent, ent2)) {
 									if (((ent instanceof Obstacle && ((Obstacle) ent).getState().equals("non-moveable")
 											&& (ent2 instanceof MovingEntity && ent2.getIsUp()
 													&& ent2.getDrawWidth() < 160))
 											|| (ent2 instanceof Obstacle
-													&& ((Obstacle) ent2).getState().equals("non-moveable") && (ent.getIsUp()
-															&& ent instanceof MovingEntity && ent.getDrawWidth() < 160)))) {
+													&& ((Obstacle) ent2).getState().equals("non-moveable")
+													&& (ent.getIsUp() && ent instanceof MovingEntity
+															&& ent.getDrawWidth() < 160)))) {
 
 										if (ent instanceof Obstacle) {
 											ent2.setIsUp(true);
@@ -484,7 +477,7 @@ public class GamePanel extends AnimatedPanel {
 												|| ((Bot) ent2).getTarget().getZ() == 3))
 												|| (ent2 instanceof Obstacle && (((Bot) ent).getTarget() == null
 														|| ((Bot) ent).getTarget().getZ() == 3))) {
-											//CHECKME: Moving stuff up trees i think
+											// CHECKME: Moving stuff up trees i think
 											if (ent instanceof Obstacle) {
 												ent2.setIsUp(true);
 												ent2.setZ(3.0);
@@ -494,19 +487,20 @@ public class GamePanel extends AnimatedPanel {
 												ent.setZ(3.0);
 											}
 										}
-									}
-									else if(!(ent instanceof Obstacle && ((Obstacle)ent).getState()!="moveable")&&(ent2 instanceof Obstacle&&((Obstacle)ent2).getState()=="water")&&ent.getZ()<2) {
-											double newZ = ent.getZ() + (-1.0 - ent.getZ()) / 10;
-											if (newZ< 0.0) {
-												newZ = 0.0; // Ensure Z does not go below ground level (Z = 1)
-											}
-											ent.setZ(newZ);
-										
+									} else if (!(ent instanceof Obstacle && ((Obstacle) ent).getState() != "moveable")
+											&& (ent2 instanceof Obstacle && ((Obstacle) ent2).getState() == "water")
+											&& ent.getZ() < 2) {
+										double newZ = ent.getZ() + (-1.0 - ent.getZ()) / 10;
+										if (newZ < 0.0) {
+											newZ = 0.0; // Ensure Z does not go below ground level (Z = 1)
+										}
+										ent.setZ(newZ);
+
 										ent.setIsDown(true);
-										zSet=true;
+										zSet = true;
 									}
 									// Handle collision effects
-									if (isTouching(ent, ent2)&&!isWater2) {
+									if (isTouching(ent, ent2) && !isWater2) {
 										if (ent2 instanceof MovingEntity && ent instanceof MovingEntity) {
 											if (ent2 instanceof Player) {
 												collide(ent2, ent);
@@ -515,16 +509,19 @@ public class GamePanel extends AnimatedPanel {
 											} else {
 												collide(ent, ent2);
 											}
-											if (angleCollide((MovingEntity) ent, (MovingEntity) ent2, 90) || (ent2 instanceof Player && ((Player) ent2).getDashingFrames() > 0 && angleCollide((MovingEntity) ent2, (MovingEntity) ent, 160))) {
+											if (angleCollide((MovingEntity) ent, (MovingEntity) ent2, 90)
+													|| (ent2 instanceof Player && ((Player) ent2).getDashingFrames() > 0
+															&& angleCollide((MovingEntity) ent2, (MovingEntity) ent,
+																	160))) {
 												if (ent instanceof Bot) {
 													((Bot) ent).setTarget((MovingEntity) ent2);
 												}
-												//damage being added
+												// damage being added
 												if (((MovingEntity) ent).getHitCooldown() == 0) {
 
-
 													((MovingEntity) ent).setHitCooldown(30);
-													if (ent2 instanceof Player && ((Player) ent2).getDashingFrames() > 0) {
+													if (ent2 instanceof Player
+															&& ((Player) ent2).getDashingFrames() > 0) {
 														((MovingEntity) ent).setHealth(((MovingEntity) ent).getHealth()
 																- ((MovingEntity) ent2).getDamage() * 2.2);
 													}
@@ -550,12 +547,12 @@ public class GamePanel extends AnimatedPanel {
 													&& angleCollide((Consumable) ent, (MovingEntity) ent2, 90)) {
 												((Consumable) ent).consume((MovingEntity) ent2);
 												delete.add(ent);
-											}  else if (ent instanceof ThrownParticle && ent2 instanceof MovingEntity) {
+											} else if (ent instanceof ThrownParticle && ent2 instanceof MovingEntity) {
 												if (ent2 != ((ThrownParticle) ent).getOrigin()) {
 													((ThrownParticle) ent).hit((MovingEntity) ent2);
 													delete.add(ent);
 													MovingEntity org = ((ThrownParticle) ent).getOrigin();
-														
+
 													if (((MovingEntity) ent2).getHealth() <= 0) {
 														delete.add(ent2);
 														if (org instanceof Player) {
@@ -567,18 +564,18 @@ public class GamePanel extends AnimatedPanel {
 														((MovingEntity) ent2).setHealth(0);
 														((MovingEntity) org).changeKillCount(1);
 													}
-else {
+												}
+											} else {
 												collide(ent, ent2);
 											}
 										}
 									}
-								}
-								if (ent2 instanceof Obstacle && ent.getZ() > 1.0
-										&& !ent.getIsUp()&&!(isWater)) {
-									double newZ = ent.getZ() + (0.5 - ent.getZ()) / 10;
-									if (ent.getZ() >= (ent2.getZ() + 1) && newZ < (ent2.getZ() + 1)) {
-										ent.setIsUp(true);
-										ent.setZ((ent2.getZ() + 1));
+									if (ent2 instanceof Obstacle && ent.getZ() > 1.0 && !ent.getIsUp() && !(isWater)) {
+										double newZ = ent.getZ() + (0.5 - ent.getZ()) / 10;
+										if (ent.getZ() >= (ent2.getZ() + 1) && newZ < (ent2.getZ() + 1)) {
+											ent.setIsUp(true);
+											ent.setZ((ent2.getZ() + 1));
+										}
 									}
 								}
 							}
@@ -587,7 +584,8 @@ else {
 				}
 				if (ent instanceof MovingEntity && ent.getIsUp() == true) {
 					boolean isUp = false;
-					for (int i = Math.max(chunk[0] - 1, 0); i < Math.min(chunk[0] + 2, this.chunkedEntities.length); i++) {
+					for (int i = Math.max(chunk[0] - 1, 0); i < Math.min(chunk[0] + 2,
+							this.chunkedEntities.length); i++) {
 						for (int j = Math.max(chunk[1] - 1, 0); j < Math.min(chunk[1] + 2,
 								this.chunkedEntities[0].length); j++) {
 							for (Entity ent2 : this.chunkedEntities[i][j]) {
@@ -603,7 +601,7 @@ else {
 				if (ent.getZ() < 2) {
 					ent.setIsUp(false);
 				}
-				if(!zSet) {
+				if (!zSet) {
 					ent.setIsDown(false);
 				}
 				if (ent instanceof MovingEntity && !((MovingEntity) ent).getIsUp() && ent.getZ() > 1.0) {
@@ -612,9 +610,7 @@ else {
 						newZ = 1.0; // Ensure Z does not go below ground level (Z = 1)
 					}
 					ent.setZ(newZ);
-				}
-				else if(ent.getZ() < 1.0
-						&& !ent.getIsDown()&&!isWater) {
+				} else if (ent.getZ() < 1.0 && !ent.getIsDown() && !isWater) {
 					double newZ = ent.getZ() + (1.5 - ent.getZ()) / 10;
 					if (newZ > 1.0) {
 						newZ = 1.0; // Ensure Z does not go below ground level (Z = 1)
@@ -641,12 +637,13 @@ else {
 						} else {
 							((Bot) ent).move();
 						}
-					}else if (ent instanceof ThrownParticle) {
+					} else if (ent instanceof ThrownParticle) {
 						ThrownParticle casted = (ThrownParticle) ent;
 						casted.move();
 						if (casted.getLifeFrames() <= 0) {
 							delete.add(ent);
 						}
+					}
 				}
 				// Draw player UI over everything else
 				if (ent instanceof Player && this.player.getHealth() > 0) {
@@ -661,8 +658,7 @@ else {
 				ent.setHeight(height);
 				ent.setWidth(width);
 
-			}
-			else {
+			} else {
 				if (ent instanceof Player) {
 					// Adjust Z-coordinate for player entity when near edges of other entities or
 					// objects
@@ -670,13 +666,12 @@ else {
 				} else {
 					ent.draw(g, (int) playerPos[0], (int) playerPos[1]);
 				}
-				
-				
+
 			}
 
 		}
 		// Draw player UI over everything else
-		
+
 		if (this.entities.contains(this.player)) {
 			this.player.drawUI(g);
 			if (!paused) {
@@ -700,9 +695,9 @@ else {
 			try {
 				boolean didRemove = this.entities.remove(delete.get(i));
 				this.shuffledEntities.remove(delete.get(i));
-				
+
 				if (delete.get(i) instanceof MovingEntity && didRemove) {
-					Bot newBot=new Bot(random(boundingX), random(boundingY),null, boundingX, boundingY);
+					Bot newBot = new Bot(random(boundingX), random(boundingY), null, boundingX, boundingY);
 					this.entities.add(newBot);
 					this.shuffledEntities.add(newBot);
 				}
@@ -713,11 +708,10 @@ else {
 		delete.clear();
 		this.entities.sort((o1, o2) -> o1.getDrawHeight() - o2.getDrawHeight());
 	}
-				public void addEntity(Entity ent) {
-					this.entities.add(ent);
-				}
 
-
+	public void addEntity(Entity ent) {
+		this.entities.add(ent);
+	}
 
 	private void displayBorders(double[] playerPos, Graphics g) {
 		g.setColor(new Color(0, 210, 0));

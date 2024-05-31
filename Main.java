@@ -1,5 +1,6 @@
 import java.awt.event.InputEvent;
 import javax.swing.*;
+import java.util.Timer;
 
 class Main extends JFrame{
 	public static boolean showHitBoxes=true;
@@ -36,11 +37,12 @@ class Main extends JFrame{
         Main.done = false;
         try {
             while (!Main.done) {
+            	long startTime = System.currentTimeMillis();
                 this.gamePanel.updateAnimation();
-
+                
                 repaint();
-
-                Thread.sleep(0);
+                long endTime = System.currentTimeMillis();
+                Thread.sleep(33 - (endTime - startTime));
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
