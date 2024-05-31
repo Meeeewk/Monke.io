@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -142,15 +143,14 @@ public class Player extends MovingEntity {
         g2d.drawImage(this.getPlayerImage(), this.getWidth() / 2 - this.getDrawWidth() / 2, this.getHeight() / 2 - this.getDrawHeight() / 2, this.getDrawWidth(), this.getDrawHeight(), null);
         g2d.setColor(new Color(255, 0, 0, (int) this.getHitCooldown() * 3));
         g2d.fillOval((int) (this.getWidth() / 2 - (this.getDrawWidth() * 0.72) / 2), (int) (this.getHeight() / 2 - (this.getDrawHeight() * 0.72) / 2), (int) (this.getDrawWidth() * 0.72), (int) (this.getDrawHeight() * 0.72));
-        g2d.setColor(Color.black);
+//        g2d.setColor(Color.black);
 //        g2d.drawString("z: " + this.getZ(), (int) (this.getWidth() / 2 - (this.getDrawWidth() * 0.72) / 2), (int) (this.getHeight() / 2 - (this.getDrawHeight() * 0.72) / 2) - 30);
 //        g2d.drawString("chunk: " + Arrays.toString(getChunk()), (int) (this.getWidth() / 2 - (this.getDrawWidth() * 0.72) / 2), (int) (this.getHeight() / 2 - (this.getDrawHeight() * 0.72) / 2) - 30);
+        g2d.setTransform(old);
         g2d.setColor(Color.red);
+        g2d.setFont(new Font("TimesRoman", Font.PLAIN, 20)); 
 	    g2d.drawString("kill count: "+this.getKillCount(), (int) (this.getWidth() / 2 - (this.getDrawWidth() * 0.72) / 2), (int) (this.getHeight() / 2 - (this.getDrawHeight() * 0.72) / 2) - 30);
         this.setHitCooldown(this.getHitCooldown() <= 0 ? 0 : this.getHitCooldown() - 0.5);
-        g2d.setTransform(old);
-        
-        g2d.fillOval((int) (this.getxVelocity() * 10 + getWidth() / 2),(int) (this.getyVelocity() * 10 + getHeight() / 2), 40, 40);
     }
 
     public void drawUI(Graphics g) {

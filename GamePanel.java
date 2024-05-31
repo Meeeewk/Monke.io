@@ -378,6 +378,9 @@ public class GamePanel extends AnimatedPanel {
 	}
 
 	private void movePastBounding(Entity e) {
+		if (e instanceof ThrownParticle) {
+			return;
+		}
 		int offset = e.getDrawWidth() / 3;
 		if (e.getX() > this.getBoundingX() - offset) {
 			e.setX(this.getBoundingX() - offset);
@@ -422,6 +425,10 @@ public class GamePanel extends AnimatedPanel {
 		Collections.sort(this.entities, new Comparator<Entity>() {
 			public int compare(Entity e, Entity e2) {
 				boolean isWater = (e instanceof Obstacle && ((Obstacle) e).getState() == "water");
+				boolean bothWater = isWater && (e2 instanceof Obstacle && ((Obstacle) e2).getState() == "water");
+				if (bothWater) {
+					return (e.getY() -e2.getY())>0?1:-1;
+				}
 				if (isWater) {
 					return -1;
 				}

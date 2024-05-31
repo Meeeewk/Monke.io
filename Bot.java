@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -111,7 +112,9 @@ g2d.setColor(new Color(255, 0, 0, (int)this.getHitCooldown()*3));
 	    int x=(int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + this.getWidth() / 2);
 	    int y=(int) (this.getY() - playerY - (this.getDrawHeight() * 0.72) / 2.0 + this.getHeight() / 2)-20;
 	    g2d.fillRect(x, y,(int) (this.getHealth() * this.getDrawWidth()/100), 10);
-	    g2d.setColor(Color.red);
+	    g2d.setTransform(old);
+        g2d.setColor(Color.red);
+        g2d.setFont(new Font("TimesRoman", Font.PLAIN, 20)); 
 	    g2d.drawString("kill count: "+this.getKillCount(), x, y-30);
 	    g2d.setColor(Color.black);
 //	    g2d.drawString("chunk: " + Arrays.toString(getChunk()), x, y-30);

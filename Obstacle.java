@@ -92,7 +92,7 @@ public class Obstacle extends Entity {
 					(int) (this.getY() - playerY - this.getDrawHeight() / 2.0 + this.getHeight() / 2),
 					this.getDrawWidth(), this.getDrawHeight(),null);
 		}else if (this.state == "water") {
-			g2d.setColor(new Color(0,105,148));
+			g2d.setColor(new Color(71,85,166));
 			g2d.fillOval((int) (this.getX() - playerX - this.getDrawWidth() / 2.0 + this.getWidth() / 2),
 					(int) (this.getY() - playerY - this.getDrawHeight() / 2.0 + this.getHeight() / 2),
 					this.getDrawWidth(), this.getDrawHeight());

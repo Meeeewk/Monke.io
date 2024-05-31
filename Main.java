@@ -3,7 +3,7 @@ import javax.swing.*;
 import java.util.Timer;
 
 class Main extends JFrame{
-	public static boolean showHitBoxes=true;
+	public static boolean showHitBoxes=false;
     private static volatile boolean done = false;
     private AnimatedPanel gamePanel;
     public static void main(String[] args) throws InterruptedException{
@@ -42,7 +42,7 @@ class Main extends JFrame{
                 
                 repaint();
                 long endTime = System.currentTimeMillis();
-                Thread.sleep(33 - (endTime - startTime));
+                Thread.sleep(Math.max(33 - (endTime - startTime), 0));
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
