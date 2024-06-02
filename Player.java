@@ -288,7 +288,7 @@ public class Player extends MovingEntity {
         	this.gamePanel.pause(true);
         	this.showEvoOption = true;
         	this.xp %= this.xpGoal;
-        	this.xpGoal *= 1.03;
+        	this.xpGoal *= 1.18;
         }
     }
     
