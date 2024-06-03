@@ -72,6 +72,14 @@ public class Consumable extends Entity {
 	private void setXp(int xp) {
 		this.xp = xp;
 	}
+	
+	public int getSize() {
+		return this.getDrawHeight();
+	}
+	
+	public String getName() {
+		return this.name;
+	}
 
 	private void setName(String name) {
 		this.name = name;
