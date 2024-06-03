@@ -119,6 +119,10 @@ public class Player extends MovingEntity {
     					// TODO Auto-generated catch block
     					ex.printStackTrace();
     				}
+    				this.availableAbilities.addAll(this.currentAbilities);
+    				this.currentAbilities.clear();
+    				this.availableAbilityKeys.addAll(this.currentAbilityKeys);
+    				this.currentAbilityKeys.clear();
 //    				this.setDrawHeight(drawHeight);
 //    				this.setDrawWidth(drawWidth);
     				this.setDrawHeight((int)(this.skinSize[this.getSkin()]+ this.getZ()*10));
