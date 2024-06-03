@@ -119,6 +119,8 @@ public class Player extends MovingEntity {
     					// TODO Auto-generated catch block
     					ex.printStackTrace();
     				}
+    				this.xp = 0;
+    				this.xpGoal = 200;
     				this.availableAbilities.addAll(this.currentAbilities);
     				this.currentAbilities.clear();
     				this.availableAbilityKeys.addAll(this.currentAbilityKeys);
@@ -292,7 +294,7 @@ public class Player extends MovingEntity {
         	this.gamePanel.pause(true);
         	this.showEvoOption = true;
         	this.xp %= this.xpGoal;
-        	this.xpGoal *= 1.18;
+        	this.xpGoal *= 1.1;
         }
     }
     
