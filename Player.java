@@ -96,7 +96,7 @@ public class Player extends MovingEntity {
     		this.evoBtns.remove(index);
     		switch (ting) {
     			case "DMG":
-    				this.dmgIncrease += 0.05;
+    				this.dmgIncrease += 0.1;
     				break;
     			case "SPEED":
     				this.setMaxSpeed(this.getMaxSpeed() * 1.05);
@@ -108,9 +108,6 @@ public class Player extends MovingEntity {
     			case "ENERGY":
     				this.setMaxSprintEndurance(this.getMaxSprintEndurance() + 45);
     				break;
-    			case "HCD":
-    				this.setHitCooldown(this.getHitCooldown() + 1);
-    				break;
     			case "EVO":
     				this.setSkin(selectRandomSkin(this.getSkin()));
     				try {
@@ -121,6 +118,12 @@ public class Player extends MovingEntity {
     				}
     				this.xp = 0;
     				this.xpGoal = 200;
+    				this.setMaxSpeed(Math.sqrt(162));
+    				this.dmgIncrease = 1;
+    				this.setHealth(100);
+    				this.setMaxHealth(100);
+    				this.setMaxSprintEndurance(240);
+    				this.setSprintEndurance(240);
     				this.availableAbilities.addAll(this.currentAbilities);
     				this.currentAbilities.clear();
     				this.availableAbilityKeys.addAll(this.currentAbilityKeys);
@@ -183,21 +186,18 @@ public class Player extends MovingEntity {
 				while (this.evoBtns.size() < 9) {
 					double rand = Math.random();
 					JButton btn = new JButton();
-					if (rand < 0.2) {
+					if (rand < 0.25) {
 						btn.setText("<html><center>"+"Increase"+"<br>"+"Damage"+"</center></html>");
 						btn.setActionCommand("DMG");
-					} else if (rand < 0.4) {
+					} else if (rand < 0.5) {
 						btn.setText("<html><center>"+"Increase"+"<br>"+"Speed"+"</center></html>");
 						btn.setActionCommand("SPEED");
-					} else if (rand < 0.6) {
+					} else if (rand < 0.75) {
 						btn.setText("<html><center>"+"Increase"+"<br>"+"Health"+"</center></html>");
 						btn.setActionCommand("HEALTH");
-					} else if (rand < 0.8) {
+					} else if (rand < 0.96) {
 						btn.setText("<html><center>"+"Increase"+"<br>"+"Energy"+"</center></html>");
 						btn.setActionCommand("ENERGY");
-					} else if (rand < 0.96) {
-						btn.setText("<html><center>"+"Increase"+"<br>"+"Hit-cooldown"+"</center></html>");
-						btn.setActionCommand("HCD");
 					} else {
 						btn.setText("EVOLVE");
 						btn.setActionCommand("EVO");
