@@ -451,6 +451,10 @@ public class GamePanel extends AnimatedPanel {
 		});
 		for (Entity ent : this.entities) {
 			boolean isWater = (ent instanceof Obstacle && ((Obstacle) ent).getState() == "water");
+			if(!isWater &&ent.getZ()>0&&!bordersCreated) {
+				bordersCreated=true;
+				displayBorders(playerPos, g);
+			}
 			if (!paused) {
 				boolean zSet = false; // Flag to track if Z-coordinate has been set for the current entity
 				int[] chunk = ent.getChunk();
@@ -683,7 +687,6 @@ public class GamePanel extends AnimatedPanel {
 
 		}
 		// Draw player UI over everything else
-		displayBorders(playerPos, g);
 		if (this.entities.contains(this.player)) {
 			this.player.drawUI(g);
 			if (!paused) {
