@@ -707,6 +707,10 @@ public class GamePanel extends AnimatedPanel {
 					Bot newBot = new Bot(random(boundingX), random(boundingY), null, boundingX, boundingY);
 					this.entities.add(newBot);
 					this.shuffledEntities.add(newBot);
+				} else if (delete.get(i) instanceof Consumable && Math.random() > 0.75) {
+					Consumable old = (Consumable) delete.get(i);
+					Consumable newConsume = new Consumable(random(boundingX), random(boundingY), old.getName(), old.getSize(), old.getXp(), old.getHealth());
+					this.entities.add(newConsume);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
