@@ -451,10 +451,6 @@ public class GamePanel extends AnimatedPanel {
 		});
 		for (Entity ent : this.entities) {
 			boolean isWater = (ent instanceof Obstacle && ((Obstacle) ent).getState() == "water");
-			if (!isWater && !bordersCreated) {
-				bordersCreated = true;
-				displayBorders(playerPos, g);
-			}
 			if (!paused) {
 				boolean zSet = false; // Flag to track if Z-coordinate has been set for the current entity
 				int[] chunk = ent.getChunk();
@@ -687,7 +683,7 @@ public class GamePanel extends AnimatedPanel {
 
 		}
 		// Draw player UI over everything else
-
+		displayBorders(playerPos, g);
 		if (this.entities.contains(this.player)) {
 			this.player.drawUI(g);
 			if (!paused) {
@@ -716,6 +712,10 @@ public class GamePanel extends AnimatedPanel {
 					Bot newBot = new Bot(random(boundingX), random(boundingY), null, boundingX, boundingY);
 					this.entities.add(newBot);
 					this.shuffledEntities.add(newBot);
+				} else if (delete.get(i) instanceof Consumable && Math.random() > 0.75) {
+					Consumable old = (Consumable) delete.get(i);
+					Consumable newConsume = new Consumable(random(boundingX), random(boundingY), old.getName(), old.getSize(), old.getXp(), old.getHealth());
+					this.entities.add(newConsume);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
