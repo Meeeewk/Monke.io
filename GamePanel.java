@@ -178,8 +178,14 @@ public class GamePanel extends AnimatedPanel {
 					(int) (Math.random() * 100 + 50), 1));
 		}
 		for (int i = 0; i < (boundingX + boundingY) / 500; i++) {
-			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "tree", "non-moveable",
-					(int) (Math.random() * 500 + 300), 2));
+			double randX = random(boundingX);
+			double randY = random(boundingY);
+			int randSize = (int) (Math.random() * 500 + 300);
+			this.entities.add(new Obstacle(randX, randY, "tree", "non-moveable", randSize, 2));
+			for (int a = 0; a < (boundingX + boundingY) / 700; a++) {
+				this.entities.add(new Consumable(randX + ((int) (Math.random() * -randSize/2) + randSize / 4),
+						randY + ((int) (Math.random() * -randSize/2) + randSize/4), "banana", 40, 45, 0));
+			}
 		}
 		for (int i = 0; i < (boundingX + boundingY) / 700; i++) {
 			createRandomWater(entities);
@@ -219,6 +225,9 @@ public class GamePanel extends AnimatedPanel {
 			zDiff = 0;
 		}
 
+		if (e.getZ() > 2&&e.getZ()<=3 && e2.getZ() >2&&e2.getZ()<=3) {
+			zDiff = 0;
+		}
 //		double rotDiff=e.getFacingDir()-e2.getFacingDir();
 //		if(e instanceof Player&&rotDiff>2.5&&rotDiff<4.5) {
 //		System.out.println(rotDiff);
@@ -427,7 +436,7 @@ public class GamePanel extends AnimatedPanel {
 				boolean isWater = (e instanceof Obstacle && ((Obstacle) e).getState() == "water");
 				boolean bothWater = isWater && (e2 instanceof Obstacle && ((Obstacle) e2).getState() == "water");
 				if (bothWater) {
-					return (e.getY() -e2.getY())>0?1:-1;
+					return (e.getY() - e2.getY()) > 0 ? 1 : -1;
 				}
 				if (isWater) {
 					return -1;
@@ -589,7 +598,7 @@ public class GamePanel extends AnimatedPanel {
 						}
 					}
 				}
-				if (ent instanceof MovingEntity && ent.getIsUp() == true) {
+				if ((ent instanceof MovingEntity&& ent.getIsUp() == true)||ent instanceof Consumable) {
 					boolean isUp = false;
 					for (int i = Math.max(chunk[0] - 1, 0); i < Math.min(chunk[0] + 2,
 							this.chunkedEntities.length); i++) {
@@ -611,7 +620,7 @@ public class GamePanel extends AnimatedPanel {
 				if (!zSet) {
 					ent.setIsDown(false);
 				}
-				if (ent instanceof MovingEntity && !((MovingEntity) ent).getIsUp() && ent.getZ() > 1.0) {
+				if (!(ent instanceof Obstacle && ((Obstacle) ent).getState().equals("non-moveable"))&& !ent.getIsUp() && ent.getZ() > 1.0) {
 					double newZ = ent.getZ() + (0.5 - ent.getZ()) / 10; // Adjust the descent speed as needed
 					if (newZ < 1.0) {
 						newZ = 1.0; // Ensure Z does not go below ground level (Z = 1)
