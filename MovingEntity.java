@@ -9,10 +9,10 @@ import javax.imageio.ImageIO;
 import java.util.Random;
 
 public class MovingEntity extends Entity {
-	public static String[] skins = { "bigfoot.png", "gorilla.png", "elephant.png", "croc.png", "orangutan.png" };
-	public double[] skinsDamage = { 15, 10, 20, 30, 10 };
-	public int[] skinSize = { 200, 100, 250, 150, 170 };
-	public static double[] skinsRarity = { 0.01, 0.1, 0.2, 0.1, 0.4 };
+	public static String[] skins = { "eagle.png","falcon.png","bigfoot.png", "gorilla.png", "elephant.png", "croc.png", "orangutan.png" };
+	public double[] skinsDamage = { 20,25,15, 10, 20, 30, 10 };
+	public int[] skinSize = { 130,150,200, 100, 250, 150, 170 };
+	public static double[] skinsRarity = { 0.1,0.2,0.01, 0.1, 0.2, 0.1, 0.4 };
 	private double x;
 	private double y;
 	private int width;

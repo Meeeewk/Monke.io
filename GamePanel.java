@@ -16,8 +16,8 @@ public class GamePanel extends AnimatedPanel {
 	private Player player;
 	private int mouseX;
 	private int mouseY;
-	private int boundingX = 3000;
-	private int boundingY = 3000;
+	private int boundingX = (int)(Math.random()*4000)+500;
+	private int boundingY = boundingX;
 	private boolean paused = false;
 	private ArrayList<Entity> shuffledEntities = new ArrayList<>();
 
@@ -157,7 +157,7 @@ public class GamePanel extends AnimatedPanel {
 		while (!checkForWater(randomY)) {
 			randomY = random(boundingY);
 		}
-		for (int i = 0; i < boundingX / 150; i++) {
+		for (int i = 0; i < boundingX / 100; i++) {
 			entities.add(new Obstacle(randomX + i * 500, randomY + (i * 10), "river", "water", 500, 0));
 		}
 	}
@@ -169,7 +169,7 @@ public class GamePanel extends AnimatedPanel {
 			this.entities.add(new Bot(random(boundingX), random(boundingY), null, boundingX, boundingY));
 		}
 
-		for (int j = 0; j < (boundingX + boundingY) / 30; j++) {
+		for (int j = 0; j < (boundingX + boundingY) / 50; j++) {
 			this.entities.add(new Consumable(random(boundingX), random(boundingY), "watermelon", 60, 0, 15));
 			this.entities.add(new Consumable(random(boundingX), random(boundingY), "banana", 40, 45, 0));
 		}
@@ -182,12 +182,12 @@ public class GamePanel extends AnimatedPanel {
 			double randY = random(boundingY);
 			int randSize = (int) (Math.random() * 500 + 300);
 			this.entities.add(new Obstacle(randX, randY, "tree", "non-moveable", randSize, 2));
-			for (int a = 0; a < (boundingX + boundingY) / 700; a++) {
+			for (int a = 0; a < (boundingX + boundingY) / 800; a++) {
 				this.entities.add(new Consumable(randX + ((int) (Math.random() * -randSize/2) + randSize / 4),
 						randY + ((int) (Math.random() * -randSize/2) + randSize/4), "banana", 40, 45, 0));
 			}
 		}
-		for (int i = 0; i < (boundingX + boundingY) / 700; i++) {
+		for (int i = 0; i < (boundingX + boundingY) / 1000; i++) {
 			createRandomWater(entities);
 		}
 
@@ -434,12 +434,16 @@ public class GamePanel extends AnimatedPanel {
 		Collections.sort(this.entities, new Comparator<Entity>() {
 			public int compare(Entity e, Entity e2) {
 				boolean isWater = (e instanceof Obstacle && ((Obstacle) e).getState() == "water");
-				boolean bothWater = isWater && (e2 instanceof Obstacle && ((Obstacle) e2).getState() == "water");
+				boolean isWater2 = (e2 instanceof Obstacle && ((Obstacle) e2).getState() == "water");
+				boolean bothWater = isWater && isWater2;
 				if (bothWater) {
 					return (e.getY() - e2.getY()) > 0 ? 1 : -1;
 				}
 				if (isWater) {
 					return -1;
+				}
+				else if(isWater2) {
+					return 1;
 				}
 				if (e.getZ() - e2.getZ() > 0) {
 					return 1;
