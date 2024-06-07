@@ -712,10 +712,15 @@ public class GamePanel extends AnimatedPanel {
 		}
 		for (int i = 0; i < delete.size(); i++) {
 			try {
+				double x=delete.get(i).getX();
+				double y=delete.get(i).getY();
 				boolean didRemove = this.entities.remove(delete.get(i));
 				this.shuffledEntities.remove(delete.get(i));
 
 				if (delete.get(i) instanceof MovingEntity && didRemove) {
+					Consumable meat = new Consumable(x, y, "meat", (int)(Math.random()*50)+40, 50, 20,1);
+					this.entities.add(meat);
+					this.shuffledEntities.add(meat);
 					Bot newBot = new Bot(random(boundingX), random(boundingY), null, boundingX, boundingY);
 					this.entities.add(newBot);
 					this.shuffledEntities.add(newBot);

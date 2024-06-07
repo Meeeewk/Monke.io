@@ -45,6 +45,11 @@ public class Consumable extends Entity {
 		this.setHealth(health);
 	}
 
+	public Consumable(double x, double y, String name, int size, int xp, int health,int z) {
+		this(x, y, name, size,xp,health);
+		this.setZ(z);
+	}
+
 	public Consumable(double x, double y, String name, int size) {
 		super(x, y);
 		this.setZ(3);
