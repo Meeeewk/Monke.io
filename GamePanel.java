@@ -455,9 +455,6 @@ public class GamePanel extends AnimatedPanel {
 			}
 		});
 		for (Entity ent : this.entities) {
-			if(ent instanceof Consumable) {
-			System.out.println(ent.getX());
-			}
 			boolean isWater = (ent instanceof Obstacle && ((Obstacle) ent).getState() == "water");
 			if(!isWater &&ent.getZ()>0&&!bordersCreated) {
 				bordersCreated=true;
