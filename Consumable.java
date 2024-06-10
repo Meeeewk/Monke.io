@@ -140,7 +140,6 @@ public class Consumable extends Entity {
 	}
 
 	public void setWidth(int width) {
-		this.setX(this.getX() + -1 * (width - this.getWidth()) / 2);
 		this.width = width;
 	}
 

@@ -16,7 +16,7 @@ public class GamePanel extends AnimatedPanel {
 	private Player player;
 	private int mouseX;
 	private int mouseY;
-	private int boundingX = (int)(Math.random()*4000)+500;
+	private int boundingX = (int)(Math.random()*3000)+1000;
 	private int boundingY = boundingX;
 	private boolean paused = false;
 	private ArrayList<Entity> shuffledEntities = new ArrayList<>();
@@ -165,10 +165,11 @@ public class GamePanel extends AnimatedPanel {
 	public void createObjects() {
 		this.player = new Player(this);
 		this.entities.add(this.player);
-		for (int i = 0; i < (boundingX + boundingY) / 200; i++) {
+		for (int i = 0; i < (boundingX + boundingY) / 500; i++) {
 			this.entities.add(new Bot(random(boundingX), random(boundingY), null, boundingX, boundingY));
 		}
-
+//		
+//
 		for (int j = 0; j < (boundingX + boundingY) / 50; j++) {
 			this.entities.add(new Consumable(random(boundingX), random(boundingY), "watermelon", 60, 0, 15));
 			this.entities.add(new Consumable(random(boundingX), random(boundingY), "banana", 40, 45, 0));
@@ -454,6 +455,9 @@ public class GamePanel extends AnimatedPanel {
 			}
 		});
 		for (Entity ent : this.entities) {
+			if(ent instanceof Consumable) {
+			System.out.println(ent.getX());
+			}
 			boolean isWater = (ent instanceof Obstacle && ((Obstacle) ent).getState() == "water");
 			if(!isWater &&ent.getZ()>0&&!bordersCreated) {
 				bordersCreated=true;
@@ -718,13 +722,15 @@ public class GamePanel extends AnimatedPanel {
 				this.shuffledEntities.remove(delete.get(i));
 
 				if (delete.get(i) instanceof MovingEntity && didRemove) {
-					Consumable meat = new Consumable(x, y, "meat", (int)(Math.random()*50)+40, 50, 20,1);
+					for(int a=0;a<(int)(Math.random()*2)+1;a++) {
+					Consumable meat = new Consumable(x+(Math.random()*200)-100, y+400+(Math.random()*200)-100, "meat", (int)(Math.random()*50)+40, 50, 20,1);
 					this.entities.add(meat);
 					this.shuffledEntities.add(meat);
+					}
 					Bot newBot = new Bot(random(boundingX), random(boundingY), null, boundingX, boundingY);
 					this.entities.add(newBot);
 					this.shuffledEntities.add(newBot);
-				} else if (delete.get(i) instanceof Consumable && Math.random() > 0.75) {
+				} else if (delete.get(i) instanceof Consumable && Math.random() > 0.75&&((Consumable)delete.get(i)).getName()!="meat") {
 					Consumable old = (Consumable) delete.get(i);
 					Consumable newConsume = new Consumable(random(boundingX), random(boundingY), old.getName(), old.getSize(), old.getXp(), old.getHealth());
 					this.entities.add(newConsume);
