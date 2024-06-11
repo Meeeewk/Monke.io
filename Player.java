@@ -45,7 +45,7 @@ public class Player extends MovingEntity {
     }
 
     public Player() {
-        this(0.0, 0.0, 400, 400, 60, 100, 100, "elephant.png", Math.sqrt(162), Math.sqrt(243));
+        this(0.0, 0.0, 400, 400, 60, 100, 100, "images/elephant.png", Math.sqrt(162), Math.sqrt(243));
 //        super.setZ(5);
        this.listener = new ActionListener() {
 
@@ -128,8 +128,6 @@ public class Player extends MovingEntity {
     				this.currentAbilities.clear();
     				this.availableAbilityKeys.addAll(this.currentAbilityKeys);
     				this.currentAbilityKeys.clear();
-//    				this.setDrawHeight(drawHeight);
-//    				this.setDrawWidth(drawWidth);
     				this.setDrawHeight((int)(this.skinSize[this.getSkin()]+ this.getZ()*10));
     				this.setDrawWidth((int)(this.skinSize[this.getSkin()]+ this.getZ()*10));
     		}
@@ -186,16 +184,16 @@ public class Player extends MovingEntity {
 				while (this.evoBtns.size() < 9) {
 					double rand = Math.random();
 					JButton btn = new JButton();
-					if (rand < 0.25) {
+					if (rand < 0.21) {
 						btn.setText("<html><center>"+"Increase"+"<br>"+"Damage"+"</center></html>");
 						btn.setActionCommand("DMG");
-					} else if (rand < 0.5) {
+					} else if (rand < 0.44) {
 						btn.setText("<html><center>"+"Increase"+"<br>"+"Speed"+"</center></html>");
 						btn.setActionCommand("SPEED");
-					} else if (rand < 0.75) {
+					} else if (rand < 0.67) {
 						btn.setText("<html><center>"+"Increase"+"<br>"+"Health"+"</center></html>");
 						btn.setActionCommand("HEALTH");
-					} else if (rand < 0.96) {
+					} else if (rand < 0.87) {
 						btn.setText("<html><center>"+"Increase"+"<br>"+"Energy"+"</center></html>");
 						btn.setActionCommand("ENERGY");
 					} else {
@@ -345,7 +343,7 @@ public class Player extends MovingEntity {
 					this.setSprintEndurance(this.getSprintEndurance() - 70);
 				}
 				this.setSprintingDisabled(30);
-				ThrownParticle thrown = new ThrownParticle(this.getX() + this.getxVelocity() * 10 + this.getWidth() / 2, this.getY() + this.getyVelocity() * 10 + this.getHeight() / 2, this.getZ(), this.getxVelocity() * 4, this.getyVelocity() * 4, 25, 40, "rock.png",this);
+				ThrownParticle thrown = new ThrownParticle(this.getX() + this.getxVelocity() * 10 + this.getWidth() / 2, this.getY() + this.getyVelocity() * 10 + this.getHeight() / 2, this.getZ(), this.getxVelocity() * 4, this.getyVelocity() * 4, 25, 40, "images/rock.png",this);
 				this.gamePanel.addEntity(thrown);
 			}
 			break;
