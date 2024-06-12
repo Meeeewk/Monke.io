@@ -63,7 +63,7 @@ public class Consumable extends Entity {
 		this.setXp(50);
 		this.setName(name);
 		try {
-			this.setPlayerImage(ImageIO.read(new File(name + ".png")));
+			this.setPlayerImage(ImageIO.read(new File("images/" + name + ".png")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -86,11 +86,11 @@ public class Consumable extends Entity {
 	private void setXp(int xp) {
 		this.xp = xp;
 	}
-	
+
 	public int getSize() {
 		return this.getDrawHeight();
 	}
-	
+
 	public String getName() {
 		return this.name;
 	}
