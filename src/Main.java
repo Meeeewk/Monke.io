@@ -21,7 +21,7 @@ class Main extends JFrame{
     }
 
     public void createFrame(Object semaphore) {
-        this.setTitle("walk around");
+        this.setTitle("Monke.io");
         this.setSize(1000, 1000);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.gamePanel = new GamePanel();
