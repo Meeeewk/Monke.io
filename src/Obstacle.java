@@ -50,7 +50,7 @@ public class Obstacle extends Entity {
 		this.setName(name);
 		if (name != "water") {
 			try {
-				this.setPlayerImage(ImageIO.read(new File(name + ".png")));
+				this.setPlayerImage(ImageIO.read(new File("images/" + name + ".png")));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
