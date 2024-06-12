@@ -6,15 +6,13 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-
-import java.util.ArrayList;
 import java.util.Random;
 
 public class MovingEntity extends Entity {
-	public static String[] skins = { "hippo.png","rhino.png","lion.png","tiger.png","bear.png","eagle.png","falcon.png","bigfoot.png", "gorilla.png", "elephant.png", "croc.png", "orangutan.png" };
+	public static String[] skins = { "images/hippo.png","images/rhino.png","images/lion.png","images/tiger.png","images/bear.png","images/eagle.png","images/falcon.png","images/bigfoot.png", "images/gorilla.png", "images/elephant.png", "images/croc.png", "images/orangutan.png" };
 	public double[] skinsDamage = { 30,25,25,25,25,20,25,15, 10, 20, 30, 10 };
 	public int[] skinSize = { 220,170,180,180,180,130,150,200, 100, 280, 150, 170 };
-	public static double[] skinsRarity = { 0.1,0.1,0.1,0.1,0.1,0.3,0.2,0.5, 0.8, 0.2, 0.3, 0.8 };
+	public static double[] skinsRarity = { 0.1,0.1,0.1,0.1,0.1,0.3,0.2,0.2, 0.3, 0.2, 0.3, 0.4 };
 	private double x;
 	private double y;
 	private int width;
@@ -80,19 +78,18 @@ public class MovingEntity extends Entity {
 	}
 
 	public static int selectRandomSkin() {
-		ArrayList<String> list=new ArrayList<>();
-		double fin=0;
-		for(int i=0;i<skinsRarity.length;i++) {
-			for(int a=0;a<skinsRarity[i]*10;a++) {
-				list.add(skins[i]);
-			}
-		}
-		// If no skin is selected, return a default skin or handle it as needed
-		for(int i=0;i<skins.length;i++) {
-			if(skins[i].equals(list.get((int)(Math.random()*list.size())))) {
+		Random random = new Random();
+		double rand = random.nextDouble();
+		double cumulativeProbability = 0.0;
+
+		for (int i = 0; i < skins.length; i++) {
+			cumulativeProbability += skinsRarity[i];
+			if (rand < cumulativeProbability) {
 				return i;
 			}
 		}
+
+		// If no skin is selected, return a default skin or handle it as needed
 		return 0;
 	}
 	
