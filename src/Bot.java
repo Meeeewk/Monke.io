@@ -16,7 +16,7 @@ public class Bot extends MovingEntity {
 	private int boundingX;
 	private int boundingY;
 	public Bot() {
-		this(0.0, 0.0, 400, 400, 120, "Hyena-S2.png", 100, 100, Math.sqrt(100), 400, Math.sqrt(192));
+		this(0.0, 0.0, 400, 400, 120, "images/Hyena-S2.png", 100, 100, Math.sqrt(100), 400, Math.sqrt(192));
 	}
 
 	public Bot(double x, double y, int width, int height, int moveSpeedMod, String imgPath, int drawWidth,
@@ -26,7 +26,7 @@ public class Bot extends MovingEntity {
 	}
 	
 	public Bot(double x, double y,MovingEntity target, int boundingX, int boundingY) {
-		this(x, y, 400, 400, 30, "Hyena-S2.png", 100, 100, Math.sqrt(100), 400, Math.sqrt(192));
+		this(x, y, 400, 400, 30, "images/Hyena-S2.png", 100, 100, Math.sqrt(100), 400, Math.sqrt(192));
 //		int rnd = (int) (Math.random() * 20 + 100);
 //		this.setDrawHeight(rnd);
 //		this.setDrawWidth(rnd);
