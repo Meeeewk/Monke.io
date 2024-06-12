@@ -1,3 +1,4 @@
+package src;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -7,6 +8,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class MovingEntity extends Entity {
@@ -82,31 +84,15 @@ public class MovingEntity extends Entity {
 		Random random = new Random();
 		double rand = random.nextDouble();
 		double cumulativeProbability = 0.0;
-
+		ArrayList<Integer> list=new ArrayList<Integer>();
 		for (int i = 0; i < skins.length; i++) {
-			cumulativeProbability += skinsRarity[i];
-			if (rand < cumulativeProbability) {
-				return i;
+			for(int a=0;a<skinsRarity[i]*10;a++) {
+				list.add(i);
 			}
 		}
-
-		// If no skin is selected, return a default skin or handle it as needed
-		return 0;
-	}
-	
-	public static int selectRandomSkin(int notThis) {
-		Random random = new Random();
-		double rand = random.nextDouble();
-		double cumulativeProbability = 0.0;
-		int retrn = notThis;
 		
-		while (retrn == notThis) {
-			retrn = (int) (random.nextDouble() * skins.length);
-		}
-		
-
 		// If no skin is selected, return a default skin or handle it as needed
-		return retrn;
+		return list.get((int)(Math.random()*list.size()));
 	}
 
 	public double getDamage() {

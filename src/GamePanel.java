@@ -1,3 +1,4 @@
+package src;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
@@ -18,7 +19,7 @@ public class GamePanel extends AnimatedPanel {
 	private int mouseX;
 	private int mouseY;
 //	private int boundingX = (int)(Math.random()*3000)+1000;
-	private int boundingX = 5000;
+	private int boundingX = 3000;
 	private int boundingY = boundingX;
 	private boolean paused = false;
 	private ArrayList<Entity> shuffledEntities = new ArrayList<>();
@@ -167,7 +168,7 @@ public class GamePanel extends AnimatedPanel {
 	public void createObjects() {
 		this.player = new Player(this);
 		this.entities.add(this.player);
-		for (int i = 0; i < (boundingX + boundingY) / 500; i++) {
+		for (int i = 0; i < (boundingX + boundingY) / 250; i++) {
 			this.entities.add(new Bot(random(boundingX), random(boundingY), null, boundingX, boundingY));
 		}
 //		
@@ -176,11 +177,11 @@ public class GamePanel extends AnimatedPanel {
 			this.entities.add(new Consumable(random(boundingX), random(boundingY), "watermelon", 60, 0, 15));
 			this.entities.add(new Consumable(random(boundingX), random(boundingY), "banana", 40, 45, 0));
 		}
-		for (int i = 0; i < (boundingX + boundingY) / 200; i++) {
+		for (int i = 0; i < (boundingX + boundingY) / 100; i++) {
 			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "rock", "moveable",
 					(int) (Math.random() * 100 + 50), 1));
 		}
-		for (int i = 0; i < (boundingX + boundingY) / 500; i++) {
+		for (int i = 0; i < (boundingX + boundingY) / 400; i++) {
 			double randX = random(boundingX);
 			double randY = random(boundingY);
 			int randSize = (int) (Math.random() * 500 + 300);
@@ -190,11 +191,11 @@ public class GamePanel extends AnimatedPanel {
 						randY + ((int) (Math.random() * -randSize/2) + randSize/4), "banana", 40, 45, 0));
 			}
 		}
-		for (int i = 0; i < (boundingX + boundingY) / 1000; i++) {
+		for (int i = 0; i < (boundingX + boundingY) / 800; i++) {
 			createRandomWater(entities);
 		}
 
-		for (int i = 0; i < (boundingX + boundingY) / 3000; i++) {
+		for (int i = 0; i < (boundingX + boundingY) / 2100; i++) {
 			createRiver(entities);
 		}
 		shuffledEntities = new ArrayList<>(this.entities);
