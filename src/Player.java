@@ -47,102 +47,108 @@ public class Player extends MovingEntity {
     public Player() {
         this(0.0, 0.0, 400, 400, 60, 100, 100, "images/elephant.png", Math.sqrt(162), Math.sqrt(243));
         this.setSkin(8);
-		try {
-			this.setPlayerImage(ImageIO.read(new File(skins[this.getSkin()])));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        try {
+            this.setPlayerImage(ImageIO.read(new File(skins[this.getSkin()])));
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 //		this.setDrawHeight(drawHeight);
 //		this.setDrawWidth(drawWidth);
-		this.setDrawHeight((int)(this.skinSize[this.getSkin()]+ this.getZ()*10));
-		this.setDrawWidth((int)(this.skinSize[this.getSkin()]+ this.getZ()*10));
+        this.setDrawHeight((int)(this.skinSize[this.getSkin()]+ this.getZ()*10));
+        this.setDrawWidth((int)(this.skinSize[this.getSkin()]+ this.getZ()*10));
 //        super.setZ(5);
        this.listener = new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String ting = e.getActionCommand();
-				
-				gamePanel.pause(false);
-				showEvoOption = false;
-				for (Component cmp : gamePanel.getComponents()) {
-					if (cmp instanceof JButton) {
-						gamePanel.remove(cmp);
-					}
-				}
-				handleLevelUp(ting);
-			}
-		};
-		for (int i = 0; i < this.availableAbilities.size(); i++) {
-			JButton btn = new JButton(this.availableAbilities.get(i));
-			btn.setBackground(Color.orange);
-			btn.addActionListener(listener);
-			this.evoBtns.add(btn);
-		}
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String ting = e.getActionCommand();
+
+                gamePanel.pause(false);
+                showEvoOption = false;
+                for (Component cmp : gamePanel.getComponents()) {
+                    if (cmp instanceof JButton) {
+                        gamePanel.remove(cmp);
+                    }
+                }
+                handleLevelUp(ting);
+            }
+        };
+        for (int i = 0; i < this.availableAbilities.size(); i++) {
+            JButton btn = new JButton(this.availableAbilities.get(i));
+            String btnKey = this.availableAbilityKeys.get(i) + "";
+            if (btnKey.equals(" ")) {
+                btnKey = "Space";
+            }
+            btn.setText("<html><center>"+this.availableAbilities.get(i)+"<br>" + "Keybind: " + btnKey + "</center></html>");
+            btn.setActionCommand(this.availableAbilities.get(i));
+            btn.setBackground(Color.orange);
+            btn.addActionListener(listener);
+            this.evoBtns.add(btn);
+        }
     }
-    
+
     public Player(GamePanel gamePanel) {
-    	this();
-    	this.gamePanel = gamePanel;
-    	
+        this();
+        this.gamePanel = gamePanel;
+
     }
-    
+
     private void handleLevelUp(String ting) {
-    	try {
-        	int index = this.availableAbilities.indexOf(ting);
-        	this.evoBtns.remove(index);
-        	this.currentAbilities.add(ting);
-        	this.currentAbilityKeys.add(this.availableAbilityKeys.get(index));
-        	this.availableAbilities.remove(index);
-        	this.availableAbilityKeys.remove(index);
-    	} catch (Exception e) {
-    		// If caught then it isnt a new ability, but a stat boost
-    		int index = -1;
-    		for (JButton btn : this.evoBtns) {
-    			if (btn.getActionCommand().equals(ting)) {
-    				index = this.evoBtns.indexOf(btn);
-    			}
-    		}
-    		this.evoBtns.remove(index);
-    		switch (ting) {
-    			case "DMG":
-    				this.dmgIncrease += 0.1;
-    				break;
-    			case "SPEED":
-    				this.setMaxSpeed(this.getMaxSpeed() * 1.05);
-    				break;
-    			case "HEALTH":
-    				this.setHealth(this.getHealth() + 15);
-    				this.setMaxHealth(this.getMaxHealth() + 15);
-    				break;
-    			case "ENERGY":
-    				this.setMaxSprintEndurance(this.getMaxSprintEndurance() + 45);
-    				break;
-    			case "EVO":
-    				this.setSkin(selectRandomSkin(this.getSkin()));
-    				try {
-    					this.setPlayerImage(ImageIO.read(new File(skins[this.getSkin()])));
-    				} catch (IOException ex) {
-    					// TODO Auto-generated catch block
-    					ex.printStackTrace();
-    				}
-    				this.xp = 0;
-    				this.xpGoal = 200;
-    				this.setMaxSpeed(Math.sqrt(162));
-    				this.dmgIncrease = 1;
-    				this.setHealth(100);
-    				this.setMaxHealth(100);
-    				this.setMaxSprintEndurance(240);
-    				this.setSprintEndurance(240);
-    				this.availableAbilities.addAll(this.currentAbilities);
-    				this.currentAbilities.clear();
-    				this.availableAbilityKeys.addAll(this.currentAbilityKeys);
-    				this.currentAbilityKeys.clear();
-    				this.setDrawHeight((int)(this.skinSize[this.getSkin()]+ this.getZ()*10));
-    				this.setDrawWidth((int)(this.skinSize[this.getSkin()]+ this.getZ()*10));
-    		}
-    	}
+        try {
+            int index = this.availableAbilities.indexOf(ting);
+            this.evoBtns.remove(index);
+            this.currentAbilities.add(ting);
+            this.currentAbilityKeys.add(this.availableAbilityKeys.get(index));
+            this.availableAbilities.remove(index);
+            this.availableAbilityKeys.remove(index);
+        } catch (Exception e) {
+            // If caught then it isnt a new ability, but a stat boost
+            int index = -1;
+            for (JButton btn : this.evoBtns) {
+                if (btn.getActionCommand().equals(ting)) {
+                    index = this.evoBtns.indexOf(btn);
+                }
+            }
+            this.evoBtns.remove(index);
+            switch (ting) {
+                case "DMG":
+                    this.dmgIncrease += 0.1;
+                    break;
+                case "SPEED":
+                    this.setMaxSpeed(this.getMaxSpeed() * 1.05);
+                    break;
+                case "HEALTH":
+                    this.setHealth(this.getHealth() + 15);
+                    this.setMaxHealth(this.getMaxHealth() + 15);
+                    break;
+                case "ENERGY":
+                    this.setMaxSprintEndurance(this.getMaxSprintEndurance() + 45);
+                    break;
+                case "EVO":
+                    this.setSkin(selectRandomSkin(this.getSkin()));
+                    try {
+                        this.setPlayerImage(ImageIO.read(new File(skins[this.getSkin()])));
+                    } catch (IOException ex) {
+                        // TODO Auto-generated catch block
+                        ex.printStackTrace();
+                    }
+                    this.xp = 0;
+                    this.xpGoal = 200;
+                    this.setMaxSpeed(Math.sqrt(162));
+                    this.dmgIncrease = 1;
+                    this.setHealth(100);
+                    this.setMaxHealth(100);
+                    this.setMaxSprintEndurance(240);
+                    this.setSprintEndurance(240);
+                    this.availableAbilities.addAll(this.currentAbilities);
+                    this.currentAbilities.clear();
+                    this.availableAbilityKeys.addAll(this.currentAbilityKeys);
+                    this.currentAbilityKeys.clear();
+                    this.setDrawHeight((int)(this.skinSize[this.getSkin()]+ this.getZ()*10));
+                    this.setDrawWidth((int)(this.skinSize[this.getSkin()]+ this.getZ()*10));
+            }
+        }
     }
 
     @Override
@@ -167,7 +173,7 @@ public class Player extends MovingEntity {
         g2d.setTransform(old);
         g2d.setColor(Color.red);
         g2d.setFont(new Font("TimesRoman", Font.PLAIN, 20)); 
-	    g2d.drawString("kill count: "+this.getKillCount(), (int) (this.getWidth() / 2 - (this.getDrawWidth() * 0.72) / 2), (int) (this.getHeight() / 2 - (this.getDrawHeight() * 0.72) / 2) - 30);
+        g2d.drawString("kill count: "+this.getKillCount(), (int) (this.getWidth() / 2 - (this.getDrawWidth() * 0.72) / 2), (int) (this.getHeight() / 2 - (this.getDrawHeight() * 0.72) / 2) - 30);
         this.setHitCooldown(this.getHitCooldown() <= 0 ? 0 : this.getHitCooldown() - 0.5);
     }
 
@@ -190,48 +196,48 @@ public class Player extends MovingEntity {
         g2d.fillRect(65, this.getHeight() / 2 - 300 - 5, 30, healthBarHeight);
         g2d.setColor(this.healthToColor(this.getHealth() / this.getMaxHealth()));
         g2d.fillRect(70, (int) (this.getHeight() / 2 - 300 + 5 + (healthBarHeight * (1 - (this.getHealth() / this.getMaxHealth())))), 20, (int) (this.getHealth() * healthBarHeight / this.getMaxHealth()) - 15);
-    	if (this.showEvoOption) {
-    		if (this.evoBtns.size() < 3) {
-				while (this.evoBtns.size() < 9) {
-					double rand = Math.random();
-					JButton btn = new JButton();
-					if (rand < 0.21) {
-						btn.setText("<html><center>"+"Increase"+"<br>"+"Damage"+"</center></html>");
-						btn.setActionCommand("DMG");
-					} else if (rand < 0.44) {
-						btn.setText("<html><center>"+"Increase"+"<br>"+"Speed"+"</center></html>");
-						btn.setActionCommand("SPEED");
-					} else if (rand < 0.67) {
-						btn.setText("<html><center>"+"Increase"+"<br>"+"Health"+"</center></html>");
-						btn.setActionCommand("HEALTH");
-					} else if (rand < 0.87) {
-						btn.setText("<html><center>"+"Increase"+"<br>"+"Energy"+"</center></html>");
-						btn.setActionCommand("ENERGY");
-					} else {
-						btn.setText("EVOLVE");
-						btn.setActionCommand("EVO");
-					}
-					btn.addActionListener(this.listener);
-					this.evoBtns.add(btn);
-				}
-			}
-    		int rnd1 = (int) (Math.random() * this.evoBtns.size());
-    		int rnd2 = (int) (Math.random() * this.evoBtns.size());
-    		int rnd3 = (int) (Math.random() * this.evoBtns.size());
-    		while (rnd2 == rnd1) {
-    			rnd2 = (int) (Math.random() * this.evoBtns.size());
-    		}
-    		while (rnd3 == rnd2 || rnd3 == rnd1) {
-    			rnd3 = (int) (Math.random() * this.evoBtns.size());
-    		}
-    		int[] rands = {rnd1, rnd2, rnd3};
-    		for (int i = 0; i < 3; i++) {
-    			JButton rnd = this.evoBtns.get(rands[i]);
-    			rnd.setBounds(this.getWidth() * (i + 1) / 4 - this.getWidth() / 16, this.getHeight() / 3, this.getWidth() / 8, this.getHeight() / 12);
-    			this.gamePanel.add(rnd);
-    		}
-    		this.showEvoOption = false;
-    	}
+        if (this.showEvoOption) {
+            if (this.evoBtns.size() < 3) {
+                while (this.evoBtns.size() < 9) {
+                    double rand = Math.random();
+                    JButton btn = new JButton();
+                    if (rand < 0.21) {
+                        btn.setText("<html><center>"+"Increase"+"<br>"+"Damage"+"</center></html>");
+                        btn.setActionCommand("DMG");
+                    } else if (rand < 0.44) {
+                        btn.setText("<html><center>"+"Increase"+"<br>"+"Speed"+"</center></html>");
+                        btn.setActionCommand("SPEED");
+                    } else if (rand < 0.67) {
+                        btn.setText("<html><center>"+"Increase"+"<br>"+"Health"+"</center></html>");
+                        btn.setActionCommand("HEALTH");
+                    } else if (rand < 0.87) {
+                        btn.setText("<html><center>"+"Increase"+"<br>"+"Energy"+"</center></html>");
+                        btn.setActionCommand("ENERGY");
+                    } else {
+                        btn.setText("EVOLVE");
+                        btn.setActionCommand("EVO");
+                    }
+                    btn.addActionListener(this.listener);
+                    this.evoBtns.add(btn);
+                }
+            }
+            int rnd1 = (int) (Math.random() * this.evoBtns.size());
+            int rnd2 = (int) (Math.random() * this.evoBtns.size());
+            int rnd3 = (int) (Math.random() * this.evoBtns.size());
+            while (rnd2 == rnd1) {
+                rnd2 = (int) (Math.random() * this.evoBtns.size());
+            }
+            while (rnd3 == rnd2 || rnd3 == rnd1) {
+                rnd3 = (int) (Math.random() * this.evoBtns.size());
+            }
+            int[] rands = {rnd1, rnd2, rnd3};
+            for (int i = 0; i < 3; i++) {
+                JButton rnd = this.evoBtns.get(rands[i]);
+                rnd.setBounds(this.getWidth() * (i + 1) / 4 - this.getWidth() / 16, this.getHeight() / 3, this.getWidth() / 8, this.getHeight() / 12);
+                this.gamePanel.add(rnd);
+            }
+            this.showEvoOption = false;
+        }
     }
 
     public void move() {
@@ -251,42 +257,42 @@ public class Player extends MovingEntity {
         cursorX -= this.getWidth() / 2;
         cursorY -= this.getHeight() / 2;
         if (jumpingFrames > 0) {
-        	this.setZ(this.getZ() + 0.8);
-        	jumpingFrames--;
+            this.setZ(this.getZ() + 0.8);
+            jumpingFrames--;
         }
         if (dashingFrames > 0) {
-			dashingFrames--;
-		}
+            dashingFrames--;
+        }
         if (throwingFrames > 0) {
-        	throwingFrames--;
+            throwingFrames--;
         }
         super.move(cursorX, cursorY, this.getZ());
     }
-    
+
     @Override
     public void setWidth(int width) {
-    	super.setWidth(width);
-    	if (this.evoBtns == null) {
-    		return;
-    	}
-    	int numSections = this.evoBtns.size() + 1;
-    	for (int i = 0; i < this.evoBtns.size(); i++) {
-    		JButton btn = this.evoBtns.get(i);
-    		btn.setBounds(((i + 1) * this.getWidth() / numSections) - (this.getWidth() / (4 * numSections)), this.getHeight() / 3, (this.getWidth() / (2 * numSections)), this.getHeight() / 6);
-    	}
+        super.setWidth(width);
+        if (this.evoBtns == null) {
+            return;
+        }
+        int numSections = this.evoBtns.size() + 1;
+        for (int i = 0; i < this.evoBtns.size(); i++) {
+            JButton btn = this.evoBtns.get(i);
+            btn.setBounds(((i + 1) * this.getWidth() / numSections) - (this.getWidth() / (4 * numSections)), this.getHeight() / 3, (this.getWidth() / (2 * numSections)), this.getHeight() / 6);
+        }
     }
-    
+
     @Override
     public void setHeight(int height) {
-    	super.setHeight(height);
-    	if (this.evoBtns == null) {
-    		return;
-    	}
-    	int numSections = this.evoBtns.size() + 1;
-    	for (int i = 0; i < this.evoBtns.size(); i++) {
-    		JButton btn = this.evoBtns.get(i);
-    		btn.setBounds((this.getWidth() / numSections) - (this.getWidth() / (4 * numSections)), this.getHeight() / 3, (this.getWidth() / (2 * numSections)), this.getHeight() / 6);
-    	}
+        super.setHeight(height);
+        if (this.evoBtns == null) {
+            return;
+        }
+        int numSections = this.evoBtns.size() + 1;
+        for (int i = 0; i < this.evoBtns.size(); i++) {
+            JButton btn = this.evoBtns.get(i);
+            btn.setBounds((this.getWidth() / numSections) - (this.getWidth() / (4 * numSections)), this.getHeight() / 3, (this.getWidth() / (2 * numSections)), this.getHeight() / 6);
+        }
     }
 
     public void setTarget(Entity ent) {
@@ -300,16 +306,16 @@ public class Player extends MovingEntity {
     public void setXp(int xp) {
         this.xp = xp;
         if (this.xp >= this.xpGoal) {
-        	this.gamePanel.pause(true);
-        	this.showEvoOption = true;
-        	this.xp %= this.xpGoal;
-        	this.xpGoal *= 1.1;
+            this.gamePanel.pause(true);
+            this.showEvoOption = true;
+            this.xp %= this.xpGoal;
+            this.xpGoal *= 1.1;
         }
     }
-    
+
     @Override
     public double getDamage() {
-    	return super.getDamage() * this.dmgIncrease;
+        return super.getDamage() * this.dmgIncrease;
     }
 
     public double getViewPOV() {
@@ -320,52 +326,52 @@ public class Player extends MovingEntity {
         this.viewPOV = viewPOV;
     }
 
-	public ArrayList<Character> getCurrentAbilityKeys() {
-		return this.currentAbilityKeys;
-	}
+    public ArrayList<Character> getCurrentAbilityKeys() {
+        return this.currentAbilityKeys;
+    }
 
-	public void activateAbility(int index) {
-		String ability = this.currentAbilities.get(index);
-		switch (ability) {
-		case "JUMP":
-			if (jumpingFrames == 0 && this.getSprintEndurance() > 70 && this.getSprintingDisabled() == 0) {
-				this.jumpingFrames = 20;
-				this.setSprintEndurance(this.getSprintEndurance() - 70);
-				this.setSprintingDisabled(25);
-			}
-			break;
-		case "DASH":
-			if (getDashingFrames() == 0 && this.getSprintEndurance() > 70 && this.getSprintingDisabled() == 0) {
-				this.setDashingFrames(12);
-				if (this.getSprintEndurance() < 75 && this.getSprintEndurance() > 65) {
-					this.setSprintEndurance(0);
-				} else {
-					this.setSprintEndurance(this.getSprintEndurance() - 70);
-				}
-				this.setSprintingDisabled(25);
-			} 
-			break;
-		case "THROW":
-			if (throwingFrames == 0 && this.getSprintEndurance() > 70 && this.getSprintingDisabled() == 0) {
-				throwingFrames = 45;
-				if (this.getSprintEndurance() < 75 && this.getSprintEndurance() > 65) {
-					this.setSprintEndurance(0);
-				} else {
-					this.setSprintEndurance(this.getSprintEndurance() - 70);
-				}
-				this.setSprintingDisabled(30);
-				ThrownParticle thrown = new ThrownParticle(this.getX() + this.getxVelocity() * 10 + this.getWidth() / 2, this.getY() + this.getyVelocity() * 10 + this.getHeight() / 2, this.getZ(), this.getxVelocity() * 4, this.getyVelocity() * 4, 25, 40, "images/rock.png",this);
-				this.gamePanel.addEntity(thrown);
-			}
-			break;
-		}
-	}
+    public void activateAbility(int index) {
+        String ability = this.currentAbilities.get(index);
+        switch (ability) {
+        case "JUMP":
+            if (jumpingFrames == 0 && this.getSprintEndurance() > 70 && this.getSprintingDisabled() == 0) {
+                this.jumpingFrames = 20;
+                this.setSprintEndurance(this.getSprintEndurance() - 70);
+                this.setSprintingDisabled(25);
+            }
+            break;
+        case "DASH":
+            if (getDashingFrames() == 0 && this.getSprintEndurance() > 70 && this.getSprintingDisabled() == 0) {
+                this.setDashingFrames(12);
+                if (this.getSprintEndurance() < 75 && this.getSprintEndurance() > 65) {
+                    this.setSprintEndurance(0);
+                } else {
+                    this.setSprintEndurance(this.getSprintEndurance() - 70);
+                }
+                this.setSprintingDisabled(25);
+            } 
+            break;
+        case "THROW":
+            if (throwingFrames == 0 && this.getSprintEndurance() > 70 && this.getSprintingDisabled() == 0) {
+                throwingFrames = 45;
+                if (this.getSprintEndurance() < 75 && this.getSprintEndurance() > 65) {
+                    this.setSprintEndurance(0);
+                } else {
+                    this.setSprintEndurance(this.getSprintEndurance() - 70);
+                }
+                this.setSprintingDisabled(30);
+                ThrownParticle thrown = new ThrownParticle(this.getX() + this.getxVelocity() * 10 + this.getWidth() / 2, this.getY() + this.getyVelocity() * 10 + this.getHeight() / 2, this.getZ(), this.getxVelocity() * 4, this.getyVelocity() * 4, 25, 40, "images/rock.png",this);
+                this.gamePanel.addEntity(thrown);
+            }
+            break;
+        }
+    }
 
-	public int getDashingFrames() {
-		return dashingFrames;
-	}
+    public int getDashingFrames() {
+        return dashingFrames;
+    }
 
-	public void setDashingFrames(int dashingFrames) {
-		this.dashingFrames = dashingFrames;
-	}
+    public void setDashingFrames(int dashingFrames) {
+        this.dashingFrames = dashingFrames;
+    }
 }
