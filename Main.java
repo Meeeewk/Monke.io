@@ -1,5 +1,6 @@
 import java.awt.event.InputEvent;
 import javax.swing.*;
+
 import java.util.Timer;
 
 class Main extends JFrame{
@@ -22,7 +23,7 @@ class Main extends JFrame{
 
     public void createFrame(Object semaphore) {
         this.setTitle("Monke.io");
-        this.setSize(1000, 1000);
+        this.setSize(1750, 1000);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.gamePanel = new GamePanel();
         this.add(gamePanel);

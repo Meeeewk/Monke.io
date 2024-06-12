@@ -126,7 +126,15 @@ public class Player extends MovingEntity {
                     this.setMaxSprintEndurance(this.getMaxSprintEndurance() + 45);
                     break;
                 case "EVO":
-                    this.setSkin(selectRandomSkin(this.getSkin()));
+                	if(this.getSkin()==8) {
+                		this.setSkin(11);
+                	}
+                	else if(this.getSkin()==11) {
+                		this.setSkin(7);
+                	}
+                	else {
+                		this.setSkin(8);
+                	}
                     try {
                         this.setPlayerImage(ImageIO.read(new File(skins[this.getSkin()])));
                     } catch (IOException ex) {

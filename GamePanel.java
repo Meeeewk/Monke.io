@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.swing.SwingUtilities;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,7 +17,8 @@ public class GamePanel extends AnimatedPanel {
 	private Player player;
 	private int mouseX;
 	private int mouseY;
-	private int boundingX = (int)(Math.random()*3000)+1000;
+//	private int boundingX = (int)(Math.random()*3000)+1000;
+	private int boundingX = 5000;
 	private int boundingY = boundingX;
 	private boolean paused = false;
 	private ArrayList<Entity> shuffledEntities = new ArrayList<>();
@@ -720,7 +722,7 @@ public class GamePanel extends AnimatedPanel {
 
 				if (delete.get(i) instanceof MovingEntity && didRemove) {
 					for(int a=0;a<(int)(Math.random()*2)+1;a++) {
-					Consumable meat = new Consumable(x+(Math.random()*200)-100, y+400+(Math.random()*200)-100, "meat", (int)(Math.random()*50)+40, 50, 20,1);
+					Consumable meat = new Consumable(x+this.getWidth()-900+(Math.random()*200-100), y+400+(Math.random()*200)-100, "meat", (int)(Math.random()*50)+40, 50, 20,1);
 					this.entities.add(meat);
 					this.shuffledEntities.add(meat);
 					}
