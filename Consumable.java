@@ -27,19 +27,26 @@ public class Consumable extends Entity {
 		super(x, y);
 		this.setXp(xp);
 		this.setName(name);
-		this.setWidth(width);
+		this.width=width;
 		this.setHeight(height);
 		try {
 			this.setPlayerImage(ImageIO.read(new File(imgPath)));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		this.setDrawHeight(drawHeight);
-		this.setDrawWidth(drawWidth);
+		this.setOrigDrawHeight(drawHeight);
+		this.setOrigDrawWidth(drawWidth);
+		this.setDrawHeight((int)(getOrigDrawHeight()+ getZ()*10));
+		this.setDrawWidth((int)(getOrigDrawWidth()+ getZ()*10));
 	}
 
 	public Consumable(double x, double y, String name, int size, int xp, int health) {
 		this(x, y, name, size);
+
+		this.setOrigDrawHeight(size);
+		this.setOrigDrawWidth(size);
+		this.setDrawHeight((int)(getOrigDrawHeight()+ getZ()*10));
+		this.setDrawWidth((int)(getOrigDrawWidth()+ getZ()*10));
 		this.setZ(3);
 		this.setXp(xp);
 		this.setHealth(health);
@@ -140,6 +147,7 @@ public class Consumable extends Entity {
 	}
 
 	public void setWidth(int width) {
+		this.setX(this.getX() + -1 * (width - this.getWidth()) / 2);
 		this.width = width;
 	}
 

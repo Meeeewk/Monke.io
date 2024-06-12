@@ -35,8 +35,11 @@ public class Obstacle extends Entity {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		this.setDrawHeight(drawHeight);
-		this.setDrawWidth(drawWidth);
+
+		this.setOrigDrawHeight(drawHeight);
+		this.setOrigDrawWidth(drawWidth);
+		this.setDrawHeight((int)(getOrigDrawHeight()+ getZ()*10));
+		this.setDrawWidth((int)(getOrigDrawWidth()+ getZ()*10));
 		this.setState(moveable);
 	}
 
@@ -52,8 +55,11 @@ public class Obstacle extends Entity {
 				e.printStackTrace();
 			}
 		}
-		this.setDrawHeight(size);
-		this.setDrawWidth(size);
+
+		this.setOrigDrawHeight(size);
+		this.setOrigDrawWidth(size);
+		this.setDrawHeight((int)(getOrigDrawHeight()+ getZ()*10));
+		this.setDrawWidth((int)(getOrigDrawWidth()+ getZ()*10));
 		this.setState(moveable);
 	}
 

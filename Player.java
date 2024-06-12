@@ -46,6 +46,17 @@ public class Player extends MovingEntity {
 
     public Player() {
         this(0.0, 0.0, 400, 400, 60, 100, 100, "images/elephant.png", Math.sqrt(162), Math.sqrt(243));
+        this.setSkin(8);
+		try {
+			this.setPlayerImage(ImageIO.read(new File(skins[this.getSkin()])));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//		this.setDrawHeight(drawHeight);
+//		this.setDrawWidth(drawWidth);
+		this.setDrawHeight((int)(this.skinSize[this.getSkin()]+ this.getZ()*10));
+		this.setDrawWidth((int)(this.skinSize[this.getSkin()]+ this.getZ()*10));
 //        super.setZ(5);
        this.listener = new ActionListener() {
 

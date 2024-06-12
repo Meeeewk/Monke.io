@@ -7,6 +7,8 @@ public class Entity {
 	private int height;
 	private int drawWidth;
 	private int drawHeight;
+	private int origDrawWidth;
+	private int origDrawHeight;
 	private Image playerImage;
 	private double facingDir;
 	private int[] chunk = new int[2];
@@ -29,6 +31,8 @@ public class Entity {
 	}
 	public void setZ(double z) {
 		this.z=z;
+		this.setDrawHeight((int)(origDrawHeight+ z*10));
+		this.setDrawWidth((int)(origDrawWidth+ z*10));
 	}
 	public double compareTo(Entity e) {
 		return Math.sqrt(Math.pow(this.getX()-e.getX(),2)+Math.pow(this.getY()-e.getY(),2));
@@ -101,5 +105,17 @@ public class Entity {
 	}
 	public boolean getIsDown() {
 		return this.isDown;
+	}
+	public int getOrigDrawWidth() {
+		return origDrawWidth;
+	}
+	public void setOrigDrawWidth(int origDrawWidth) {
+		this.origDrawWidth = origDrawWidth;
+	}
+	public int getOrigDrawHeight() {
+		return origDrawHeight;
+	}
+	public void setOrigDrawHeight(int origDrawHeight) {
+		this.origDrawHeight = origDrawHeight;
 	}
 }
