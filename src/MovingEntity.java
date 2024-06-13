@@ -16,6 +16,7 @@ public class MovingEntity extends Entity {
 	public double[] skinsDamage = { 30,25,25,25,25,20,25,15, 10, 20, 30, 10 };
 	public int[] skinSize = { 220,170,180,180,180,130,150,200, 150, 280, 150, 170 };
 	public static double[] skinsRarity = { 0.1,0.1,0.1,0.1,0.1,0.3,0.2,0.2, 0.3, 0.2, 0.3, 0.4 };
+	public static double[] skinSpeed = { 8,15,10,12,12,15,16,14, 10, 7, 10, 10 };
 	private double x;
 	private double y;
 	private int width;
@@ -44,10 +45,10 @@ public class MovingEntity extends Entity {
 		super(x, y);
 		this.setWidth(width);
 		this.setHeight(height);
-		this.setMaxSpeed(maxSpeed);
 		this.setMoveSpeedMod(moveSpeedMod);
 		this.setSprintSpeed(sprintSpeed);
 		this.setSkin(selectRandomSkin());
+		this.setMaxSpeed(skinSpeed[skin]);
 		try {
 			this.setPlayerImage(ImageIO.read(new File(skins[skin])));
 		} catch (IOException e) {

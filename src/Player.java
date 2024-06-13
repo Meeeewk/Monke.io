@@ -42,7 +42,7 @@ public class Player extends MovingEntity {
     private double viewPOV = 55; // Default value
 
     public Player(double x, double y, int width, int height, int moveSpeedMod, int drawWidth, int drawHeight, String playerImage, double maxSpeed, double sprintSpeed) {
-        super(x, y, width, height, moveSpeedMod, playerImage, drawWidth, drawHeight, maxSpeed, sprintSpeed);
+        super(x, y, width, height, moveSpeedMod, playerImage, drawWidth, drawHeight, maxSpeed/5, sprintSpeed);
     }
 
     public Player() {
@@ -150,10 +150,10 @@ public class Player extends MovingEntity {
                     this.setMaxHealth(100);
                     this.setMaxSprintEndurance(240);
                     this.setSprintEndurance(240);
-                    this.availableAbilities.addAll(this.currentAbilities);
-                    this.currentAbilities.clear();
-                    this.availableAbilityKeys.addAll(this.currentAbilityKeys);
-                    this.currentAbilityKeys.clear();
+//                    this.availableAbilities.addAll(this.currentAbilities);
+//                    this.currentAbilities.clear();
+//                    this.availableAbilityKeys.addAll(this.currentAbilityKeys);
+//                    this.currentAbilityKeys.clear();
                     this.setDrawHeight((int)(this.skinSize[this.getSkin()]+ this.getZ()*10));
                     this.setDrawWidth((int)(this.skinSize[this.getSkin()]+ this.getZ()*10));
             }

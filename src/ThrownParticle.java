@@ -30,8 +30,10 @@ public class ThrownParticle extends Entity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		this.setDrawWidth(50);
-		this.setDrawHeight(50);
+		this.setOrigDrawHeight(50);
+		this.setOrigDrawWidth(50);
+		this.setDrawHeight((int)(getOrigDrawHeight()+ getZ()*10));
+		this.setDrawWidth((int)(getOrigDrawWidth()+ getZ()*10));
 	}
 
 	public void move() {

@@ -13,15 +13,16 @@ import java.util.Comparator;
 import java.util.HashSet;
 
 public class GamePanel extends AnimatedPanel {
-	private ArrayList<Entity> entities = new ArrayList<>();
+	public static ArrayList<Entity> entities = new ArrayList<>();
 	private Set<Entity>[][] chunkedEntities;
 	private Player player;
 	private int mouseX;
 	private int mouseY;
 //	private int boundingX = (int)(Math.random()*3000)+1000;
-	private int boundingX = 3000;
+	private int boundingX = 5050;
 	private int boundingY = boundingX;
 	private boolean paused = false;
+	private final double populateRate=1;
 	private ArrayList<Entity> shuffledEntities = new ArrayList<>();
 
 	@Override
@@ -31,7 +32,7 @@ public class GamePanel extends AnimatedPanel {
 
 	public GamePanel() {
 		addEventHandlers();
-		this.setBackground(Color.GREEN);
+		this.setBackground(new Color(69, 206, 93));
 		createObjects();
 		this.chunkedEntities = new Set[2 * (boundingX / 500)][2 * (boundingY / 500)];
 		this.entities.sort((o1, o2) -> o1.getDrawHeight() - o2.getDrawHeight());
@@ -168,20 +169,20 @@ public class GamePanel extends AnimatedPanel {
 	public void createObjects() {
 		this.player = new Player(this);
 		this.entities.add(this.player);
-		for (int i = 0; i < (boundingX + boundingY) / 250; i++) {
+		for (int i = 0; i < (boundingX + boundingY) / (200/populateRate); i++) {
 			this.entities.add(new Bot(random(boundingX), random(boundingY), null, boundingX, boundingY));
 		}
 //		
 //
-		for (int j = 0; j < (boundingX + boundingY) / 50; j++) {
+		for (int j = 0; j < (boundingX + boundingY) / (50/populateRate); j++) {
 			this.entities.add(new Consumable(random(boundingX), random(boundingY), "watermelon", 60, 0, 15));
 			this.entities.add(new Consumable(random(boundingX), random(boundingY), "banana", 40, 45, 0));
 		}
-		for (int i = 0; i < (boundingX + boundingY) / 100; i++) {
+		for (int i = 0; i < (boundingX + boundingY) / (100/populateRate); i++) {
 			this.entities.add(new Obstacle(random(boundingX), random(boundingY), "rock", "moveable",
 					(int) (Math.random() * 100 + 50), 1));
 		}
-		for (int i = 0; i < (boundingX + boundingY) / 400; i++) {
+		for (int i = 0; i < (boundingX + boundingY) / (400/populateRate); i++) {
 			double randX = random(boundingX);
 			double randY = random(boundingY);
 			int randSize = (int) (Math.random() * 500 + 300);
@@ -748,7 +749,7 @@ public class GamePanel extends AnimatedPanel {
 	}
 
 	private void displayBorders(double[] playerPos, Graphics g) {
-		g.setColor(new Color(0, 210, 0));
+		g.setColor(new Color(6,175,34));
 		// Drawing map borders
 		// Top
 		g.fillRect(-boundingX - (int) playerPos[0] - 100, -boundingY - (int) playerPos[1] - getHeight() / 2 - 100,
@@ -766,7 +767,7 @@ public class GamePanel extends AnimatedPanel {
 	}
 
 	private void drawGrid(double[] playerPos, Graphics g, int width) {
-		g.setColor(new Color(0, 210, 0));
+		g.setColor(new Color(68,188,90));
 		for (int i = -boundingX; i <= boundingX * 2; i += width) {
 			for (int j = (int) (-boundingY - this.getHeight()); j <= boundingY; j += width) {
 				g.drawRect(i - (int) playerPos[0], j - (int) playerPos[1] + getWidth() / 2, width * 3, width * 3);
